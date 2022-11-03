@@ -3,6 +3,14 @@
   "ignorePatterns": [
     "projects/**/*"
   ],
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".ts"],
+        "moduleDirectory": ["src", "node_modules"]
+      }
+    }
+},
   "env": {
     "browser": true
   },
@@ -13,7 +21,7 @@
       ],
       "parserOptions": {
         "project": [
-          "tsconfig.json"
+          "./tsconfig.json"
         ],
         "createDefaultProgram": true
       },
