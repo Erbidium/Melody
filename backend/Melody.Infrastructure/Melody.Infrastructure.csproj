@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Melody.Core\Melody.Core.csproj" />
+    <ProjectReference Include="..\Melody.SharedKernel\Melody.SharedKernel.csproj" />
   </ItemGroup>
 
 </Project>
