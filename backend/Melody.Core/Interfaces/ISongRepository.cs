@@ -1,11 +1,11 @@
-﻿using Melody.Infrastructure.Data.Entities;
+﻿using Melody.Core.Entities;
+using Melody.Core.ValueObjects;
 
-namespace Melody.Infrastructure.Data.Repositories
+namespace Melody.Infrastructure.Data.Repositories;
+
+public interface ISongRepository
 {
-    public interface ISongRepository
-    {
-        Task<Song> CreateSong(Song song);
-        Task<Song> GetSong(long id);
-        Task<IEnumerable<Song>> GetSongs();
-    }
+    Task<Song> CreateSong(SongInfo song);
+    Task<Song> GetSong(long id);
+    Task<IEnumerable<Song>> GetSongs();
 }

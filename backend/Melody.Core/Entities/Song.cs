@@ -1,12 +1,21 @@
-﻿namespace Melody.Infrastructure.Data.Entities;
+﻿namespace Melody.Core.Entities;
 
 public class Song
 {
-    public int Id { get; set; }
+    public Song(long id, string name, string path, string authorName, int year, long genreId)
+    {
+        Id = id;
+        Name = name;
+        Path = path;
+        AuthorName = authorName;
+        Year = year;
+        GenreId = genreId;
+    }
+
+    public long Id { get; set; }
     public string Name { get; set; }
     public string Path { get; set; }
     public string AuthorName { get; set; }
     public int Year { get; set; }
-    public int GenreId { get; set; }
-    public bool IsDeleted { get; set; }
+    public long GenreId { get; set; }
 }

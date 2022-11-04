@@ -1,10 +1,17 @@
-﻿namespace Melody.Infrastructure.Data.Entities;
+﻿namespace Melody.Core.Entities;
 
 public class Playlist
 {
-    public int Id { get; set; }
+    public Playlist(long id, string name, string link, long authorId)
+    {
+        Id = id;
+        Name = name;
+        Link = link;
+        AuthorId = authorId;
+    }
+
+    public long Id { get; set; }
     public string Name { get; set; }
     public string Link { get; set; }
-    public int AuthorId { get; set; }
-    public bool IsDeleted { get; set; }
+    public long AuthorId { get; set; }
 }

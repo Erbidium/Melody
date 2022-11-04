@@ -1,6 +1,8 @@
 ﻿using Dapper;
+using Melody.Core.Entities;
+using Melody.Core.ValueObjects;
 using Melody.Infrastructure.Data.Context;
-using Melody.Infrastructure.Data.Entities;
+using Melody.Infrastructure.Data.Records;
 using System.Data;
 
 namespace Melody.Infrastructure.Data.Repositories;
@@ -17,8 +19,8 @@ public class SongRepository : ISongRepository
     {
         var query = "SELECT * FROM Songs";
         using var connection = _context.CreateConnection();
-        var companies = await connection.QueryAsync<Song>(query);
-        return companies.ToList();
+        var songs = await connection.QueryAsync<SongRecord>(query);
+        return songs.ToList().Select(record => new Song(record.Id, record.Name, record.Path, record.AuthorName, record.Year, record.GenreId));
     }
 
     public async Task<Song> GetSong(long id)
@@ -26,10 +28,11 @@ public class SongRepository : ISongRepository
         var query = "SELECT * FROM Songs WHERE Id = @Id";
 
         using var connection = _context.CreateConnection();
-        return await connection.QuerySingleOrDefaultAsync<Song>(query, new { id });
+        var record = await connection.QuerySingleOrDefaultAsync<SongRecord>(query, new { id });
+        return new Song(record.Id, record.Name, record.Path, record.AuthorName, record.Year, record.GenreId);
     }
 
-    public async Task<Song> CreateSong(Song song)
+    public async Task<Song> CreateSong(SongInfo song)
     {
         var query = "INSERT INTO Songs (Name, Path, AuthorName, Year, GenreId, IsDeleted) VALUES (@Name, @Path, @AuthorName, @Year, @GenreId, @IsDeleted)" +
             "SELECT CAST(SCOPE_IDENTITY() as int)";
@@ -45,16 +48,6 @@ public class SongRepository : ISongRepository
         using var connection = _context.CreateConnection();
         var id = await connection.QuerySingleAsync<int>(query, parameters);
 
-        var createdSong = new Song
-        {
-            Id = id,
-            Name = song.Name,
-            Path = song.Path,
-            AuthorName = song.AuthorName,
-            Year = song.Year,
-            GenreId = song.GenreId,
-            IsDeleted = song.IsDeleted,
-        };
-        return createdSong;
+        return new Song(id, song.Name, song.Path, song.AuthorName, song.Year, song.GenreId);
     }
 }
