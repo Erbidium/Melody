@@ -1,4 +1,5 @@
-using Melody.Infrastructure.Data.Entities;
+using Melody.Core.Entities;
+using Melody.Core.ValueObjects;
 using Melody.Infrastructure.Data.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,9 +9,9 @@ namespace Melody.WebAPI.Controllers
     [Route("[controller]")]
     public class SongController : ControllerBase
     {
-        private readonly SongRepository _songRepository;
+        private readonly ISongRepository _songRepository;
 
-        public SongController(SongRepository songRepository)
+        public SongController(ISongRepository songRepository)
         {
             _songRepository = songRepository;
         }
@@ -28,7 +29,7 @@ namespace Melody.WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateSong(Song song)
+        public async Task<IActionResult> CreateSong(SongInfo song)
         {
             var createdSong = await _songRepository.CreateSong(song);
             return Ok(createdSong);

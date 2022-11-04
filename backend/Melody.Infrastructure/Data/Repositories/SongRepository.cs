@@ -17,7 +17,7 @@ public class SongRepository : ISongRepository
 
     public async Task<IEnumerable<Song>> GetSongs()
     {
-        var query = "SELECT * FROM Songs";
+        var query = "SELECT * FROM Songs WHERE IsDeleted = 0";
         using var connection = _context.CreateConnection();
         var songs = await connection.QueryAsync<SongRecord>(query);
         return songs.ToList().Select(record => new Song(record.Id, record.Name, record.Path, record.AuthorName, record.Year, record.GenreId));
@@ -25,7 +25,7 @@ public class SongRepository : ISongRepository
 
     public async Task<Song> GetSong(long id)
     {
-        var query = "SELECT * FROM Songs WHERE Id = @Id";
+        var query = "SELECT * FROM Songs WHERE Id = @Id AND IsDeleted = 0";
 
         using var connection = _context.CreateConnection();
         var record = await connection.QuerySingleOrDefaultAsync<SongRecord>(query, new { id });
@@ -34,7 +34,7 @@ public class SongRepository : ISongRepository
 
     public async Task<Song> CreateSong(SongInfo song)
     {
-        var query = "INSERT INTO Songs (Name, Path, AuthorName, Year, GenreId, IsDeleted) VALUES (@Name, @Path, @AuthorName, @Year, @GenreId, @IsDeleted)" +
+        var query = "INSERT INTO Songs (Name, Path, AuthorName, Year, GenreId, IsDeleted) VALUES (@Name, @Path, @AuthorName, @Year, @GenreId, 0)" +
             "SELECT CAST(SCOPE_IDENTITY() as int)";
 
         var parameters = new DynamicParameters();
@@ -43,7 +43,6 @@ public class SongRepository : ISongRepository
         parameters.Add("AuthorName", song.AuthorName, DbType.String);
         parameters.Add("Year", song.Year, DbType.Int32);
         parameters.Add("GenreId", song.GenreId, DbType.Int64);
-        parameters.Add("IsDeleted", false, DbType.Boolean);
 
         using var connection = _context.CreateConnection();
         var id = await connection.QuerySingleAsync<int>(query, parameters);
