@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddSingleton<DapperContext>();
 builder.Services.AddSingleton<Database>();
-builder.Services.AddScoped<SongRepository>();
+builder.Services.AddScoped<ISongRepository, SongRepository>();
 
 builder.Services.AddLogging(c => c.AddFluentMigratorConsole())
 .AddFluentMigratorCore()

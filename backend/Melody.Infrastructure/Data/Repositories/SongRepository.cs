@@ -5,7 +5,7 @@ using System.Data;
 
 namespace Melody.Infrastructure.Data.Repositories;
 
-public class SongRepository
+public class SongRepository : ISongRepository
 {
     private readonly DapperContext _context;
     public SongRepository(DapperContext context)
