@@ -1,6 +1,7 @@
 using FluentMigrator.Runner;
 using Melody.Infrastructure.Data.Context;
 using Melody.Infrastructure.Data.Migrations;
+using Melody.Infrastructure.Data.Repositories;
 using Melody.WebAPI.Extensions;
 using System.Reflection;
 
@@ -9,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddSingleton<DapperContext>();
 builder.Services.AddSingleton<Database>();
+builder.Services.AddScoped<SongRepository>();
 
 builder.Services.AddLogging(c => c.AddFluentMigratorConsole())
 .AddFluentMigratorCore()
