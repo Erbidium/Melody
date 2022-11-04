@@ -12,11 +12,11 @@ public class User
         IsBanned = isBanned;
     }
 
-    public long Id { get; set; }
-    public string Name { get; set; }
-    public string Email { get; set; }
-    public string PhoneNumber { get; set; }
-    public long RoleId { get; set; }
-    public bool IsBanned { get; set; }
+    public long Id { get; }
+    public string Name { get; }
+    public string Email { get; }
+    public string PhoneNumber { get; }
+    public long RoleId { get; }
+    public bool IsBanned { get; }
 
 }

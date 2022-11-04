@@ -10,8 +10,8 @@ public class Playlist
         AuthorId = authorId;
     }
 
-    public long Id { get; set; }
-    public string Name { get; set; }
-    public string Link { get; set; }
-    public long AuthorId { get; set; }
+    public long Id { get; }
+    public string Name { get; }
+    public string Link { get; }
+    public long AuthorId { get; }
 }

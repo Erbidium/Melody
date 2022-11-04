@@ -15,12 +15,12 @@ public class SongRepository : ISongRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<Song>> GetSongs()
+    public async Task<IReadOnlyCollection<Song>> GetSongs()
     {
         var query = "SELECT * FROM Songs WHERE IsDeleted = 0";
         using var connection = _context.CreateConnection();
         var songs = await connection.QueryAsync<SongRecord>(query);
-        return songs.ToList().Select(record => new Song(record.Id, record.Name, record.Path, record.AuthorName, record.Year, record.GenreId));
+        return songs.Select(record => new Song(record.Id, record.Name, record.Path, record.AuthorName, record.Year, record.GenreId)).ToList().AsReadOnly();
     }
 
     public async Task<Song> GetSong(long id)

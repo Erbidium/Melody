@@ -12,10 +12,10 @@ public class Song
         GenreId = genreId;
     }
 
-    public long Id { get; set; }
-    public string Name { get; set; }
-    public string Path { get; set; }
-    public string AuthorName { get; set; }
-    public int Year { get; set; }
-    public long GenreId { get; set; }
+    public long Id { get; }
+    public string Name { get; }
+    public string Path { get; }
+    public string AuthorName { get; }
+    public int Year { get; }
+    public long GenreId { get; }
 }
