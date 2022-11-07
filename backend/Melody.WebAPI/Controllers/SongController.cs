@@ -1,5 +1,7 @@
+using AutoMapper;
 using Melody.Core.Entities;
 using Melody.Infrastructure.Data.Repositories;
+using Melody.WebAPI.DTO.Song;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Melody.WebAPI.Controllers;
@@ -9,10 +11,12 @@ namespace Melody.WebAPI.Controllers;
 public class SongController : ControllerBase
 {
     private readonly ISongRepository _songRepository;
+    private readonly IMapper _mapper;
 
-    public SongController(ISongRepository songRepository)
+    public SongController(ISongRepository songRepository, IMapper mapper)
     {
         _songRepository = songRepository;
+        _mapper = mapper;
     }
 
     [HttpGet]
@@ -28,9 +32,8 @@ public class SongController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Song>> CreateSong(Song song)
+    public async Task<ActionResult<Song>> CreateSong(NewSongDto song)
     {
-        var createdSong = await _songRepository.Create(song);
-        return Ok(createdSong);
+        return Ok(await _songRepository.Create(_mapper.Map<Song>(song)));
     }
 }

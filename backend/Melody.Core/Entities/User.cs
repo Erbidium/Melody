@@ -4,7 +4,7 @@ namespace Melody.Core.Entities;
 
 public class User
 {
-    public User(string name, string email, string phoneNumber, long roleId, bool isBanned, long id = -1)
+    public User(string name, string email, string phoneNumber, long roleId, bool isBanned = false, long id = -1)
     {
         Id = id;
         Name = name;

@@ -3,6 +3,7 @@ using Melody.Infrastructure.Data.Context;
 using Melody.Infrastructure.Data.Migrations;
 using Melody.Infrastructure.Data.Repositories;
 using Melody.WebAPI.Extensions;
+using Melody.WebAPI.MappingProfiles;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<DapperContext>();
 builder.Services.AddSingleton<Database>();
 builder.Services.AddScoped<ISongRepository, SongRepository>();
+builder.Services.AddAutoMapper(Assembly.GetAssembly(typeof(UserProfile)));
 
 builder.Services.AddLogging(c => c.AddFluentMigratorConsole())
 .AddFluentMigratorCore()
