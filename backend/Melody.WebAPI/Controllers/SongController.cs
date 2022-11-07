@@ -1,8 +1,12 @@
 using AutoMapper;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using FluentValidation.Results;
 using Melody.Core.Entities;
 using Melody.Infrastructure.Data.Repositories;
 using Melody.WebAPI.DTO.Song;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace Melody.WebAPI.Controllers;
 
@@ -12,11 +16,13 @@ public class SongController : ControllerBase
 {
     private readonly ISongRepository _songRepository;
     private readonly IMapper _mapper;
+    private readonly IValidator<NewSongDto> _validator;
 
-    public SongController(ISongRepository songRepository, IMapper mapper)
+    public SongController(ISongRepository songRepository, IMapper mapper, IValidator<NewSongDto> validator)
     {
         _songRepository = songRepository;
         _mapper = mapper;
+        _validator = validator;
     }
 
     [HttpGet]
@@ -34,6 +40,12 @@ public class SongController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Song>> CreateSong(NewSongDto song)
     {
+        ValidationResult result = await _validator.ValidateAsync(song);
+        if (!result.IsValid)
+        {
+            result.AddToModelState(ModelState);
+            return BadRequest(ModelState);
+        }
         return Ok(await _songRepository.Create(_mapper.Map<Song>(song)));
     }
 }
