@@ -16,28 +16,22 @@ public class SongRepository : ISongRepository
 
     public async Task<IReadOnlyCollection<Song>> GetAll()
     {
-        var query = "SELECT Id, Name, Path, AuthorName, Year, GenreId, IsDeleted FROM Songs WHERE IsDeleted = 0";
-
         using var connection = _context.CreateConnection();
 
-        var songs = await connection.QueryAsync<SongRecord>(query);
+        var songs = await connection.QueryAsync<SongRecord>(SqlScriptsResource.GetAllSongs);
         return songs.Select(record => new Song(record.Name, record.Path, record.AuthorName, record.Year, record.GenreId, record.Id)).ToList().AsReadOnly();
     }
 
     public async Task<Song?> GetById(long id)
     {
-        var query = "SELECT Id, Name, Path, AuthorName, Year, GenreId, IsDeleted FROM Songs WHERE Id = @Id AND IsDeleted = 0";
-
         using var connection = _context.CreateConnection();
 
-        var record = await connection.QuerySingleOrDefaultAsync<SongRecord>(query, new { id });
+        var record = await connection.QuerySingleOrDefaultAsync<SongRecord>(SqlScriptsResource.GetSongById, new { id });
         return record == null ? null : new Song(record.Name, record.Path, record.AuthorName, record.Year, record.GenreId, record.Id);
     }
 
     public async Task<Song> Create(Song song)
     {
-        var query = "INSERT INTO Songs (Name, Path, AuthorName, Year, GenreId) OUTPUT Inserted.Id VALUES (@Name, @Path, @AuthorName, @Year, @GenreId)";
-
         var parameters = new DynamicParameters();
         parameters.Add("Name", song.Name, DbType.String);
         parameters.Add("Path", song.Path, DbType.String);
@@ -47,15 +41,13 @@ public class SongRepository : ISongRepository
 
         using var connection = _context.CreateConnection();
 
-        var id = await connection.ExecuteScalarAsync<long>(query, parameters);
+        var id = await connection.ExecuteScalarAsync<long>(SqlScriptsResource.CreateSong, parameters);
 
         return new Song(song.Name, song.Path, song.AuthorName, song.Year, song.GenreId, id);
     }
 
     public async Task Update(Song song)
     {
-        var query = "UPDATE Songs SET Name = @Name, Path = @Path, AuthorName = @AuthorName, Year = @Year, GenreId = @GenreId WHERE Id = @Id AND IsDeleted = 0";
-
         var parameters = new DynamicParameters();
         parameters.Add("Name", song.Name, DbType.String);
         parameters.Add("Path", song.Path, DbType.String);
@@ -65,15 +57,13 @@ public class SongRepository : ISongRepository
 
         using var connection = _context.CreateConnection();
 
-        await connection.ExecuteAsync(query, parameters);
+        await connection.ExecuteAsync(SqlScriptsResource.UpdateSong, parameters);
     }
 
     public async Task Delete(long id)
     {
-        var query = "UPDATE Songs SET IsDeleted = 1 WHERE Id = @Id AND IsDeleted = 0";
-
         using var connection = _context.CreateConnection();
 
-        await connection.ExecuteAsync(query, new { id });
+        await connection.ExecuteAsync(SqlScriptsResource.DeleteSong, new { id });
     }
 }

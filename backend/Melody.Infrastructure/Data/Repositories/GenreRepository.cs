@@ -15,21 +15,17 @@ public class GenreRepository : IGenreRepository
     }
     public async Task<IReadOnlyCollection<Genre>> GetAll()
     {
-        var query = "SELECT Id, Name FROM Genres";
-
         using var connection = _context.CreateConnection();
 
-        var genres = await connection.QueryAsync<GenreRecord>(query);
+        var genres = await connection.QueryAsync<GenreRecord>(SqlScriptsResource.GetAllGenres);
         return genres.Select(record => new Genre(record.Id, record.Name)).ToList().AsReadOnly();
     }
 
     public async Task<Genre?> GetById(long id)
     {
-        var query = "SELECT Id, Name FROM Genres WHERE Id = @Id";
-
         using var connection = _context.CreateConnection();
 
-        var record = await connection.QuerySingleOrDefaultAsync<GenreRecord>(query, new { id });
+        var record = await connection.QuerySingleOrDefaultAsync<GenreRecord>(SqlScriptsResource.GetGenreById, new { id });
         return record == null ? null : new Genre(record.Id, record.Name);
     }
 }
