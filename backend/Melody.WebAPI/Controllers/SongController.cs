@@ -35,7 +35,12 @@ public class SongController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<Song>> GetSong(long id)
     {
-        return Ok(await _songRepository.GetById(id));
+        var song = await _songRepository.GetById(id);
+        if (song is null)
+        {
+            throw new KeyNotFoundException("Song is not found");
+        }
+        return Ok(song);
     }
 
     [HttpPost]

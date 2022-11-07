@@ -5,6 +5,7 @@ using Melody.Infrastructure.Data.Migrations;
 using Melody.Infrastructure.Data.Repositories;
 using Melody.WebAPI.Extensions;
 using Melody.WebAPI.MappingProfiles;
+using Melody.WebAPI.Middlewares;
 using Melody.WebAPI.Validators.User;
 using System.Reflection;
 
@@ -38,6 +39,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 app.UseHttpsRedirection();
 

@@ -24,14 +24,14 @@ public class SongRepository : ISongRepository
         return songs.Select(record => new Song(record.Name, record.Path, record.AuthorName, record.Year, record.GenreId, record.Id)).ToList().AsReadOnly();
     }
 
-    public async Task<Song> GetById(long id)
+    public async Task<Song?> GetById(long id)
     {
         var query = "SELECT Id, Name, Path, AuthorName, Year, GenreId, IsDeleted FROM Songs WHERE Id = @Id AND IsDeleted = 0";
 
         using var connection = _context.CreateConnection();
 
         var record = await connection.QuerySingleOrDefaultAsync<SongRecord>(query, new { id });
-        return new Song(record.Name, record.Path, record.AuthorName, record.Year, record.GenreId, record.Id);
+        return record == null ? null : new Song(record.Name, record.Path, record.AuthorName, record.Year, record.GenreId, record.Id);
     }
 
     public async Task<Song> Create(Song song)
