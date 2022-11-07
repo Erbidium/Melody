@@ -1,6 +1,5 @@
 ﻿using Dapper;
 using Melody.Core.Entities;
-using Melody.Core.ValueObjects;
 using Melody.Infrastructure.Data.Context;
 using Melody.Infrastructure.Data.Records;
 using System.Data;
@@ -15,7 +14,7 @@ public class SongRepository : ISongRepository
         _context = context;
     }
 
-    public async Task<IReadOnlyCollection<Song>> GetSongs()
+    public async Task<IReadOnlyCollection<Song>> GetAll()
     {
         var query = "SELECT * FROM Songs WHERE IsDeleted = 0";
         using var connection = _context.CreateConnection();
@@ -23,7 +22,7 @@ public class SongRepository : ISongRepository
         return songs.Select(record => new Song(record.Id, record.Name, record.Path, record.AuthorName, record.Year, record.GenreId)).ToList().AsReadOnly();
     }
 
-    public async Task<Song> GetSong(long id)
+    public async Task<Song> GetById(long id)
     {
         var query = "SELECT * FROM Songs WHERE Id = @Id AND IsDeleted = 0";
 
@@ -32,7 +31,7 @@ public class SongRepository : ISongRepository
         return new Song(record.Id, record.Name, record.Path, record.AuthorName, record.Year, record.GenreId);
     }
 
-    public async Task<Song> CreateSong(SongInfo song)
+    public async Task<Song> Create(Song song)
     {
         var query = "INSERT INTO Songs (Name, Path, AuthorName, Year, GenreId, IsDeleted) VALUES (@Name, @Path, @AuthorName, @Year, @GenreId, 0)" +
             "SELECT CAST(SCOPE_IDENTITY() as int)";

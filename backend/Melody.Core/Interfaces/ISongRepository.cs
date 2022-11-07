@@ -1,11 +1,10 @@
 ﻿using Melody.Core.Entities;
-using Melody.Core.ValueObjects;
 
 namespace Melody.Infrastructure.Data.Repositories;
 
 public interface ISongRepository
 {
-    Task<Song> CreateSong(SongInfo song);
-    Task<Song> GetSong(long id);
-    Task<IReadOnlyCollection<Song>> GetSongs();
+    Task<Song> Create(Song song);
+    Task<Song> GetById(long id);
+    Task<IReadOnlyCollection<Song>> GetAll();
 }
