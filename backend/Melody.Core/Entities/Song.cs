@@ -1,8 +1,10 @@
-﻿namespace Melody.Core.Entities;
+﻿using Melody.Core.Exceptions;
+
+namespace Melody.Core.Entities;
 
 public class Song
 {
-    public Song(long id, string name, string path, string authorName, int year, long genreId)
+    public Song(string name, string path, string authorName, int year, long genreId, long id = -1)
     {
         Id = id;
         Name = name;
@@ -12,7 +14,13 @@ public class Song
         GenreId = genreId;
     }
 
-    public long Id { get; }
+    private long _id;
+    public long Id
+    {
+        get => _id < 0 ? throw new WrongIdException() : _id;
+        set => _id = value;
+    }
+        
     public string Name { get; }
     public string Path { get; }
     public string AuthorName { get; }

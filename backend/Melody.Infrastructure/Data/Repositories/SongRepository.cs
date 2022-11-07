@@ -16,19 +16,19 @@ public class SongRepository : ISongRepository
 
     public async Task<IReadOnlyCollection<Song>> GetAll()
     {
-        var query = "SELECT * FROM Songs WHERE IsDeleted = 0";
+        var query = "SELECT Id, Name, Path, AuthorName, Year, GenreId, IsDeleted FROM Songs WHERE IsDeleted = 0";
         using var connection = _context.CreateConnection();
         var songs = await connection.QueryAsync<SongRecord>(query);
-        return songs.Select(record => new Song(record.Id, record.Name, record.Path, record.AuthorName, record.Year, record.GenreId)).ToList().AsReadOnly();
+        return songs.Select(record => new Song(record.Name, record.Path, record.AuthorName, record.Year, record.GenreId, record.Id)).ToList().AsReadOnly();
     }
 
     public async Task<Song> GetById(long id)
     {
-        var query = "SELECT * FROM Songs WHERE Id = @Id AND IsDeleted = 0";
+        var query = "SELECT Id, Name, Path, AuthorName, Year, GenreId, IsDeleted FROM Songs WHERE Id = @Id AND IsDeleted = 0";
 
         using var connection = _context.CreateConnection();
         var record = await connection.QuerySingleOrDefaultAsync<SongRecord>(query, new { id });
-        return new Song(record.Id, record.Name, record.Path, record.AuthorName, record.Year, record.GenreId);
+        return new Song(record.Name, record.Path, record.AuthorName, record.Year, record.GenreId, record.Id);
     }
 
     public async Task<Song> Create(Song song)
@@ -46,6 +46,6 @@ public class SongRepository : ISongRepository
         using var connection = _context.CreateConnection();
         var id = await connection.QuerySingleAsync<int>(query, parameters);
 
-        return new Song(id, song.Name, song.Path, song.AuthorName, song.Year, song.GenreId);
+        return new Song(song.Name, song.Path, song.AuthorName, song.Year, song.GenreId, id);
     }
 }
