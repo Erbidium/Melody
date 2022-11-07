@@ -1,12 +1,8 @@
 ﻿using Melody.Core.Entities;
+using Melody.SharedKernel.Interfaces;
 
 namespace Melody.Infrastructure.Data.Repositories;
 
-public interface ISongRepository
+public interface ISongRepository : IRepository<Song, long>
 {
-    Task<Song> Create(Song song);
-    Task<Song?> GetById(long id);
-    Task<IReadOnlyCollection<Song>> GetAll();
-    Task Update(Song song);
-    Task Delete(long id);
 }

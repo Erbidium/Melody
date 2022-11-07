@@ -1,8 +1,9 @@
 ﻿using Melody.Core.Exceptions;
+using Melody.SharedKernel.Interfaces;
 
 namespace Melody.Core.Entities;
 
-public class User
+public class User : IEntityBase<long>
 {
     public User(string name, string email, string phoneNumber, long roleId, bool isBanned = false, long id = -1)
     {
@@ -18,7 +19,7 @@ public class User
     public long Id
     {
         get => _id < 0 ? throw new WrongIdException() : _id;
-        set => _id = value;
+        private set => _id = value;
     }
     public string Name { get; }
     public string Email { get; }

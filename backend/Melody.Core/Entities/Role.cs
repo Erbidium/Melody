@@ -1,6 +1,8 @@
-﻿namespace Melody.Core.Entities;
+﻿using Melody.SharedKernel.Interfaces;
 
-public class Role
+namespace Melody.Core.Entities;
+
+public class Role : IEntityBase<long>
 {
     public Role(long id, string name)
     {

@@ -1,9 +1,8 @@
 ﻿using Melody.Core.Entities;
+using Melody.SharedKernel.Interfaces;
 
 namespace Melody.Core.Interfaces;
 
-public interface IGenreRepository
+public interface IGenreRepository : IReadRepository<Genre, long>
 {
-    Task<Genre?> GetById(long id);
-    Task<IReadOnlyCollection<Genre>> GetAll();
 }

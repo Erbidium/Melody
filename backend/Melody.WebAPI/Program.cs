@@ -1,5 +1,6 @@
 using FluentMigrator.Runner;
 using FluentValidation;
+using Melody.Core.Interfaces;
 using Melody.Infrastructure.Data.Context;
 using Melody.Infrastructure.Data.Migrations;
 using Melody.Infrastructure.Data.Repositories;
@@ -15,6 +16,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<DapperContext>();
 builder.Services.AddSingleton<Database>();
 builder.Services.AddScoped<ISongRepository, SongRepository>();
+builder.Services.AddScoped<IPlaylistRepository, PlaylistRepository>();
+builder.Services.AddScoped<IGenreRepository, GenreRepository>();
 builder.Services.AddAutoMapper(Assembly.GetAssembly(typeof(UserProfile)));
 builder.Services.AddValidatorsFromAssemblyContaining<NewUserDtoValidator>();
 

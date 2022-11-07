@@ -1,12 +1,8 @@
 ﻿using Melody.Core.Entities;
+using Melody.SharedKernel.Interfaces;
 
 namespace Melody.Core.Interfaces;
 
-public interface IPlaylistRepository
+public interface IPlaylistRepository : IRepository<Playlist, long>
 {
-    Task<Playlist> Create(Playlist playlist);
-    Task<Playlist?> GetById(long id);
-    Task<IReadOnlyCollection<Playlist>> GetAll();
-    Task Update(Playlist playlist);
-    Task Delete(long id);
 }

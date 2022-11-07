@@ -1,8 +1,9 @@
 ﻿using Melody.Core.Exceptions;
+using Melody.SharedKernel.Interfaces;
 
 namespace Melody.Core.Entities;
 
-public class Song
+public class Song : IEntityBase<long>
 {
     public Song(string name, string path, string authorName, int year, long genreId, long id = -1)
     {
@@ -18,7 +19,7 @@ public class Song
     public long Id
     {
         get => _id < 0 ? throw new WrongIdException() : _id;
-        set => _id = value;
+        private set => _id = value;
     }
         
     public string Name { get; }
