@@ -33,8 +33,7 @@ public class SongRepository : ISongRepository
 
     public async Task<Song> Create(Song song)
     {
-        var query = "INSERT INTO Songs (Name, Path, AuthorName, Year, GenreId) VALUES (@Name, @Path, @AuthorName, @Year, @GenreId)" +
-            "SELECT CAST(SCOPE_IDENTITY() as int)";
+        var query = "INSERT INTO Songs (Name, Path, AuthorName, Year, GenreId) OUTPUT Inserted.Id VALUES (@Name, @Path, @AuthorName, @Year, @GenreId)";
 
         var parameters = new DynamicParameters();
         parameters.Add("Name", song.Name, DbType.String);
@@ -44,7 +43,7 @@ public class SongRepository : ISongRepository
         parameters.Add("GenreId", song.GenreId, DbType.Int64);
 
         using var connection = _context.CreateConnection();
-        var id = await connection.QuerySingleAsync<int>(query, parameters);
+        var id = await connection.ExecuteScalarAsync<long>(query, parameters);
 
         return new Song(song.Name, song.Path, song.AuthorName, song.Year, song.GenreId, id);
     }
