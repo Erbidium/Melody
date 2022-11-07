@@ -12,7 +12,7 @@ public static class MigrationManager
             var databaseService = scope.ServiceProvider.GetRequiredService<Database>();
             var migrationService = scope.ServiceProvider.GetRequiredService<IMigrationRunner>();
 
-            databaseService.CreateDatabase("DapperMigrationExample");
+            databaseService.CreateDatabase("MelodyDb");
 
             migrationService.ListMigrations();
             migrationService.MigrateUp();

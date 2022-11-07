@@ -29,7 +29,7 @@ public class InitialTables_202211031808 : Migration
             .WithColumn("PhoneNumber").AsString(50).NotNullable()
             .WithColumn("RoleId").AsInt64().NotNullable().ForeignKey("Roles", "Id")
             .WithColumn("IsBanned").AsBoolean().NotNullable()
-            .WithColumn("IsDeleted").AsBoolean().NotNullable();
+            .WithColumn("IsDeleted").AsBoolean().NotNullable().WithDefaultValue(0);
 
         Create.Table("Genres")
            .WithColumn("Id").AsInt64().PrimaryKey().Identity()
@@ -42,7 +42,7 @@ public class InitialTables_202211031808 : Migration
             .WithColumn("AuthorName").AsString(50).NotNullable()
             .WithColumn("Year").AsInt32().NotNullable()
             .WithColumn("GenreId").AsInt64().NotNullable().ForeignKey("Genres", "Id")
-            .WithColumn("IsDeleted").AsBoolean().NotNullable();
+            .WithColumn("IsDeleted").AsBoolean().NotNullable().WithDefaultValue(0);
 
         Create.Table("FavouriteSongs")
             .WithColumn("UserId").AsInt64().NotNullable().ForeignKey("Users", "Id")
@@ -55,7 +55,7 @@ public class InitialTables_202211031808 : Migration
             .WithColumn("Name").AsString(50).NotNullable()
             .WithColumn("Link").AsString(50).NotNullable().Unique()
             .WithColumn("AuthorId").AsInt64().NotNullable().ForeignKey("Users", "Id")
-            .WithColumn("IsDeleted").AsBoolean().NotNullable();
+            .WithColumn("IsDeleted").AsBoolean().NotNullable().WithDefaultValue(0);
 
         Create.Table("UserPlaylists")
             .WithColumn("UserId").AsInt64().NotNullable().ForeignKey("Users", "Id")

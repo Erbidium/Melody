@@ -33,7 +33,7 @@ public class SongRepository : ISongRepository
 
     public async Task<Song> Create(Song song)
     {
-        var query = "INSERT INTO Songs (Name, Path, AuthorName, Year, GenreId, IsDeleted) VALUES (@Name, @Path, @AuthorName, @Year, @GenreId, 0)" +
+        var query = "INSERT INTO Songs (Name, Path, AuthorName, Year, GenreId) VALUES (@Name, @Path, @AuthorName, @Year, @GenreId)" +
             "SELECT CAST(SCOPE_IDENTITY() as int)";
 
         var parameters = new DynamicParameters();
