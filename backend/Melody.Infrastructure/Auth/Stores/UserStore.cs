@@ -1,13 +1,11 @@
 ﻿using Melody.Core.Entities;
 using Melody.Core.Interfaces;   
 using Microsoft.AspNetCore.Identity;
-using System.Threading;
-using System.Timers;
 
 namespace Melody.Infrastructure.Auth.Stores;
 
 
-public class UserStore: IUserStore<UserIdentity>, IUserRoleStore<UserIdentity>
+public class UserStore: IUserStore<UserIdentity>, IUserRoleStore<UserIdentity>, IUserEmailStore<UserIdentity>
 {
     private readonly IUserRepository _userRepository;
     private readonly IRoleRepository _roleRepository;
@@ -236,5 +234,56 @@ public class UserStore: IUserStore<UserIdentity>, IUserRoleStore<UserIdentity>
         cancellationToken.ThrowIfCancellationRequested();
         var userRole = await _userRepository.FindUserRoleAsync(userId, roleId);
         return userRole;
+    }
+
+    public Task SetEmailAsync(UserIdentity user, string email, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        user.ThrowIfNull(nameof(user));
+        user.Email = email;
+        return Task.CompletedTask;
+    }
+
+    public Task<string> GetEmailAsync(UserIdentity user, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        user.ThrowIfNull(nameof(user));
+        return Task.FromResult(user.Email);
+    }
+
+    public Task<bool> GetEmailConfirmedAsync(UserIdentity user, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        user.ThrowIfNull(nameof(user));
+        return Task.FromResult(user.EmailConfirmed);
+    }
+
+    public Task SetEmailConfirmedAsync(UserIdentity user, bool confirmed, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        user.ThrowIfNull(nameof(user));
+        user.EmailConfirmed = confirmed;
+        return Task.CompletedTask;
+    }
+
+    public async Task<UserIdentity> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        return _userRepository.FindByEmailAsync(normalizedEmail);
+    }
+
+    public Task<string> GetNormalizedEmailAsync(UserIdentity user, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        user.ThrowIfNull(nameof(user));
+        return Task.FromResult(user.NormalizedEmail);
+    }
+
+    public Task SetNormalizedEmailAsync(UserIdentity user, string normalizedEmail, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        user.ThrowIfNull(nameof(user));
+        user.NormalizedEmail = normalizedEmail;
+        return Task.CompletedTask;
     }
 }   
