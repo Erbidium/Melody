@@ -13,7 +13,7 @@ public class InitialSeed_202211041627 : Migration
             .Row(new RoleRecord(0, "User", "user"))
             .Row(new RoleRecord(1, "Admin", "admin"));
 
-        Delete.FromTable("Roles")
+        Delete.FromTable("Genres")
             .Row(new GenreRecord(0, "Rock"))
             .Row(new GenreRecord(1, "Jazz"))
             .Row(new GenreRecord(2, "Rap"))
@@ -33,8 +33,8 @@ public class InitialSeed_202211041627 : Migration
     {
         Insert.IntoTable("Roles")
             .WithIdentityInsert()
-            .Row(new RoleRecord(0, "User"))
-            .Row(new RoleRecord(1, "Admin"));
+            .Row(new RoleRecord(0, "User", "user"))
+            .Row(new RoleRecord(1, "Admin", "admin"));
 
         Insert.IntoTable("Genres")
             .WithIdentityInsert()

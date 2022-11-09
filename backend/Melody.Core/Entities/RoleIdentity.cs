@@ -1,9 +1,8 @@
-﻿namespace Melody.Core.Entities
+﻿namespace Melody.Core.Entities;
+
+public class RoleIdentity
 {
-    public class RoleIdentity
-    {
-        public long Id { get; set; }
-        public string Name { get; set; }
-        public string NormalizedName { get; set; }
-    }
+    public long Id { get; set; }
+    public string Name { get; set; }
+    public string NormalizedName { get; set; }
 }

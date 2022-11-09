@@ -266,7 +266,7 @@ public class UserStore: IUserStore<UserIdentity>, IUserRoleStore<UserIdentity>, 
         return Task.CompletedTask;
     }
 
-    public async Task<UserIdentity> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
+    public Task<UserIdentity> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
         return _userRepository.FindByEmailAsync(normalizedEmail);
