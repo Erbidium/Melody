@@ -1,5 +1,7 @@
-﻿using Melody.Infrastructure.Auth.Models;
+﻿using Melody.Core.Entities;
+using Melody.Infrastructure.Auth.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -13,17 +15,19 @@ namespace Melody.WebAPI.Controllers
     public class LoginController : ControllerBase
     {
         private IConfiguration _configuration;
+        private UserManager<UserIdentity> _userManager;
 
-        public LoginController(IConfiguration configuration)
+        public LoginController(IConfiguration configuration, UserManager<UserIdentity> userManager)
         {
             _configuration = configuration;
+            _userManager = userManager;
         }
 
         [AllowAnonymous]
         [HttpPost]
-        public IActionResult Login([FromBody] UserLogin userLogin)
+        public async Task<IActionResult> Login([FromBody] UserLogin userLogin)
         {
-            var user = Authenticate(userLogin);
+            var user = await Authenticate(userLogin);
 
             if (user != null)
             {
@@ -34,19 +38,19 @@ namespace Melody.WebAPI.Controllers
             return NotFound("User not found");
         }
 
-        private string Generate(UserModel user)
+        private async Task<string> Generate(UserIdentity user)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-            var claims = new[]
+            var roles = await _userManager.GetRolesAsync(user);
+
+            var claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.NameIdentifier, user.UserName),
-                new Claim(ClaimTypes.Email, user.EmailAdress),
-                new Claim(ClaimTypes.GivenName, user.GivenName),
-                new Claim(ClaimTypes.Surname, user.Surname),
-                new Claim(ClaimTypes.Role, user.Role)
+                new Claim(ClaimTypes.Email, user.Email),
             };
+            claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)).ToArray());
 
             var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
                 _configuration["Jwt:Audience"],
@@ -57,12 +61,11 @@ namespace Melody.WebAPI.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        private UserModel? Authenticate(UserLogin userLogin)
+        private async Task<UserIdentity?> Authenticate(UserLogin userLogin)
         {
-            var currentUser = UserConstants.Users.FirstOrDefault(o => o.UserName.ToLower() == userLogin.UserName.ToLower()
-                && o.Password == userLogin.Password);
+            var currentUser = await _userManager.FindByEmailAsync(userLogin.Email);
 
-            if (currentUser != null)
+            if (currentUser != null && await _userManager.CheckPasswordAsync(currentUser, userLogin.Password))
             {
                 return currentUser;
             }

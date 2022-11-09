@@ -10,7 +10,6 @@ public class UserIdentity
     public bool EmailConfirmed { get; set; }
     public string PasswordHash { get; set; }
     public string PhoneNumber { get; set; }
-    public long RoleId { get; set; }
     public bool IsBanned { get; set; }
     public bool IsDeleted { get; set; }
 }
