@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 namespace Melody.Infrastructure.Auth.Stores;
 
 
-public class UserStore: IUserStore<UserIdentity>, IUserRoleStore<UserIdentity>, IUserEmailStore<UserIdentity>
+public class UserStore: IUserStore<UserIdentity>, IUserRoleStore<UserIdentity>, IUserEmailStore<UserIdentity>, IUserPasswordStore<UserIdentity>
 {
     private readonly IUserRepository _userRepository;
     private readonly IRoleRepository _roleRepository;
@@ -285,5 +285,27 @@ public class UserStore: IUserStore<UserIdentity>, IUserRoleStore<UserIdentity>, 
         user.ThrowIfNull(nameof(user));
         user.NormalizedEmail = normalizedEmail;
         return Task.CompletedTask;
+    }
+
+    public Task SetPasswordHashAsync(UserIdentity user, string passwordHash, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        user.ThrowIfNull(nameof(user));
+        user.PasswordHash = passwordHash;
+        return Task.CompletedTask;
+    }
+
+    public Task<string> GetPasswordHashAsync(UserIdentity user, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        user.ThrowIfNull(nameof(user));
+        return Task.FromResult(user.PasswordHash);
+    }
+
+    public Task<bool> HasPasswordAsync(UserIdentity user, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        user.ThrowIfNull(nameof(user));
+        return Task.FromResult(!string.IsNullOrWhiteSpace(user.PasswordHash));
     }
 }   
