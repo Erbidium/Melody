@@ -32,7 +32,7 @@ public class InitialTables_202211031808 : Migration
             .WithColumn("EmailConfirmed").AsBoolean().NotNullable()
             .WithColumn("PasswordHash").AsString().Nullable()
             .WithColumn("PhoneNumber").AsString(50).Nullable()
-            .WithColumn("IsBanned").AsBoolean().NotNullable()
+            .WithColumn("IsBanned").AsBoolean().NotNullable().WithDefaultValue(0)
             .WithColumn("IsDeleted").AsBoolean().NotNullable().WithDefaultValue(0);
 
         Create.Table("UserRoles")
