@@ -10,8 +10,8 @@ public class InitialSeed_202211041627 : Migration
     public override void Down()
     {
         Delete.FromTable("Roles")
-            .Row(new RoleRecord(0, "User"))
-            .Row(new RoleRecord(1, "Admin"));
+            .Row(new RoleRecord(0, "User", "user"))
+            .Row(new RoleRecord(1, "Admin", "admin"));
 
         Delete.FromTable("Roles")
             .Row(new GenreRecord(0, "Rock"))

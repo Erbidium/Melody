@@ -20,16 +20,26 @@ public class InitialTables_202211031808 : Migration
     {
         Create.Table("Roles")
            .WithColumn("Id").AsInt64().PrimaryKey().Identity()
-           .WithColumn("Name").AsString(50).NotNullable();
+           .WithColumn("Name").AsString(50).Nullable()
+           .WithColumn("NormalizedName").AsString(50).Nullable();
 
         Create.Table("Users")
             .WithColumn("Id").AsInt64().PrimaryKey().Identity()
-            .WithColumn("Name").AsString(50).NotNullable()
-            .WithColumn("Email").AsString(50).NotNullable()
-            .WithColumn("PhoneNumber").AsString(50).NotNullable()
-            .WithColumn("RoleId").AsInt64().NotNullable().ForeignKey("Roles", "Id")
+            .WithColumn("UserName").AsString(50).Nullable()
+            .WithColumn("NormalizedUserName").AsString(50).Nullable()
+            .WithColumn("Email").AsString(50).Nullable()
+            .WithColumn("NormalizedEmail").AsString(50).Nullable()
+            .WithColumn("EmailConfirmed").AsBoolean().NotNullable()
+            .WithColumn("PasswordHash").AsString().Nullable()
+            .WithColumn("PhoneNumber").AsString(50).Nullable()
             .WithColumn("IsBanned").AsBoolean().NotNullable()
             .WithColumn("IsDeleted").AsBoolean().NotNullable().WithDefaultValue(0);
+
+        Create.Table("UserRoles")
+            .WithColumn("UserId").AsInt64().NotNullable().ForeignKey("Users", "Id")
+            .WithColumn("RoleId").AsInt64().NotNullable().ForeignKey("Roles", "Id");
+
+        Create.PrimaryKey().OnTable("UserRoles").Columns("UserId", "RoleId");
 
         Create.Table("Genres")
            .WithColumn("Id").AsInt64().PrimaryKey().Identity()
