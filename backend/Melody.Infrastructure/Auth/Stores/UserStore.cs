@@ -102,11 +102,11 @@ public class UserStore: IUserStore<UserIdentity>, IUserRoleStore<UserIdentity>, 
         return Task.FromResult<object>(result: null);
     }
 
-    public Task<IdentityResult> UpdateAsync(UserIdentity user, CancellationToken cancellationToken)
+    public async Task<IdentityResult> UpdateAsync(UserIdentity user, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
         user.ThrowIfNull(nameof(user));
-        var updated = await _userRepository.UpdateAsync(user, UserRoles, UserTokens);
+        var updated = await _userRepository.UpdateAsync(user, UserRoles);
         return updated ? IdentityResult.Success : IdentityResult.Failed(new IdentityError
         {
             Code = string.Empty,

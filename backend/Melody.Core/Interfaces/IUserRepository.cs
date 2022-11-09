@@ -10,7 +10,7 @@ public interface IUserRepository
     public Task<UserIdentity> FindByNameAsync(string normalizedUserName);
     public Task<UserIdentity> FindByEmailAsync(string normalizedEmail);
     public Task<bool> UpdateAsync(UserIdentity user);
-    Task<bool> UpdateAsync(UserIdentity user, IList<RoleIdentity> roles, IList<TUserToken> tokens);
+    Task<bool> UpdateAsync(UserIdentity user, IList<RoleIdentity> roles);
     public Task<IEnumerable<RoleIdentity>> GetRolesAsync(long userId);
     public Task<bool> CreateUserRole(UserIdentity user, RoleIdentity role);
     public Task<UserRole> FindUserRoleAsync(long userId, long roleId);
