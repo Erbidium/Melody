@@ -17,7 +17,7 @@ public class GenreRepository : IGenreRepository
     {
         using var connection = _context.CreateConnection();
 
-        var genres = await connection.QueryAsync<GenreRecord>(SqlScriptsResource.GetAllGenres);
+        var genres = await connection.QueryAsync<GenreDb>(SqlScriptsResource.GetAllGenres);
         return genres.Select(record => new Genre(record.Id, record.Name)).ToList().AsReadOnly();
     }
 
@@ -25,7 +25,7 @@ public class GenreRepository : IGenreRepository
     {
         using var connection = _context.CreateConnection();
 
-        var record = await connection.QuerySingleOrDefaultAsync<GenreRecord>(SqlScriptsResource.GetGenreById, new { id });
+        var record = await connection.QuerySingleOrDefaultAsync<GenreDb>(SqlScriptsResource.GetGenreById, new { id });
         return record == null ? null : new Genre(record.Id, record.Name);
     }
 }

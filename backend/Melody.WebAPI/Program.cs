@@ -1,10 +1,11 @@
 using FluentMigrator.Runner;
 using FluentValidation;
-using Melody.Core.Entities;
 using Melody.Core.Interfaces;
 using Melody.Infrastructure.Auth.Stores;
 using Melody.Infrastructure.Data.Context;
+using Melody.Infrastructure.Data.Interfaces;
 using Melody.Infrastructure.Data.Migrations;
+using Melody.Infrastructure.Data.Records;
 using Melody.Infrastructure.Data.Repositories;
 using Melody.WebAPI.Extensions;
 using Melody.WebAPI.MappingProfiles;

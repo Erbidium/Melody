@@ -1,5 +1,5 @@
-﻿using Melody.Core.Entities;
-using Melody.Core.Interfaces;
+﻿using Melody.Infrastructure.Data.Interfaces;
+using Melody.Infrastructure.Data.Records;
 using Microsoft.AspNetCore.Identity;
 
 namespace Melody.Infrastructure.Auth.Stores;

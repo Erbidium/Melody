@@ -1,6 +1,6 @@
-﻿using Melody.Core.Entities;
+﻿using Melody.Infrastructure.Data.Records;
 
-namespace Melody.Core.Interfaces;
+namespace Melody.Infrastructure.Data.Interfaces;
 
 public interface IRoleRepository
 {

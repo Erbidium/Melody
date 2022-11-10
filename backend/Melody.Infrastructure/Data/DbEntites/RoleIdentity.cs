@@ -1,4 +1,4 @@
-﻿namespace Melody.Core.Entities;
+﻿namespace Melody.Infrastructure.Data.Records;
 
 public class RoleIdentity
 {
