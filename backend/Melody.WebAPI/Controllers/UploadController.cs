@@ -12,6 +12,7 @@ namespace Melody.WebAPI.Controllers
         [HttpPost]
         public IActionResult UploadFile(IFormFile uploadedSoundFile)
         {
+            // TODO: check total user uploads size by sql query by filtering isDeleted
             var extension = Path.GetExtension(uploadedSoundFile.FileName);
             /*if (extension != soundExtension)
             {
@@ -44,7 +45,10 @@ namespace Melody.WebAPI.Controllers
             {
                 uploadedSoundFile.CopyTo(stream);
             }
+            // TODO: write information to db about user uploader, upload date, upload size with IsDeleted property
             return Ok(Path.Combine(folderName, guidSubFolders, guidFileName));
         }
+
+        // TODO: add ability to delete files
     }
 }
