@@ -11,9 +11,14 @@ namespace Melody.WebAPI.Controllers
         [HttpPost]
         public IActionResult UploadFile(IFormFile uploadedSoundFile)
         {
+            var extension = Path.GetExtension(uploadedSoundFile.FileName);
+            if (extension != ".mp3")
+            {
+                return BadRequest();
+            }
+
             var folderName = Path.Combine("Sounds");
             var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
-
             if (!Directory.Exists(pathToSave))
             {
                 Directory.CreateDirectory(pathToSave);
