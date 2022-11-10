@@ -83,6 +83,18 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO Users (UserName, NormalizedUserName, Email, NormalizedEmail , EmailConfirmed, PasswordHash, PhoneNumber)
+        ///OUTPUT Inserted.Id
+        ///VALUES (@UserName, @NormalizedUserName, @Email, @NormalizedEmail, @EmailConfirmed, @PasswordHash, @PhoneNumber)
+        ///.
+        /// </summary>
+        internal static string CreateUser {
+            get {
+                return ResourceManager.GetString("CreateUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to UPDATE Playlists
         ///SET IsDeleted = 1
         ///WHERE Id = @Id AND IsDeleted = 0.
@@ -94,6 +106,17 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DELETE
+        ///FROM UserRoles
+        ///WHERE UserId = @UserId;.
+        /// </summary>
+        internal static string DeleteRoles {
+            get {
+                return ResourceManager.GetString("DeleteRoles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to UPDATE Songs
         ///SET IsDeleted = 1
         ///WHERE Id = @Id AND IsDeleted = 0.
@@ -101,6 +124,17 @@ namespace Melody.Infrastructure.Data {
         internal static string DeleteSong {
             get {
                 return ResourceManager.GetString("DeleteSong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DELETE
+        ///FROM Users
+        ///WHERE Id = @Id;.
+        /// </summary>
+        internal static string DeleteUser {
+            get {
+                return ResourceManager.GetString("DeleteUser", resourceCulture);
             }
         }
         
@@ -160,6 +194,19 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SELECT Roles.*
+        ///FROM Roles
+        ///INNER JOIN UserRoles ON UserRoles.RoleId = Roles.Id
+        ///INNER JOIN Users ON UserRoles.UserId = Users.Id
+        ///WHERE Users.Id = @UserId;.
+        /// </summary>
+        internal static string GetRoles {
+            get {
+                return ResourceManager.GetString("GetRoles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SELECT Id, Name, Path, AuthorName, Year, GenreId, IsDeleted
         ///FROM Songs
         ///WHERE Id = @Id AND IsDeleted = 0
@@ -177,6 +224,72 @@ namespace Melody.Infrastructure.Data {
         internal static string GetSongs {
             get {
                 return ResourceManager.GetString("GetSongs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT * 
+        ///FROM Users
+        ///WHERE NormalizedEmail = @NormalizedEmail.
+        /// </summary>
+        internal static string GetUserByEmail {
+            get {
+                return ResourceManager.GetString("GetUserByEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT *
+        ///FROM Users
+        ///WHERE Id = @Id;.
+        /// </summary>
+        internal static string GetUserById {
+            get {
+                return ResourceManager.GetString("GetUserById", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT *
+        ///FROM Users
+        ///WHERE NormalizedUserName = @NormalizedUserName;.
+        /// </summary>
+        internal static string GetUserByName {
+            get {
+                return ResourceManager.GetString("GetUserByName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT *
+        ///FROM UserRoles
+        ///WHERE UserId = @UserId AND RoleId = @RoleId;.
+        /// </summary>
+        internal static string GetUserRoles {
+            get {
+                return ResourceManager.GetString("GetUserRoles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT Users.*
+        ///FROM Users
+        ///INNER JOIN Roles ON Users.RoleId = Roles.Id
+        ///WHERE Roles.NormalizedName = @NormalizedName;.
+        /// </summary>
+        internal static string GetUsersInRole {
+            get {
+                return ResourceManager.GetString("GetUsersInRole", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO UserRoles (UserId, RoleId)
+        ///VALUES (@UserId, @RoleId);.
+        /// </summary>
+        internal static string InsertRoles {
+            get {
+                return ResourceManager.GetString("InsertRoles", resourceCulture);
             }
         }
         
@@ -199,6 +312,25 @@ namespace Melody.Infrastructure.Data {
         internal static string UpdateSong {
             get {
                 return ResourceManager.GetString("UpdateSong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UPDATE Users
+        ///SET UserName = @UserName, 
+        ///    NormalizedUserName = @NormalizedUserName, 
+        ///    Email = @Email, 
+        ///    NormalizedEmail = @NormalizedEmail, 
+        ///    EmailConfirmed = @EmailConfirmed, 
+        ///    PasswordHash = @PasswordHash,  
+        ///    PhoneNumber = @PhoneNumber,
+        ///    IsBanned = @IsBanned,
+        ///    IsDeleted = @IsDeleted
+        ///WHERE Id = @Id;.
+        /// </summary>
+        internal static string UpdateUser {
+            get {
+                return ResourceManager.GetString("UpdateUser", resourceCulture);
             }
         }
     }

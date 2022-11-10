@@ -124,11 +124,20 @@
   <data name="CreateSong" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqlscripts\songs\createsong.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="CreateUser" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\users\createuser.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="DeletePlaylist" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqlscripts\playlists\deleteplaylist.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="DeleteRoles" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\users\deleteroles.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="DeleteSong" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqlscripts\songs\deletesong.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="DeleteUser" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\users\deleteuser.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="GetAllGenres" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqlscripts\genres\getallgenres.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
@@ -145,16 +154,40 @@
   <data name="GetPlaylistById" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqlscripts\playlists\getplaylistbyid.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="GetRoles" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\users\getroles.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="GetSongById" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqlscripts\songs\getsongbyid.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="GetSongs" xml:space="preserve">
     <value />
   </data>
+  <data name="GetUserByEmail" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\users\getuserbyemail.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="GetUserById" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\users\getuserbyid.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="GetUserByName" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\users\getuserbyname.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="GetUserRoles" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\users\getuserroles.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="GetUsersInRole" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\users\getusersinrole.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="InsertRoles" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\users\insertroles.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="UpdatePlaylist" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqlscripts\playlists\updateplaylist.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="UpdateSong" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqlscripts\songs\updatesong.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="UpdateUser" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\users\updateuser.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
 </root>

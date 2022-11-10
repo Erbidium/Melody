@@ -15,11 +15,6 @@ public class UserRepository : IUserRepository
     }
     public async Task<bool> CreateAsync(UserIdentity user)
     {
-        const string sql = @"
-            INSERT INTO Users (UserName, NormalizedUserName, Email, NormalizedEmail , EmailConfirmed, PasswordHash, PhoneNumber)
-            OUTPUT Inserted.Id
-            VALUES (@UserName, @NormalizedUserName, @Email, @NormalizedEmail, @EmailConfirmed, @PasswordHash, @PhoneNumber);
-        ";
         var parameters = new DynamicParameters();
         parameters.Add("UserName", user.UserName, DbType.String);
         parameters.Add("NormalizedUserName", "default", DbType.String);
@@ -31,65 +26,39 @@ public class UserRepository : IUserRepository
         parameters.Add("PhoneNumber", user.PhoneNumber, DbType.String);
 
         using var connection = _context.CreateConnection();
-        var id = await connection.ExecuteScalarAsync<long>(sql, parameters);
-        user.Id = id;
+        user.Id = await connection.ExecuteScalarAsync<long>(SqlScriptsResource.CreateUser, parameters);
         return true;
     }
 
     public async Task<bool> DeleteAsync(long userId)
     {
-        const string sql = @"
-            DELETE
-            FROM Users
-            WHERE Id = @Id;
-        ";
         using var connection = _context.CreateConnection();
-        var rowsDeleted = await connection.ExecuteAsync(sql, new { Id = userId });
+        var rowsDeleted = await connection.ExecuteAsync(SqlScriptsResource.DeleteUser, new { Id = userId });
         return rowsDeleted == 1;
     }
 
     public async Task<UserIdentity> FindByEmailAsync(string normalizedEmail)
     {
-        const string sql = @"
-            SELECT * 
-            FROM Users
-            WHERE NormalizedEmail = @NormalizedEmail;
-        ";
         using var connection = _context.CreateConnection();
-        return await connection.QuerySingleOrDefaultAsync<UserIdentity>(sql, new { NormalizedEmail = normalizedEmail });
+        return await connection.QuerySingleOrDefaultAsync<UserIdentity>(SqlScriptsResource.GetUserByEmail, new { NormalizedEmail = normalizedEmail });
     }
 
     public async Task<UserIdentity> FindByIdAsync(long userId)
     {
-        const string sql = @"
-            SELECT *
-            FROM Users
-            WHERE Id = @Id;
-        ";
         using var connection = _context.CreateConnection();
-        return await connection.QuerySingleOrDefaultAsync<UserIdentity>(sql, new { Id = userId });
+        return await connection.QuerySingleOrDefaultAsync<UserIdentity>(SqlScriptsResource.GetUserById, new { Id = userId });
     }
 
     public async Task<UserIdentity> FindByNameAsync(string normalizedUserName)
     {
-        const string sql = @"
-            SELECT *
-            FROM Users
-            WHERE NormalizedUserName = @NormalizedUserName;
-        ";
         using var connection = _context.CreateConnection();
-        return await connection.QuerySingleOrDefaultAsync<UserIdentity>(sql, new { NormalizedUserName = normalizedUserName });
+        return await connection.QuerySingleOrDefaultAsync<UserIdentity>(SqlScriptsResource.GetUserByName, new { NormalizedUserName = normalizedUserName });
     }
 
     public async Task<UserRole> FindUserRoleAsync(long userId, long roleId)
     {
-        const string sql = @"
-            SELECT *
-            FROM UserRoles
-            WHERE UserId = @UserId AND RoleId = @RoleId;
-        ";
         using var connection = _context.CreateConnection();
-        var userRole = await connection.QuerySingleOrDefaultAsync<UserRole>(sql, new
+        var userRole = await connection.QuerySingleOrDefaultAsync<UserRole>(SqlScriptsResource.GetUserRoles, new
         {
             UserId = userId,
             RoleId = roleId
@@ -99,46 +68,20 @@ public class UserRepository : IUserRepository
 
     public async Task<IEnumerable<RoleIdentity>> GetRolesAsync(long userId)
     {
-        const string sql = @"
-            SELECT Roles.*
-            FROM Roles
-            INNER JOIN UserRoles ON UserRoles.RoleId = Roles.Id
-            INNER JOIN Users ON UserRoles.UserId = Users.Id
-            WHERE Users.Id = @UserId;
-        ";
         using var connection = _context.CreateConnection();
-        return await connection.QueryAsync<RoleIdentity>(sql, new { UserId = userId });
+        return await connection.QueryAsync<RoleIdentity>(SqlScriptsResource.GetRoles, new { UserId = userId });
     }
 
     public async Task<IEnumerable<UserIdentity>> GetUsersInRoleAsync(string roleName)
     {
-        const string sql = @"
-            SELECT Users.*
-            FROM Users
-            INNER JOIN Roles ON Users.RoleId = Roles.Id
-            WHERE Roles.NormalizedName = @NormalizedName;
-        ";
         using var connection = _context.CreateConnection();
-        return await connection.QueryAsync<UserIdentity>(sql, new { NormalizedName = roleName });
+        return await connection.QueryAsync<UserIdentity>(SqlScriptsResource.GetUsersInRole, new { NormalizedName = roleName });
     }
 
     public async Task<bool> UpdateAsync(UserIdentity user)
     {
-        const string updateUserSql = @"
-            UPDATE Users
-            SET UserName = @UserName, 
-                NormalizedUserName = @NormalizedUserName, 
-                Email = @Email, 
-                NormalizedEmail = @NormalizedEmail, 
-                EmailConfirmed = @EmailConfirmed, 
-                PasswordHash = @PasswordHash,  
-                PhoneNumber = @PhoneNumber,
-                IsBanned = @IsBanned
-                IsDeleted = @IsDeleted
-            WHERE Id = @Id;
-        ";
         using var connection = _context.CreateConnection();
-        await connection.ExecuteAsync(updateUserSql, new
+        await connection.ExecuteAsync(SqlScriptsResource.UpdateUser, new
         {
             user.UserName,
             user.NormalizedUserName,
@@ -155,23 +98,10 @@ public class UserRepository : IUserRepository
 
     public async Task<bool> UpdateAsync(UserIdentity user, IList<UserRole> roles)
     {
-        const string updateUserSql = @"
-            UPDATE Users
-            SET UserName = @UserName, 
-                NormalizedUserName = @NormalizedUserName, 
-                Email = @Email, 
-                NormalizedEmail = @NormalizedEmail, 
-                EmailConfirmed = @EmailConfirmed, 
-                PasswordHash = @PasswordHash,  
-                PhoneNumber = @PhoneNumber,
-                IsBanned = @IsBanned,
-                IsDeleted = @IsDeleted
-            WHERE Id = @Id;
-        ";
         using var connection = _context.CreateConnection();
         connection.Open();
         using var transaction = connection.BeginTransaction();
-        await connection.ExecuteAsync(updateUserSql, new
+        await connection.ExecuteAsync(SqlScriptsResource.UpdateUser, new
         {
             user.UserName,
             user.NormalizedUserName,
@@ -186,17 +116,8 @@ public class UserRepository : IUserRepository
         }, transaction);
         if (roles?.Count > 0)
         {
-            const string deleteRolesSql = @"
-                DELETE
-                FROM UserRoles
-                WHERE UserId = @UserId;
-            ";
-            await connection.ExecuteAsync(deleteRolesSql, new { UserId = user.Id }, transaction);
-            const string insertRolesSql = @"
-                INSERT INTO UserRoles (UserId, RoleId)
-                VALUES (@UserId, @RoleId);
-            ";
-            await connection.ExecuteAsync(insertRolesSql, roles.Select(x => new
+            await connection.ExecuteAsync(SqlScriptsResource.DeleteRoles, new { UserId = user.Id }, transaction);
+            await connection.ExecuteAsync(SqlScriptsResource.InsertRoles, roles.Select(x => new
             {
                 UserId = user.Id,
                 x.RoleId
