@@ -18,7 +18,7 @@ public class SongRepository : ISongRepository
     {
         using var connection = _context.CreateConnection();
 
-        var songs = await connection.QueryAsync<SongRecord>(SqlScriptsResource.GetAllSongs);
+        var songs = await connection.QueryAsync<SongDb>(SqlScriptsResource.GetAllSongs);
         return songs.Select(record => new Song(record.Name, record.Path, record.AuthorName, record.Year, record.GenreId, record.Id)).ToList().AsReadOnly();
     }
 
@@ -26,7 +26,7 @@ public class SongRepository : ISongRepository
     {
         using var connection = _context.CreateConnection();
 
-        var record = await connection.QuerySingleOrDefaultAsync<SongRecord>(SqlScriptsResource.GetSongById, new { id });
+        var record = await connection.QuerySingleOrDefaultAsync<SongDb>(SqlScriptsResource.GetSongById, new { id });
         return record == null ? null : new Song(record.Name, record.Path, record.AuthorName, record.Year, record.GenreId, record.Id);
     }
 
