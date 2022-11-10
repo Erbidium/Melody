@@ -10,6 +10,7 @@ using Melody.Infrastructure.Data.Repositories;
 using Melody.WebAPI.Extensions;
 using Melody.WebAPI.MappingProfiles;
 using Melody.WebAPI.Middlewares;
+using Melody.WebAPI.Services;
 using Melody.WebAPI.Validators.User;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -29,6 +30,8 @@ builder.Services.AddScoped<IGenreRepository, GenreRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+
+builder.Services.AddScoped<TokenService>();
 
 builder.Services.AddScoped<IUserStore<UserIdentity>, UserStore>();
 builder.Services.AddScoped<IUserRoleStore<UserIdentity>, UserStore>();

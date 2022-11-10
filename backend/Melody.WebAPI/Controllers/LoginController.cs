@@ -1,14 +1,13 @@
 ﻿using Melody.Infrastructure.Auth.Models;
 using Melody.Infrastructure.Data.Interfaces;
 using Melody.Infrastructure.Data.Records;
+using Melody.WebAPI.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 
 namespace Melody.WebAPI.Controllers
 {
@@ -16,15 +15,17 @@ namespace Melody.WebAPI.Controllers
     [ApiController]
     public class LoginController : ControllerBase
     {
-        private IConfiguration _configuration;
-        private UserManager<UserIdentity> _userManager;
-        private IRefreshTokenRepository _refreshTokenRepository;
+        private readonly IConfiguration _configuration;
+        private readonly UserManager<UserIdentity> _userManager;
+        private readonly IRefreshTokenRepository _refreshTokenRepository;
+        private readonly TokenService _tokenService;
 
-        public LoginController(IConfiguration configuration, UserManager<UserIdentity> userManager, IRefreshTokenRepository refreshTokenRepository)
+        public LoginController(IConfiguration configuration, UserManager<UserIdentity> userManager, IRefreshTokenRepository refreshTokenRepository, TokenService tokenService)
         {
             _configuration = configuration;
             _userManager = userManager;
             _refreshTokenRepository = refreshTokenRepository;
+            _tokenService = tokenService;
         }
 
         [AllowAnonymous]
@@ -35,8 +36,9 @@ namespace Melody.WebAPI.Controllers
 
             if (user != null)
             {
-                var accessToken = await GenerateAccessToken(user);
-                var refreshToken = GenerateRefreshToken(user);
+                var roles = await _userManager.GetRolesAsync(user);
+                var accessToken = _tokenService.GenerateAccessToken(user, roles);
+                var refreshToken = _tokenService.GenerateRefreshToken(user);
                 await _refreshTokenRepository.CreateOrUpdateAsync(refreshToken, user.Id);
                 return Ok(new { accessToken, refreshToken });
             }
@@ -49,7 +51,7 @@ namespace Melody.WebAPI.Controllers
         public async Task<IActionResult> GetAccessToken(string refreshTokenString)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var validationParameters = GetValidationParameters();
+            var validationParameters = _tokenService.GetValidationParameters();
             try
             {
                 SecurityToken validatedToken;
@@ -59,7 +61,8 @@ namespace Melody.WebAPI.Controllers
                 {
                     var email = principal.FindFirst(c => c.Type == ClaimTypes.Email).Value;
                     var user = await _userManager.FindByEmailAsync(email);
-                    return Ok(await GenerateAccessToken(user));
+                    var roles = await _userManager.GetRolesAsync(user);
+                    return Ok(_tokenService.GenerateAccessToken(user, roles));
                 }
                 return Unauthorized();
             }
@@ -70,63 +73,6 @@ namespace Melody.WebAPI.Controllers
             }
             
         }
-
-        private async Task<string> GenerateAccessToken(UserIdentity user)
-        {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-            var roles = await _userManager.GetRolesAsync(user);
-
-            var claims = new List<Claim>()
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.UserName),
-                new Claim(ClaimTypes.Email, user.Email),
-            };
-            claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)).ToArray());
-
-            var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
-                _configuration["Jwt:Audience"],
-                claims,
-                expires: DateTime.Now.AddMinutes(15),
-                signingCredentials: credentials);
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
-
-        private string GenerateRefreshToken(UserIdentity user)
-        {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-            var claims = new List<Claim>()
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.UserName),
-                new Claim(ClaimTypes.Email, user.Email),
-            };
-
-            var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
-                _configuration["Jwt:Audience"],
-                claims,
-                expires: DateTime.Now.AddDays(60),
-                signingCredentials: credentials);
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
-
-        private TokenValidationParameters GetValidationParameters()
-        {
-            return new TokenValidationParameters()
-            {
-                ValidateLifetime = true,
-                ValidateAudience = true,
-                ValidateIssuer = true,
-                ValidIssuer = _configuration["Jwt:Issuer"],
-                ValidAudience = _configuration["Jwt:Audience"],
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]))
-            };
-        }
-
         private async Task<UserIdentity?> Authenticate(UserLogin userLogin)
         {
             var currentUser = await _userManager.FindByEmailAsync(userLogin.Email);
