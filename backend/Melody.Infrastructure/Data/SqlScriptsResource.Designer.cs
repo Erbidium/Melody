@@ -72,6 +72,16 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO Roles
+        ///VALUES (@Name, @NormalizedName).
+        /// </summary>
+        internal static string CreateRole {
+            get {
+                return ResourceManager.GetString("CreateRole", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to INSERT INTO Songs (Name, Path, AuthorName, Year, GenreId)
         ///OUTPUT Inserted.Id
         ///VALUES (@Name, @Path, @AuthorName, @Year, @GenreId).
@@ -102,6 +112,17 @@ namespace Melody.Infrastructure.Data {
         internal static string DeletePlaylist {
             get {
                 return ResourceManager.GetString("DeletePlaylist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DELETE
+        ///FROM Roles
+        ///WHERE Id = @Id;.
+        /// </summary>
+        internal static string DeleteRole {
+            get {
+                return ResourceManager.GetString("DeleteRole", resourceCulture);
             }
         }
         
@@ -190,6 +211,28 @@ namespace Melody.Infrastructure.Data {
         internal static string GetPlaylistById {
             get {
                 return ResourceManager.GetString("GetPlaylistById", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT Id, Name, NormalizedName
+        ///FROM Roles
+        ///WHERE Id = @Id;.
+        /// </summary>
+        internal static string GetRoleById {
+            get {
+                return ResourceManager.GetString("GetRoleById", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT Id, Name, NormalizedName
+        ///FROM Roles
+        ///WHERE NormalizedName = @NormalizedName;.
+        /// </summary>
+        internal static string GetRoleByName {
+            get {
+                return ResourceManager.GetString("GetRoleByName", resourceCulture);
             }
         }
         
@@ -301,6 +344,17 @@ namespace Melody.Infrastructure.Data {
         internal static string UpdatePlaylist {
             get {
                 return ResourceManager.GetString("UpdatePlaylist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UPDATE Roles
+        ///SET Name = @Name, NormalizedName = @NormalizedName
+        ///WHERE Id = @Id;.
+        /// </summary>
+        internal static string UpdateRole {
+            get {
+                return ResourceManager.GetString("UpdateRole", resourceCulture);
             }
         }
         

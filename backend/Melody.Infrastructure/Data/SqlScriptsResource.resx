@@ -121,6 +121,9 @@
   <data name="CreatePlaylist" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqlscripts\playlists\createplaylist.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="CreateRole" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\roles\createrole.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="CreateSong" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqlscripts\songs\createsong.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
@@ -129,6 +132,9 @@
   </data>
   <data name="DeletePlaylist" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqlscripts\playlists\deleteplaylist.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="DeleteRole" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\roles\deleterole.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="DeleteRoles" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqlscripts\users\deleteroles.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
@@ -153,6 +159,12 @@
   </data>
   <data name="GetPlaylistById" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqlscripts\playlists\getplaylistbyid.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="GetRoleById" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\roles\getrolebyid.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="GetRoleByName" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\roles\getrolebyname.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="GetRoles" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqlscripts\users\getroles.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
@@ -183,6 +195,9 @@
   </data>
   <data name="UpdatePlaylist" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqlscripts\playlists\updateplaylist.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="UpdateRole" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\roles\updaterole.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="UpdateSong" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqlscripts\songs\updatesong.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
