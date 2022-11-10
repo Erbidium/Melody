@@ -25,7 +25,7 @@ namespace Melody.Infrastructure.Data.Repositories
                 var insertQuery = "INSERT INTO UserRefreshTokens(UserId, RefreshToken) VALUES (@UserId, @Token)";
                 var parameters = new DynamicParameters();
                 parameters.Add("UserId", userId, DbType.Int64);
-                parameters.Add("RefreshToken", token, DbType.String);
+                parameters.Add("Token", token, DbType.String);
 
                 await connection.ExecuteAsync(insertQuery, parameters);
             }

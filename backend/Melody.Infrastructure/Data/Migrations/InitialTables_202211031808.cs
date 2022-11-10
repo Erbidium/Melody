@@ -40,7 +40,7 @@ public class InitialTables_202211031808 : Migration
         Create.Table("UserRefreshTokens")
             .WithColumn("Id").AsInt64().PrimaryKey().Identity()
             .WithColumn("UserId").AsInt64().NotNullable().ForeignKey("Users", "Id")
-            .WithColumn("RefreshToken").AsString().NotNullable().Unique();
+            .WithColumn("RefreshToken").AsString(int.MaxValue).NotNullable();
 
         Create.Table("UserRoles")
             .WithColumn("UserId").AsInt64().NotNullable().ForeignKey("Users", "Id")

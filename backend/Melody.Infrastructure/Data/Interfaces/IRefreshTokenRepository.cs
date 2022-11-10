@@ -2,7 +2,7 @@
 
 namespace Melody.Infrastructure.Data.Interfaces;
 
-internal interface IRefreshTokenRepository
+public interface IRefreshTokenRepository
 {
     Task<bool> CreateOrUpdateAsync(string token, long userId);
     Task<bool> DeleteAsync(string Token);
