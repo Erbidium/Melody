@@ -1,4 +1,5 @@
-﻿using Melody.Infrastructure.Data.Records;
+﻿using Melody.Infrastructure.Auth.Models;
+using Melody.Infrastructure.Data.Records;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -20,10 +21,10 @@ public class TokenService
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
         var claims = new List<Claim>()
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.UserName),
-                new Claim(ClaimTypes.Email, user.Email),
-            };
+        {
+            new Claim(ClaimTypes.NameIdentifier, user.UserName),
+            new Claim(ClaimTypes.Email, user.Email),
+        };
 
         var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
             _configuration["Jwt:Audience"],
@@ -63,6 +64,17 @@ public class TokenService
             ValidIssuer = _configuration["Jwt:Issuer"],
             ValidAudience = _configuration["Jwt:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]))
+        };
+    }
+
+    public UserToken? GetCurrentUser(ClaimsIdentity identity)
+    {
+        var userClaims = identity.Claims;
+        return new UserToken
+        {
+            UserName = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.NameIdentifier)?.Value,
+            Email = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Email)?.Value,
+            Roles = userClaims.Where(o => o.Type == ClaimTypes.Role).Select(r => r.Value),
         };
     }
 }
