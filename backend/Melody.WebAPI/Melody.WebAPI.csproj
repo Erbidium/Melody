@@ -16,4 +16,8 @@
     <ProjectReference Include="..\Melody.Infrastructure\Melody.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DTO\Auth\" />
+  </ItemGroup>
+
 </Project>

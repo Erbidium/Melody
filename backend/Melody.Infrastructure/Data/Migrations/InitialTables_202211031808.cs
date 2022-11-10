@@ -13,6 +13,8 @@ public class InitialTables_202211031808 : Migration
         Delete.Table("FavouriteSongs");
         Delete.Table("Songs");
         Delete.Table("Genres");
+        Delete.Table("UserRoles");
+        Delete.Table("UserRefreshTokens");
         Delete.Table("Users");
         Delete.Table("Roles");
     }   
@@ -34,6 +36,11 @@ public class InitialTables_202211031808 : Migration
             .WithColumn("PhoneNumber").AsString(50).Nullable().Unique()
             .WithColumn("IsBanned").AsBoolean().NotNullable().WithDefaultValue(0)
             .WithColumn("IsDeleted").AsBoolean().NotNullable().WithDefaultValue(0);
+
+        Create.Table("UserRefreshTokens")
+            .WithColumn("Id").AsInt64().PrimaryKey().Identity()
+            .WithColumn("UserId").AsInt64().NotNullable().ForeignKey("Users", "Id")
+            .WithColumn("RefreshToken").AsString().NotNullable().Unique();
 
         Create.Table("UserRoles")
             .WithColumn("UserId").AsInt64().NotNullable().ForeignKey("Users", "Id")
