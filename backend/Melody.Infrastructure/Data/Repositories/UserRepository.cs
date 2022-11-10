@@ -2,6 +2,7 @@
 using Melody.Core.Entities;
 using Melody.Core.Interfaces;
 using Melody.Infrastructure.Data.Context;
+using System.Data;
 
 namespace Melody.Infrastructure.Data.Repositories;
 
@@ -15,22 +16,24 @@ public class UserRepository : IUserRepository
     public async Task<bool> CreateAsync(UserIdentity user)
     {
         const string sql = @"
-            INSERT INTO Users
-            VALUES (@Id, @UserName, @NormalizedUserName, @Email, @NormalizedEmail, @EmailConfirmed, @PasswordHash, @PhoneNumber);
+            INSERT INTO Users (UserName, NormalizedUserName, Email, NormalizedEmail , EmailConfirmed, PasswordHash, PhoneNumber)
+            OUTPUT Inserted.Id
+            VALUES (@UserName, @NormalizedUserName, @Email, @NormalizedEmail, @EmailConfirmed, @PasswordHash, @PhoneNumber);
         ";
+        var parameters = new DynamicParameters();
+        parameters.Add("UserName", user.UserName, DbType.String);
+        parameters.Add("NormalizedUserName", "default", DbType.String);
+        parameters.Add("Email", user.Email, DbType.String);
+        parameters.Add("NormalizedEmail", "default", DbType.String);
+        parameters.Add("EmailConfirmed", user.EmailConfirmed, DbType.Boolean);
+        parameters.Add("PasswordHash", user.PasswordHash, DbType.String);
+        parameters.Add("PhoneNumber", user.PhoneNumber, DbType.String);
+        parameters.Add("PhoneNumber", user.PhoneNumber, DbType.String);
+
         using var connection = _context.CreateConnection();
-        var rowsInserted = await connection.ExecuteAsync(sql, new
-        {
-            user.Id,
-            user.UserName,
-            user.NormalizedUserName,
-            user.Email,
-            user.NormalizedEmail,
-            user.EmailConfirmed,
-            user.PasswordHash,
-            user.PhoneNumber,
-        });
-        return rowsInserted == 1;
+        var id = await connection.ExecuteScalarAsync<long>(sql, parameters);
+        user.Id = id;
+        return true;
     }
 
     public async Task<bool> DeleteAsync(long userId)
@@ -99,7 +102,8 @@ public class UserRepository : IUserRepository
         const string sql = @"
             SELECT Roles.*
             FROM Roles
-            INNER JOIN Users ON Users.RoleId = Roles.Id
+            INNER JOIN UserRoles ON UserRoles.RoleId = Roles.Id
+            INNER JOIN Users ON UserRoles.UserId = Users.Id
             WHERE Users.Id = @UserId;
         ";
         using var connection = _context.CreateConnection();
@@ -160,11 +164,12 @@ public class UserRepository : IUserRepository
                 EmailConfirmed = @EmailConfirmed, 
                 PasswordHash = @PasswordHash,  
                 PhoneNumber = @PhoneNumber,
-                IsBanned = @IsBanned
+                IsBanned = @IsBanned,
                 IsDeleted = @IsDeleted
             WHERE Id = @Id;
         ";
         using var connection = _context.CreateConnection();
+        connection.Open();
         using var transaction = connection.BeginTransaction();
         await connection.ExecuteAsync(updateUserSql, new
         {
@@ -176,7 +181,8 @@ public class UserRepository : IUserRepository
             user.PasswordHash,
             user.PhoneNumber,
             user.IsBanned,
-            user.IsDeleted
+            user.IsDeleted,
+            user.Id
         }, transaction);
         if (roles?.Count > 0)
         {
@@ -190,7 +196,8 @@ public class UserRepository : IUserRepository
                 INSERT INTO UserRoles (UserId, RoleId)
                 VALUES (@UserId, @RoleId);
             ";
-            await connection.ExecuteAsync(insertRolesSql, roles.Select(x => new {
+            await connection.ExecuteAsync(insertRolesSql, roles.Select(x => new
+            {
                 UserId = user.Id,
                 x.RoleId
             }), transaction);

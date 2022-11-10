@@ -31,7 +31,7 @@ namespace Melody.WebAPI.Controllers
 
             if (user != null)
             {
-                var token = Generate(user);
+                var token = await Generate(user);
                 return Ok(token);
             }
 

@@ -27,11 +27,11 @@ public class InitialTables_202211031808 : Migration
             .WithColumn("Id").AsInt64().PrimaryKey().Identity()
             .WithColumn("UserName").AsString(50).Nullable()
             .WithColumn("NormalizedUserName").AsString(50).Nullable()
-            .WithColumn("Email").AsString(50).Nullable()
-            .WithColumn("NormalizedEmail").AsString(50).Nullable()
+            .WithColumn("Email").AsString(50).Nullable().Unique()
+            .WithColumn("NormalizedEmail").AsString(50).Nullable().Unique()
             .WithColumn("EmailConfirmed").AsBoolean().NotNullable()
             .WithColumn("PasswordHash").AsString().Nullable()
-            .WithColumn("PhoneNumber").AsString(50).Nullable()
+            .WithColumn("PhoneNumber").AsString(50).Nullable().Unique()
             .WithColumn("IsBanned").AsBoolean().NotNullable().WithDefaultValue(0)
             .WithColumn("IsDeleted").AsBoolean().NotNullable().WithDefaultValue(0);
 
