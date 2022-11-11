@@ -181,7 +181,7 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT Id, Name, Path, AuthorName, Year, GenreId, IsDeleted
+        ///   Looks up a localized string similar to SELECT Id, UserId, UploadedAt,SizeBytes, Name, Path, AuthorName, Year, GenreId, IsDeleted
         ///FROM Songs
         ///WHERE IsDeleted = 0
         ///.
@@ -237,7 +237,7 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT Roles.*
+        ///   Looks up a localized string similar to SELECT Roles.Id, Roles.Name, Roles.NormalizedName
         ///FROM Roles
         ///INNER JOIN UserRoles ON UserRoles.RoleId = Roles.Id
         ///INNER JOIN Users ON UserRoles.UserId = Users.Id
@@ -250,7 +250,7 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT Id, Name, Path, AuthorName, Year, GenreId, IsDeleted
+        ///   Looks up a localized string similar to SELECT Id, UserId, UploadedAt,SizeBytes, Name, Path, AuthorName, Year, GenreId, IsDeleted
         ///FROM Songs
         ///WHERE Id = @Id AND IsDeleted = 0
         ///.
@@ -271,7 +271,7 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT * 
+        ///   Looks up a localized string similar to SELECT Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, PhoneNumber, IsBanned, IsDeleted
         ///FROM Users
         ///WHERE NormalizedEmail = @NormalizedEmail.
         /// </summary>
@@ -282,7 +282,16 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT *
+        ///   Looks up a localized string similar to SELECT Id,
+        ///	   UserName,
+        ///	   NormalizedUserName,
+        ///	   Email,
+        ///	   NormalizedEmail,
+        ///	   EmailConfirmed,
+        ///	   PasswordHash,
+        ///	   PhoneNumber,
+        ///	   IsBanned,
+        ///	   IsDeleted
         ///FROM Users
         ///WHERE Id = @Id;.
         /// </summary>
@@ -293,7 +302,7 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT *
+        ///   Looks up a localized string similar to SELECT Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, PhoneNumber, IsBanned, IsDeleted
         ///FROM Users
         ///WHERE NormalizedUserName = @NormalizedUserName;.
         /// </summary>
@@ -304,7 +313,7 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT *
+        ///   Looks up a localized string similar to SELECT UserId, RoleId
         ///FROM UserRoles
         ///WHERE UserId = @UserId AND RoleId = @RoleId;.
         /// </summary>
@@ -315,7 +324,16 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT Users.*
+        ///   Looks up a localized string similar to SELECT Users.Id,
+        ///	   Users.UserName,
+        ///	   Users.NormalizedUserName,
+        ///	   Users.Email,
+        ///	   Users.NormalizedEmail,
+        ///	   Users.EmailConfirmed,
+        ///	   Users.PasswordHash,
+        ///	   Users.PhoneNumber,
+        ///	   Users.IsBanned,
+        ///	   Users.IsDeleted
         ///FROM Users
         ///INNER JOIN Roles ON Users.RoleId = Roles.Id
         ///WHERE Roles.NormalizedName = @NormalizedName;.
