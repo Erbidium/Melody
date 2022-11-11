@@ -24,7 +24,7 @@ public class SongController : ControllerBase
     private readonly IMapper _mapper;
     private readonly IValidator<NewSongDto> _newSongDtoValidator;
     private readonly IValidator<UpdateSongDto> _updateSongDtoValidator;
-    private const string soundExtension = ".bmp";
+    private const string soundExtension = ".mp3";
     private const string folderName = "Sounds";
 
     public SongController(ISongRepository songRepository, IMapper mapper, IValidator<NewSongDto> newSongDtoValidator, IValidator<UpdateSongDto> updateSongDtoValidator, TokenService tokenService, UserManager<UserIdentity> userManager)
@@ -56,16 +56,27 @@ public class SongController : ControllerBase
 
     [Authorize]
     [HttpPost]
-    public async Task<ActionResult<Song>> CreateSong(NewSongDto newSong, IFormFile uploadedSoundFile)
+    public async Task<ActionResult<Song>> CreateSong(NewSongDto newSong)
     {
+        // validate path
         ValidationResult result = await _newSongDtoValidator.ValidateAsync(newSong);
         if (!result.IsValid)
         {
             result.AddToModelState(ModelState);
             return BadRequest(ModelState);
         }
+        var identity = HttpContext.User.Identity as ClaimsIdentity;
+        var currentUserFromToken = _tokenService.GetCurrentUser(identity);
+        var user = await _userManager.FindByEmailAsync(currentUserFromToken.Email);
+        var song = new Song(user.Id, newSong.Name, newSong.Path, newSong.AuthorName, newSong.Year, newSong.GenreId, newSong.SizeInBytes, DateOnly.FromDateTime(DateTime.Now));
+        return Ok(await _songRepository.Create(song));
+    }
 
-        // TODO: check total user uploads size by sql query by filtering isDeleted and reject upload if limit was reached
+    //[Authorize]
+    [HttpPost("Upload")]
+    public async Task<IActionResult> UploadFile(IFormFile uploadedSoundFile)
+    {
+        // TODO: check total user uploads size by sql query by filtering isDeleted
         var extension = Path.GetExtension(uploadedSoundFile.FileName);
         if (extension != soundExtension)
         {
@@ -79,9 +90,10 @@ public class SongController : ControllerBase
             Directory.CreateDirectory(pathToSave);
         }
 
+        string fileName = Path.GetFileName(uploadedSoundFile.FileName);
         var guidFileName = Guid.NewGuid().ToString() + soundExtension;
         var guidSubFolders = string.Empty;
-        for(int i = 0; i < 6; i = i + 2)
+        for (int i = 0; i < 6; i = i + 2)
         {
             var guidSubstr = guidFileName.Substring(i, 2);
             guidSubFolders = Path.Combine(guidSubFolders, guidSubstr);
@@ -92,16 +104,12 @@ public class SongController : ControllerBase
             }
         }
         var fullPath = Path.Combine(pathToSave, guidSubFolders, guidFileName);
-            
         using (var stream = new FileStream(fullPath, FileMode.Create))
         {
-            uploadedSoundFile.CopyTo(stream);
+            await uploadedSoundFile.CopyToAsync(stream);
         }
-        var identity = HttpContext.User.Identity as ClaimsIdentity;
-        var currentUserFromToken = _tokenService.GetCurrentUser(identity);
-        var user = await _userManager.FindByEmailAsync(currentUserFromToken.Email);
-        var song = new Song(user.Id, newSong.Name, Path.Combine(folderName, guidSubFolders, guidFileName), newSong.AuthorName, newSong.Year, newSong.GenreId, uploadedSoundFile.Length, DateOnly.FromDateTime(DateTime.Now));
-        return Ok(await _songRepository.Create(song));
+        return Ok(new { Path = Path.Combine(folderName, guidSubFolders, guidFileName), Size = uploadedSoundFile.Length });
+
     }
 
     [HttpPut]
