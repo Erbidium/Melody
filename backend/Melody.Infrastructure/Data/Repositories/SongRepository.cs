@@ -72,4 +72,11 @@ public class SongRepository : ISongRepository
 
         await connection.ExecuteAsync(SqlScriptsResource.DeleteSong, new { id });
     }
+
+    public async Task<long> GetTotalBytesSumUploadsByUser(long userId)
+    {
+        using var connection = _context.CreateConnection();
+
+        return await connection.ExecuteScalarAsync<long>(SqlScriptsResource.GetUserTotalUploadsSize, new { UserId = userId });
+    }
 }

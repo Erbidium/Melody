@@ -26,6 +26,7 @@ public class SongController : ControllerBase
     private readonly IValidator<UpdateSongDto> _updateSongDtoValidator;
     private const string soundExtension = ".mp3";
     private const string folderName = "Sounds";
+    private const long userUploadsLimit = 1000000000;
 
     public SongController(ISongRepository songRepository, IMapper mapper, IValidator<NewSongDto> newSongDtoValidator, IValidator<UpdateSongDto> updateSongDtoValidator, TokenService tokenService, UserManager<UserIdentity> userManager)
     {
@@ -72,11 +73,20 @@ public class SongController : ControllerBase
         return Ok(await _songRepository.Create(song));
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpPost("Upload")]
     public async Task<IActionResult> UploadFile(IFormFile uploadedSoundFile)
     {
-        // TODO: check total user uploads size by sql query by filtering isDeleted
+        var identity = HttpContext.User.Identity as ClaimsIdentity;
+        var currentUserFromToken = _tokenService.GetCurrentUser(identity);
+        var user = await _userManager.FindByEmailAsync(currentUserFromToken.Email);
+
+        var userUploadsSize = await _songRepository.GetTotalBytesSumUploadsByUser(user.Id);
+        if (userUploadsSize + uploadedSoundFile.Length > userUploadsLimit)
+        {
+            return BadRequest("You have reached your upload limit 1 Gb");
+        }
+
         var extension = Path.GetExtension(uploadedSoundFile.FileName);
         if (extension != soundExtension)
         {

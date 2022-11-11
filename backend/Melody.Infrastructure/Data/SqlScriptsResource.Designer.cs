@@ -327,6 +327,17 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SELECT SUM(SizeBytes)
+        ///FROM Songs
+        ///WHERE UserId = @UserId.
+        /// </summary>
+        internal static string GetUserTotalUploadsSize {
+            get {
+                return ResourceManager.GetString("GetUserTotalUploadsSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to INSERT INTO UserRoles (UserId, RoleId)
         ///VALUES (@UserId, @RoleId);.
         /// </summary>
