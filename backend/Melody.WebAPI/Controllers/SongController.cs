@@ -92,7 +92,7 @@ public class SongController : ControllerBase
         {
             return BadRequest();
         }
-        
+
         return Ok(new { Path = await WriteFile(uploadedSoundFile), Size = uploadedSoundFile.Length });
 
     }
