@@ -15,7 +15,7 @@ using System.Security.Claims;
 namespace Melody.WebAPI.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class SongController : ControllerBase
 {
     private readonly ISongRepository _songRepository;

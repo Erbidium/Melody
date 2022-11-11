@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Melody.WebAPI.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class PlaylistController : ControllerBase
 {
     private readonly IPlaylistRepository _playlistRepository;
