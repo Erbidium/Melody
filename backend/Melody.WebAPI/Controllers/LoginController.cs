@@ -18,9 +18,9 @@ namespace Melody.WebAPI.Controllers
         private readonly IConfiguration _configuration;
         private readonly UserManager<UserIdentity> _userManager;
         private readonly IRefreshTokenRepository _refreshTokenRepository;
-        private readonly TokenService _tokenService;
+        private readonly ITokenService _tokenService;
 
-        public LoginController(IConfiguration configuration, UserManager<UserIdentity> userManager, IRefreshTokenRepository refreshTokenRepository, TokenService tokenService)
+        public LoginController(IConfiguration configuration, UserManager<UserIdentity> userManager, IRefreshTokenRepository refreshTokenRepository, ITokenService tokenService)
         {
             _configuration = configuration;
             _userManager = userManager;

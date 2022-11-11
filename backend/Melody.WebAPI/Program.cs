@@ -32,7 +32,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
-builder.Services.AddScoped<TokenService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 builder.Services.AddScoped<IUserStore<UserIdentity>, UserStore>();
 builder.Services.AddScoped<IUserRoleStore<UserIdentity>, UserStore>();

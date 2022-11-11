@@ -7,12 +7,12 @@ using System.Text;
 
 namespace Melody.WebAPI.Services;
 
-public class TokenService
+public class TokenService : ITokenService
 {
     private readonly IConfiguration _configuration;
     public TokenService(IConfiguration configuration)
     {
-        _configuration= configuration;
+        _configuration = configuration;
     }
 
     public string GenerateRefreshToken(UserIdentity user)

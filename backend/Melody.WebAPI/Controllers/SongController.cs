@@ -19,7 +19,7 @@ namespace Melody.WebAPI.Controllers;
 public class SongController : ControllerBase
 {
     private readonly ISongRepository _songRepository;
-    private readonly TokenService _tokenService;
+    private readonly ITokenService _tokenService;
     private readonly UserManager<UserIdentity> _userManager;
     private readonly IMapper _mapper;
     private readonly IValidator<NewSongDto> _newSongDtoValidator;
@@ -28,7 +28,7 @@ public class SongController : ControllerBase
     private const string folderName = "Sounds";
     private const long userUploadsLimit = 1000000000;
 
-    public SongController(ISongRepository songRepository, IMapper mapper, IValidator<NewSongDto> newSongDtoValidator, IValidator<UpdateSongDto> updateSongDtoValidator, TokenService tokenService, UserManager<UserIdentity> userManager)
+    public SongController(ISongRepository songRepository, IMapper mapper, IValidator<NewSongDto> newSongDtoValidator, IValidator<UpdateSongDto> updateSongDtoValidator, ITokenService tokenService, UserManager<UserIdentity> userManager)
     {
         _songRepository = songRepository;
         _mapper = mapper;
