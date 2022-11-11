@@ -51,7 +51,14 @@ builder.Services.AddLogging(c => c.AddFluentMigratorConsole())
             .WithGlobalConnectionString(builder.Configuration.GetConnectionString("MelodyDBConnection"))
             .ScanIn(Assembly.GetAssembly(typeof(DapperContext))).For.Migrations());
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder.Services.AddControllers();
+
+builder.Services.AddIdentity<UserIdentity, RoleIdentity>();
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -66,10 +73,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 ["Jwt:Key"]))
         };
     });
-
-builder.Services.AddIdentity<UserIdentity, RoleIdentity>();
-
-builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
