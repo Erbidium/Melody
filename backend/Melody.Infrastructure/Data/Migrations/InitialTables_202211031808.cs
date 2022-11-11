@@ -55,7 +55,7 @@ public class InitialTables_202211031808 : Migration
         Create.Table("Songs")
             .WithColumn("Id").AsInt64().PrimaryKey().Identity()
             .WithColumn("UserId").AsInt64().NotNullable().ForeignKey("Users", "Id")
-            .WithColumn("UploadedAt").AsDate().NotNullable()
+            .WithColumn("UploadedAt").AsDateTime().NotNullable()
             .WithColumn("SizeBytes").AsInt64().NotNullable()
             .WithColumn("Name").AsString(50).NotNullable()
             .WithColumn("Path").AsString().NotNullable()

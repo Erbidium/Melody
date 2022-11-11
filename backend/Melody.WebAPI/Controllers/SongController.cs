@@ -68,7 +68,7 @@ public class SongController : ControllerBase
         var identity = HttpContext.User.Identity as ClaimsIdentity;
         var currentUserFromToken = _tokenService.GetCurrentUser(identity);
         var user = await _userManager.FindByEmailAsync(currentUserFromToken.Email);
-        var song = new Song(user.Id, newSong.Name, newSong.Path, newSong.AuthorName, newSong.Year, newSong.GenreId, newSong.SizeInBytes, DateOnly.FromDateTime(DateTime.Now));
+        var song = new Song(user.Id, newSong.Name, newSong.Path, newSong.AuthorName, newSong.Year, newSong.GenreId, newSong.SizeInBytes, DateTime.Now);
         return Ok(await _songRepository.Create(song));
     }
 
@@ -90,7 +90,7 @@ public class SongController : ControllerBase
             Directory.CreateDirectory(pathToSave);
         }
 
-        string fileName = Path.GetFileName(uploadedSoundFile.FileName);
+        //string fileName = Path.GetFileName(uploadedSoundFile.FileName);
         var guidFileName = Guid.NewGuid().ToString() + soundExtension;
         var guidSubFolders = string.Empty;
         for (int i = 0; i < 6; i = i + 2)

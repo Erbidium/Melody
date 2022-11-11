@@ -82,9 +82,9 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO Songs (Name, Path, AuthorName, Year, GenreId)
+        ///   Looks up a localized string similar to INSERT INTO Songs (UserId, Name, Path, AuthorName, Year, SizeBytes, UploadedAt, GenreId)
         ///OUTPUT Inserted.Id
-        ///VALUES (@Name, @Path, @AuthorName, @Year, @GenreId).
+        ///VALUES (@UserId, @Name, @Path, @AuthorName, @Year, @SizeBytes, @UploadedAt, @GenreId).
         /// </summary>
         internal static string CreateSong {
             get {
@@ -360,7 +360,7 @@ namespace Melody.Infrastructure.Data {
         
         /// <summary>
         ///   Looks up a localized string similar to UPDATE Songs
-        ///SET Name = @Name, Path = @Path, AuthorName = @AuthorName, Year = @Year, GenreId = @GenreId
+        ///SET UserId = @UserId, Name = @Name, Path = @Path, AuthorName = @AuthorName, Year = @Year, SizeBytes = @SizeBytes, UploadedAt = @UploadedAt, GenreId = @GenreId
         ///WHERE Id = @Id AND IsDeleted = 0.
         /// </summary>
         internal static string UpdateSong {
