@@ -10,9 +10,6 @@ public class NewSongDtoValidator : AbstractValidator<NewSongDto>
         RuleFor(s => s.Name)
             .NotEmpty()
             .MaximumLength(50);
-        RuleFor(s => s.Path)
-            .NotEmpty()
-            .MaximumLength(50);
         RuleFor(s => s.AuthorName)
             .NotEmpty()
             .MaximumLength(50);
