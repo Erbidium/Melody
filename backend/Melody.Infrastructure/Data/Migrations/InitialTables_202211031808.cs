@@ -1,4 +1,4 @@
-﻿using FluentMigrator;
+using FluentMigrator;
 
 namespace Melody.Infrastructure.Data.Migrations;
 
@@ -54,8 +54,11 @@ public class InitialTables_202211031808 : Migration
 
         Create.Table("Songs")
             .WithColumn("Id").AsInt64().PrimaryKey().Identity()
+            .WithColumn("UserId").AsInt64().NotNullable().ForeignKey("Users", "Id")
+            .WithColumn("UploadedAt").AsDateTime().NotNullable()
+            .WithColumn("SizeBytes").AsInt64().NotNullable()
             .WithColumn("Name").AsString(50).NotNullable()
-            .WithColumn("Path").AsString(50).NotNullable()
+            .WithColumn("Path").AsString(int.MaxValue).NotNullable()
             .WithColumn("AuthorName").AsString(50).NotNullable()
             .WithColumn("Year").AsInt32().NotNullable()
             .WithColumn("GenreId").AsInt64().NotNullable().ForeignKey("Genres", "Id")

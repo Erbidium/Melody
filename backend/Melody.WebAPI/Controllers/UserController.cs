@@ -1,5 +1,6 @@
 ﻿using Melody.Infrastructure.Auth.Models;
 using Melody.Infrastructure.Data.Records;
+using Melody.WebAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,9 +13,12 @@ namespace Melody.WebAPI.Controllers;
 public class UserController : ControllerBase
 {
     private readonly UserManager<UserIdentity> _userManager;
-    public UserController(UserManager<UserIdentity> userManager)
+    private readonly ITokenService _tokenService;
+
+    public UserController(UserManager<UserIdentity> userManager, ITokenService tokenService)
     {
         _userManager = userManager;
+        _tokenService = tokenService;
     }
 
     [AllowAnonymous]
@@ -37,6 +41,7 @@ public class UserController : ControllerBase
         {
             return Ok(result.Errors);
         }
+
         await _userManager.AddToRoleAsync(user, "User");
         return StatusCode(201);
     }
@@ -45,16 +50,18 @@ public class UserController : ControllerBase
     [Authorize(Roles = "Admin")]
     public IActionResult AdminsEndpoint()
     {
-        var currentUser = GetCurrentUser();
-        return Ok($"Hi {currentUser}, you are an {currentUser.Roles.FirstOrDefault()}");
+        var identity = HttpContext.User.Identity as ClaimsIdentity;
+        var currentUser = _tokenService.GetCurrentUser(identity);
+        return Ok($"Hi {currentUser.UserId}, you are an {currentUser.Roles.FirstOrDefault()}");
     }
 
     [HttpGet("AdminsAndUsers")]
     [Authorize(Roles = "Admin,User")]
     public IActionResult AdminsAndUsersEndpoint()
     {
-        var currentUser = GetCurrentUser();
-        return Ok($"Hi {currentUser}, you are an {currentUser.Roles.FirstOrDefault()}");
+        var identity = HttpContext.User.Identity as ClaimsIdentity;
+        var currentUser = _tokenService.GetCurrentUser(identity);
+        return Ok($"Hi {currentUser.UserId}, you are an {currentUser.Roles.FirstOrDefault()}");
     }
 
     [HttpGet("Public")]
@@ -67,23 +74,5 @@ public class UserController : ControllerBase
     public IActionResult CreateUser()
     {
         return Ok("Hi, you're on public property");
-    }
-
-    private UserToken? GetCurrentUser()
-    {
-        var identity = HttpContext.User.Identity as ClaimsIdentity;
-
-        if (identity != null)
-        {
-            var userClaims = identity.Claims;
-
-            return new UserToken
-            {
-                UserName = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.NameIdentifier)?.Value,
-                Email = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Email)?.Value,
-                Roles = userClaims.Where(o => o.Type == ClaimTypes.Role).Select(r => r.Value),
-            };
-        }
-        return null;
     }
 }

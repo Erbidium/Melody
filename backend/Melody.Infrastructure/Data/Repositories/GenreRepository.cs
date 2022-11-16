@@ -9,10 +9,12 @@ namespace Melody.Infrastructure.Data.Repositories;
 public class GenreRepository : IGenreRepository
 {
     private readonly DapperContext _context;
+
     public GenreRepository(DapperContext context)
     {
         _context = context;
     }
+
     public async Task<IReadOnlyCollection<Genre>> GetAll()
     {
         using var connection = _context.CreateConnection();

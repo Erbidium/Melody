@@ -18,9 +18,10 @@ namespace Melody.WebAPI.Controllers
         private readonly IConfiguration _configuration;
         private readonly UserManager<UserIdentity> _userManager;
         private readonly IRefreshTokenRepository _refreshTokenRepository;
-        private readonly TokenService _tokenService;
+        private readonly ITokenService _tokenService;
 
-        public LoginController(IConfiguration configuration, UserManager<UserIdentity> userManager, IRefreshTokenRepository refreshTokenRepository, TokenService tokenService)
+        public LoginController(IConfiguration configuration, UserManager<UserIdentity> userManager,
+            IRefreshTokenRepository refreshTokenRepository, ITokenService tokenService)
         {
             _configuration = configuration;
             _userManager = userManager;
@@ -55,7 +56,8 @@ namespace Melody.WebAPI.Controllers
             try
             {
                 SecurityToken validatedToken;
-                var principal = tokenHandler.ValidateToken(refreshTokenString, validationParameters, out validatedToken);
+                var principal =
+                    tokenHandler.ValidateToken(refreshTokenString, validationParameters, out validatedToken);
                 var dbEntry = await _refreshTokenRepository.FindAsync(refreshTokenString);
                 if (dbEntry != null)
                 {
@@ -64,6 +66,7 @@ namespace Melody.WebAPI.Controllers
                     var roles = await _userManager.GetRolesAsync(user);
                     return Ok(_tokenService.GenerateAccessToken(user, roles));
                 }
+
                 return Unauthorized();
             }
             catch (Exception)
@@ -71,8 +74,8 @@ namespace Melody.WebAPI.Controllers
                 await _refreshTokenRepository.DeleteAsync(refreshTokenString);
                 return Unauthorized();
             }
-            
         }
+
         private async Task<UserIdentity?> Authenticate(UserLogin userLogin)
         {
             var currentUser = await _userManager.FindByEmailAsync(userLogin.Email);

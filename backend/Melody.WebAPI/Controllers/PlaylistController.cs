@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Melody.WebAPI.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class PlaylistController : ControllerBase
 {
     private readonly IPlaylistRepository _playlistRepository;
@@ -18,7 +18,8 @@ public class PlaylistController : ControllerBase
     private readonly IValidator<NewPlaylistDto> _newPlaylistDtoValidator;
     private readonly IValidator<UpdatePlaylistDto> _updatePlaylistDtoValidator;
 
-    public PlaylistController(IPlaylistRepository playlistRepository, IMapper mapper, IValidator<NewPlaylistDto> newPlaylistDtoValidator, IValidator<UpdatePlaylistDto> updatePlaylistDtoValidator)
+    public PlaylistController(IPlaylistRepository playlistRepository, IMapper mapper,
+        IValidator<NewPlaylistDto> newPlaylistDtoValidator, IValidator<UpdatePlaylistDto> updatePlaylistDtoValidator)
     {
         _playlistRepository = playlistRepository;
         _mapper = mapper;
@@ -40,6 +41,7 @@ public class PlaylistController : ControllerBase
         {
             throw new KeyNotFoundException("Playlist is not found");
         }
+
         return Ok(playlist);
     }
 
@@ -52,6 +54,7 @@ public class PlaylistController : ControllerBase
             result.AddToModelState(ModelState);
             return BadRequest(ModelState);
         }
+
         return Ok(await _playlistRepository.Create(_mapper.Map<Playlist>(playlist)));
     }
 
@@ -64,6 +67,7 @@ public class PlaylistController : ControllerBase
             result.AddToModelState(ModelState);
             return BadRequest(ModelState);
         }
+
         await _playlistRepository.Update(_mapper.Map<Playlist>(playlist));
         return NoContent();
     }

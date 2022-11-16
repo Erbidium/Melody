@@ -8,20 +8,24 @@ public class RoleStore : IRoleStore<RoleIdentity>
 {
     private bool disposedValue;
     private readonly IRoleRepository _roleRepository;
+
     public RoleStore(IRoleRepository roleRepository)
     {
         _roleRepository = roleRepository;
     }
+
     public async Task<IdentityResult> CreateAsync(RoleIdentity role, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
         role.ThrowIfNull(nameof(role));
         var created = await _roleRepository.CreateAsync(role);
-        return created ? IdentityResult.Success : IdentityResult.Failed(new IdentityError
-        {
-            Code = string.Empty,
-            Description = $"Role '{role.Name}' could not be created."
-        });
+        return created
+            ? IdentityResult.Success
+            : IdentityResult.Failed(new IdentityError
+            {
+                Code = string.Empty,
+                Description = $"Role '{role.Name}' could not be created."
+            });
     }
 
     public async Task<IdentityResult> DeleteAsync(RoleIdentity role, CancellationToken cancellationToken)
@@ -29,11 +33,13 @@ public class RoleStore : IRoleStore<RoleIdentity>
         cancellationToken.ThrowIfCancellationRequested();
         role.ThrowIfNull(nameof(role));
         var deleted = await _roleRepository.DeleteAsync(role.Id);
-        return deleted ? IdentityResult.Success : IdentityResult.Failed(new IdentityError
-        {
-            Code = string.Empty,
-            Description = $"Role '{role.Name}' could not be deleted."
-        });
+        return deleted
+            ? IdentityResult.Success
+            : IdentityResult.Failed(new IdentityError
+            {
+                Code = string.Empty,
+                Description = $"Role '{role.Name}' could not be deleted."
+            });
     }
 
     public async Task<RoleIdentity> FindByIdAsync(string roleId, CancellationToken cancellationToken)
@@ -70,7 +76,8 @@ public class RoleStore : IRoleStore<RoleIdentity>
         return Task.FromResult(role.Name);
     }
 
-    public Task SetNormalizedRoleNameAsync(RoleIdentity role, string normalizedName, CancellationToken cancellationToken)
+    public Task SetNormalizedRoleNameAsync(RoleIdentity role, string normalizedName,
+        CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
         role.ThrowIfNull(nameof(role));
@@ -91,11 +98,13 @@ public class RoleStore : IRoleStore<RoleIdentity>
         cancellationToken.ThrowIfCancellationRequested();
         role.ThrowIfNull(nameof(role));
         var updated = await _roleRepository.UpdateAsync(role);
-        return updated ? IdentityResult.Success : IdentityResult.Failed(new IdentityError
-        {
-            Code = string.Empty,
-            Description = $"Role '{role.Name}' could not be updated."
-        });
+        return updated
+            ? IdentityResult.Success
+            : IdentityResult.Failed(new IdentityError
+            {
+                Code = string.Empty,
+                Description = $"Role '{role.Name}' could not be updated."
+            });
     }
 
     protected virtual void Dispose(bool disposing)

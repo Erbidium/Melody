@@ -16,15 +16,16 @@ public class User : IEntityBase<long>
     }
 
     private long _id;
+
     public long Id
     {
         get => _id < 0 ? throw new WrongIdException() : _id;
         private set => _id = value;
     }
+
     public string Name { get; }
     public string Email { get; }
     public string PhoneNumber { get; }
     public long RoleId { get; }
     public bool IsBanned { get; }
-
 }

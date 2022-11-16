@@ -17,6 +17,7 @@ public static class MigrationManager
             migrationService.ListMigrations();
             migrationService.MigrateUp();
         }
+
         return webApplicationBuilder;
     }
 }

@@ -9,10 +9,12 @@ namespace Melody.Infrastructure.Data.Repositories;
 public class UserRepository : IUserRepository
 {
     private readonly DapperContext _context;
+
     public UserRepository(DapperContext context)
     {
         _context = context;
     }
+
     public async Task<bool> CreateAsync(UserIdentity user)
     {
         var parameters = new DynamicParameters();
@@ -40,19 +42,22 @@ public class UserRepository : IUserRepository
     public async Task<UserIdentity> FindByEmailAsync(string normalizedEmail)
     {
         using var connection = _context.CreateConnection();
-        return await connection.QuerySingleOrDefaultAsync<UserIdentity>(SqlScriptsResource.GetUserByEmail, new { NormalizedEmail = normalizedEmail });
+        return await connection.QuerySingleOrDefaultAsync<UserIdentity>(SqlScriptsResource.GetUserByEmail,
+            new { NormalizedEmail = normalizedEmail });
     }
 
     public async Task<UserIdentity> FindByIdAsync(long userId)
     {
         using var connection = _context.CreateConnection();
-        return await connection.QuerySingleOrDefaultAsync<UserIdentity>(SqlScriptsResource.GetUserById, new { Id = userId });
+        return await connection.QuerySingleOrDefaultAsync<UserIdentity>(SqlScriptsResource.GetUserById,
+            new { Id = userId });
     }
 
     public async Task<UserIdentity> FindByNameAsync(string normalizedUserName)
     {
         using var connection = _context.CreateConnection();
-        return await connection.QuerySingleOrDefaultAsync<UserIdentity>(SqlScriptsResource.GetUserByName, new { NormalizedUserName = normalizedUserName });
+        return await connection.QuerySingleOrDefaultAsync<UserIdentity>(SqlScriptsResource.GetUserByName,
+            new { NormalizedUserName = normalizedUserName });
     }
 
     public async Task<UserRole> FindUserRoleAsync(long userId, long roleId)
@@ -75,7 +80,8 @@ public class UserRepository : IUserRepository
     public async Task<IEnumerable<UserIdentity>> GetUsersInRoleAsync(string roleName)
     {
         using var connection = _context.CreateConnection();
-        return await connection.QueryAsync<UserIdentity>(SqlScriptsResource.GetUsersInRole, new { NormalizedName = roleName });
+        return await connection.QueryAsync<UserIdentity>(SqlScriptsResource.GetUsersInRole,
+            new { NormalizedName = roleName });
     }
 
     public async Task<bool> UpdateAsync(UserIdentity user)
@@ -123,6 +129,7 @@ public class UserRepository : IUserRepository
                 x.RoleId
             }), transaction);
         }
+
         try
         {
             transaction.Commit();
@@ -132,6 +139,7 @@ public class UserRepository : IUserRepository
             transaction.Rollback();
             return false;
         }
+
         return true;
     }
 }
