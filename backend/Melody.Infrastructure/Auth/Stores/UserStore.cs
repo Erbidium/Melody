@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Melody.Infrastructure.Auth.Stores;
 
-
-public class UserStore: IUserStore<UserIdentity>, IUserRoleStore<UserIdentity>, IUserEmailStore<UserIdentity>, IUserPasswordStore<UserIdentity>
+public class UserStore : IUserStore<UserIdentity>, IUserRoleStore<UserIdentity>, IUserEmailStore<UserIdentity>,
+    IUserPasswordStore<UserIdentity>
 {
     private readonly IUserRepository _userRepository;
     private readonly IRoleRepository _roleRepository;
@@ -27,11 +27,13 @@ public class UserStore: IUserStore<UserIdentity>, IUserRoleStore<UserIdentity>, 
         cancellationToken.ThrowIfCancellationRequested();
         user.ThrowIfNull(nameof(user));
         var created = await _userRepository.CreateAsync(user);
-        return created ? IdentityResult.Success : IdentityResult.Failed(new IdentityError
-        {
-            Code = string.Empty,
-            Description = $"UserIdentity '{user.UserName}' could not be created."
-        });
+        return created
+            ? IdentityResult.Success
+            : IdentityResult.Failed(new IdentityError
+            {
+                Code = string.Empty,
+                Description = $"UserIdentity '{user.UserName}' could not be created."
+            });
     }
 
     public async Task<IdentityResult> DeleteAsync(UserIdentity user, CancellationToken cancellationToken)
@@ -39,11 +41,13 @@ public class UserStore: IUserStore<UserIdentity>, IUserRoleStore<UserIdentity>, 
         cancellationToken.ThrowIfCancellationRequested();
         user.ThrowIfNull(nameof(user));
         var deleted = await _userRepository.DeleteAsync(user.Id);
-        return deleted ? IdentityResult.Success : IdentityResult.Failed(new IdentityError
-        {
-            Code = string.Empty,
-            Description = $"UserIdentity '{user.UserName}' could not be deleted."
-        });
+        return deleted
+            ? IdentityResult.Success
+            : IdentityResult.Failed(new IdentityError
+            {
+                Code = string.Empty,
+                Description = $"UserIdentity '{user.UserName}' could not be deleted."
+            });
     }
 
     public async Task<UserIdentity> FindByIdAsync(string userId, CancellationToken cancellationToken)
@@ -82,7 +86,8 @@ public class UserStore: IUserStore<UserIdentity>, IUserRoleStore<UserIdentity>, 
         return Task.FromResult(user.UserName);
     }
 
-    public Task SetNormalizedUserNameAsync(UserIdentity user, string normalizedName, CancellationToken cancellationToken)
+    public Task SetNormalizedUserNameAsync(UserIdentity user, string normalizedName,
+        CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
         if (user == null) throw new ArgumentNullException(nameof(user));
@@ -107,11 +112,13 @@ public class UserStore: IUserStore<UserIdentity>, IUserRoleStore<UserIdentity>, 
         cancellationToken.ThrowIfCancellationRequested();
         user.ThrowIfNull(nameof(user));
         var updated = await _userRepository.UpdateAsync(user, UserRoles);
-        return updated ? IdentityResult.Success : IdentityResult.Failed(new IdentityError
-        {
-            Code = string.Empty,
-            Description = $"UserIdentity '{user.UserName}' could not be deleted."
-        });
+        return updated
+            ? IdentityResult.Success
+            : IdentityResult.Failed(new IdentityError
+            {
+                Code = string.Empty,
+                Description = $"UserIdentity '{user.UserName}' could not be deleted."
+            });
     }
 
     protected virtual void Dispose(bool disposing)
@@ -143,18 +150,20 @@ public class UserStore: IUserStore<UserIdentity>, IUserRoleStore<UserIdentity>, 
         {
             throw new ArgumentException($"Parameter {nameof(roleName)} cannot be null or empty.");
         }
+
         var roleEntity = await FindRoleAsync(roleName, cancellationToken);
         if (roleEntity == null)
         {
             throw new InvalidOperationException($"Role '{roleName}' was not found.");
         }
+
         var userRoles = (await _userRepository.GetRolesAsync(user.Id))?.Select(x => new UserRole
         {
             UserId = user.Id,
             RoleId = x.Id
         }).ToList() ?? new List<UserRole>();
         UserRoles = userRoles;
-        UserRoles.Add(new UserRole { UserId = user.Id, RoleId = roleEntity.Id});
+        UserRoles.Add(new UserRole { UserId = user.Id, RoleId = roleEntity.Id });
     }
 
     public async Task RemoveFromRoleAsync(UserIdentity user, string roleName, CancellationToken cancellationToken)
@@ -165,6 +174,7 @@ public class UserStore: IUserStore<UserIdentity>, IUserRoleStore<UserIdentity>, 
         {
             throw new ArgumentException(nameof(roleName));
         }
+
         var roleEntity = await FindRoleAsync(roleName, cancellationToken);
         if (roleEntity != null)
         {
@@ -198,12 +208,14 @@ public class UserStore: IUserStore<UserIdentity>, IUserRoleStore<UserIdentity>, 
         {
             throw new ArgumentException(null, nameof(roleName));
         }
+
         var role = await FindRoleAsync(roleName, cancellationToken);
         if (role != null)
         {
             var userRole = await FindUserRoleAsync(user.Id, role.Id, cancellationToken);
             return userRole != null;
         }
+
         return false;
     }
 
@@ -214,12 +226,14 @@ public class UserStore: IUserStore<UserIdentity>, IUserRoleStore<UserIdentity>, 
         {
             throw new ArgumentNullException(nameof(roleName));
         }
+
         var role = await FindRoleAsync(roleName, cancellationToken);
         var users = new List<UserIdentity>();
         if (role != null)
         {
             users = (await _userRepository.GetUsersInRoleAsync(roleName)).ToList();
         }
+
         return users;
     }
 
@@ -229,6 +243,7 @@ public class UserStore: IUserStore<UserIdentity>, IUserRoleStore<UserIdentity>, 
         var findRoleTask = _roleRepository.FindByNameAsync(roleName);
         return findRoleTask;
     }
+
     protected async Task<UserRole> FindUserRoleAsync(long userId, long roleId, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
@@ -308,4 +323,4 @@ public class UserStore: IUserStore<UserIdentity>, IUserRoleStore<UserIdentity>, 
         user.ThrowIfNull(nameof(user));
         return Task.FromResult(!string.IsNullOrWhiteSpace(user.PasswordHash));
     }
-}   
+}

@@ -6,10 +6,12 @@ namespace Melody.Infrastructure.Data.Migrations;
 public class Database
 {
     private readonly DapperContext _context;
+
     public Database(DapperContext context)
     {
         _context = context;
     }
+
     public void CreateDatabase(string dbName)
     {
         var query = "SELECT * FROM sys.databases WHERE name = @name";

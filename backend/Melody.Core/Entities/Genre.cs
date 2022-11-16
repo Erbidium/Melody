@@ -9,6 +9,7 @@ public class Genre : IEntityBase<long>
         Id = id;
         Name = name;
     }
+
     public long Id { get; }
     public string Name { get; }
 }

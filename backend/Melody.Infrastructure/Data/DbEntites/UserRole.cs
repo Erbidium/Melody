@@ -11,4 +11,3 @@ public class UserRole : IEquatable<UserRole>
         return UserId == other.UserId && RoleId == other.RoleId;
     }
 }
-

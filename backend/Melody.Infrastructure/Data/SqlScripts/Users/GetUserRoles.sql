@@ -1,3 +1,4 @@
 ﻿SELECT UserId, RoleId
 FROM UserRoles
-WHERE UserId = @UserId AND RoleId = @RoleId;
+WHERE UserId = @UserId
+  AND RoleId = @RoleId;

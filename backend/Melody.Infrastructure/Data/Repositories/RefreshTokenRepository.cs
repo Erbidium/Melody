@@ -11,10 +11,12 @@ namespace Melody.Infrastructure.Data.Repositories
     public class RefreshTokenRepository : IRefreshTokenRepository
     {
         private readonly DapperContext _context;
+
         public RefreshTokenRepository(DapperContext context)
         {
             _context = context;
         }
+
         public async Task<bool> CreateOrUpdateAsync(string token, long userId)
         {
             var entry = await FindAsync(token);
@@ -29,16 +31,21 @@ namespace Melody.Infrastructure.Data.Repositories
 
                 await connection.ExecuteAsync(insertQuery, parameters);
             }
-            else {
-                await connection.ExecuteAsync("UPDATE UserRefreshTokens SET RefreshToken = @Token, WHERE UserId = @Id;", new { Token = token, Id = userId });
+            else
+            {
+                await connection.ExecuteAsync("UPDATE UserRefreshTokens SET RefreshToken = @Token, WHERE UserId = @Id;",
+                    new { Token = token, Id = userId });
             }
+
             return true;
         }
 
         public async Task<bool> DeleteAsync(string Token)
         {
             using var connection = _context.CreateConnection();
-            var rowsDeleted = await connection.ExecuteAsync("DELETE FROM UserRefreshTokens WHERE RefreshToken = @Token;", new { Token });
+            var rowsDeleted =
+                await connection.ExecuteAsync("DELETE FROM UserRefreshTokens WHERE RefreshToken = @Token;",
+                    new { Token });
             return rowsDeleted == 1;
         }
 

@@ -14,6 +14,7 @@ public class UserController : ControllerBase
 {
     private readonly UserManager<UserIdentity> _userManager;
     private readonly ITokenService _tokenService;
+
     public UserController(UserManager<UserIdentity> userManager, ITokenService tokenService)
     {
         _userManager = userManager;
@@ -40,6 +41,7 @@ public class UserController : ControllerBase
         {
             return Ok(result.Errors);
         }
+
         await _userManager.AddToRoleAsync(user, "User");
         return StatusCode(201);
     }

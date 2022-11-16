@@ -28,7 +28,9 @@ public class SongController : ControllerBase
     private const string folderName = "Sounds";
     private const long userUploadsLimit = 1000000000;
 
-    public SongController(ISongRepository songRepository, IMapper mapper, IValidator<NewSongDto> newSongDtoValidator, IValidator<UpdateSongDto> updateSongDtoValidator, ITokenService tokenService, UserManager<UserIdentity> userManager)
+    public SongController(ISongRepository songRepository, IMapper mapper, IValidator<NewSongDto> newSongDtoValidator,
+        IValidator<UpdateSongDto> updateSongDtoValidator, ITokenService tokenService,
+        UserManager<UserIdentity> userManager)
     {
         _songRepository = songRepository;
         _mapper = mapper;
@@ -52,6 +54,7 @@ public class SongController : ControllerBase
         {
             throw new KeyNotFoundException("Song is not found");
         }
+
         return Ok(song);
     }
 
@@ -66,10 +69,12 @@ public class SongController : ControllerBase
             result.AddToModelState(ModelState);
             return BadRequest(ModelState);
         }
+
         var identity = HttpContext.User.Identity as ClaimsIdentity;
         var currentUserFromToken = _tokenService.GetCurrentUser(identity);
         var user = await _userManager.FindByEmailAsync(currentUserFromToken.Email);
-        var song = new Song(user.Id, newSong.Name, newSong.Path, newSong.AuthorName, newSong.Year, newSong.GenreId, newSong.SizeInBytes, DateTime.Now);
+        var song = new Song(user.Id, newSong.Name, newSong.Path, newSong.AuthorName, newSong.Year, newSong.GenreId,
+            newSong.SizeInBytes, DateTime.Now);
         return Ok(await _songRepository.Create(song));
     }
 
@@ -94,7 +99,6 @@ public class SongController : ControllerBase
         }
 
         return Ok(new { Path = await WriteFile(uploadedSoundFile), Size = uploadedSoundFile.Length });
-
     }
 
     [HttpPut]
@@ -106,6 +110,7 @@ public class SongController : ControllerBase
             result.AddToModelState(ModelState);
             return BadRequest(ModelState);
         }
+
         await _songRepository.Update(_mapper.Map<Song>(song));
         return NoContent();
     }
@@ -140,6 +145,7 @@ public class SongController : ControllerBase
                 Directory.CreateDirectory(currentPath);
             }
         }
+
         var fullPath = Path.Combine(pathToSave, guidSubFolders, guidFileName);
         using var stream = new FileStream(fullPath, FileMode.Create);
         await uploadedSoundFile.CopyToAsync(stream);

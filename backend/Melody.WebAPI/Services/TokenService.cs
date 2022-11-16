@@ -10,6 +10,7 @@ namespace Melody.WebAPI.Services;
 public class TokenService : ITokenService
 {
     private readonly IConfiguration _configuration;
+
     public TokenService(IConfiguration configuration)
     {
         _configuration = configuration;
@@ -34,16 +35,17 @@ public class TokenService : ITokenService
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
+
     public string GenerateAccessToken(UserIdentity user, IList<string> roles)
     {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
         var claims = new List<Claim>()
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.UserName),
-                new Claim(ClaimTypes.Email, user.Email),
-            };
+        {
+            new Claim(ClaimTypes.NameIdentifier, user.UserName),
+            new Claim(ClaimTypes.Email, user.Email),
+        };
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)).ToArray());
 
         var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
@@ -54,6 +56,7 @@ public class TokenService : ITokenService
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
+
     public TokenValidationParameters GetValidationParameters()
     {
         return new TokenValidationParameters()

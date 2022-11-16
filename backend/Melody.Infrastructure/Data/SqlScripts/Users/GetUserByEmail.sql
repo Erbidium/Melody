@@ -1,3 +1,12 @@
-﻿SELECT Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, PhoneNumber, IsBanned, IsDeleted
+﻿SELECT Id,
+       UserName,
+       NormalizedUserName,
+       Email,
+       NormalizedEmail,
+       EmailConfirmed,
+       PasswordHash,
+       PhoneNumber,
+       IsBanned,
+       IsDeleted
 FROM Users
 WHERE NormalizedEmail = @NormalizedEmail

@@ -1,68 +1,68 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Data\SqlScripts\Genres\GetAllGenres.sql" />
-    <None Remove="Data\SqlScripts\Genres\GetGenreById.sql" />
-    <None Remove="Data\SqlScripts\GetAllSongs.sql" />
-    <None Remove="Data\SqlScripts\Playlists\CreatePlaylist.sql" />
-    <None Remove="Data\SqlScripts\Playlists\DeletePlaylist.sql" />
-    <None Remove="Data\SqlScripts\Playlists\GetAllPlaylists.sql" />
-    <None Remove="Data\SqlScripts\Playlists\GetPlaylistById.sql" />
-    <None Remove="Data\SqlScripts\Playlists\UpdatePlaylist.sql" />
-    <None Remove="Data\SqlScripts\Songs\CreateSong.sql" />
-    <None Remove="Data\SqlScripts\Songs\DeleteSong.sql" />
-    <None Remove="Data\SqlScripts\Songs\GetSongById.sql" />
-    <None Remove="Data\SqlScripts\Songs\UpdateSong.sql" />
-  </ItemGroup>
+    <ItemGroup>
+        <None Remove="Data\SqlScripts\Genres\GetAllGenres.sql"/>
+        <None Remove="Data\SqlScripts\Genres\GetGenreById.sql"/>
+        <None Remove="Data\SqlScripts\GetAllSongs.sql"/>
+        <None Remove="Data\SqlScripts\Playlists\CreatePlaylist.sql"/>
+        <None Remove="Data\SqlScripts\Playlists\DeletePlaylist.sql"/>
+        <None Remove="Data\SqlScripts\Playlists\GetAllPlaylists.sql"/>
+        <None Remove="Data\SqlScripts\Playlists\GetPlaylistById.sql"/>
+        <None Remove="Data\SqlScripts\Playlists\UpdatePlaylist.sql"/>
+        <None Remove="Data\SqlScripts\Songs\CreateSong.sql"/>
+        <None Remove="Data\SqlScripts\Songs\DeleteSong.sql"/>
+        <None Remove="Data\SqlScripts\Songs\GetSongById.sql"/>
+        <None Remove="Data\SqlScripts\Songs\UpdateSong.sql"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="Data\SqlScripts\Genres\GetAllGenres.sql" />
-    <EmbeddedResource Include="Data\SqlScripts\Genres\GetGenreById.sql" />
-    <EmbeddedResource Include="Data\SqlScripts\Playlists\CreatePlaylist.sql" />
-    <EmbeddedResource Include="Data\SqlScripts\Playlists\DeletePlaylist.sql" />
-    <EmbeddedResource Include="Data\SqlScripts\Playlists\GetAllPlaylists.sql" />
-    <EmbeddedResource Include="Data\SqlScripts\Playlists\GetPlaylistById.sql" />
-    <EmbeddedResource Include="Data\SqlScripts\Playlists\UpdatePlaylist.sql" />
-    <EmbeddedResource Include="Data\SqlScripts\Songs\CreateSong.sql" />
-    <EmbeddedResource Include="Data\SqlScripts\Songs\DeleteSong.sql" />
-    <EmbeddedResource Include="Data\SqlScripts\Songs\GetSongById.sql" />
-    <EmbeddedResource Include="Data\SqlScripts\Songs\GetAllSongs.sql" />
-    <EmbeddedResource Include="Data\SqlScripts\Songs\UpdateSong.sql" />
-  </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="Data\SqlScripts\Genres\GetAllGenres.sql"/>
+        <EmbeddedResource Include="Data\SqlScripts\Genres\GetGenreById.sql"/>
+        <EmbeddedResource Include="Data\SqlScripts\Playlists\CreatePlaylist.sql"/>
+        <EmbeddedResource Include="Data\SqlScripts\Playlists\DeletePlaylist.sql"/>
+        <EmbeddedResource Include="Data\SqlScripts\Playlists\GetAllPlaylists.sql"/>
+        <EmbeddedResource Include="Data\SqlScripts\Playlists\GetPlaylistById.sql"/>
+        <EmbeddedResource Include="Data\SqlScripts\Playlists\UpdatePlaylist.sql"/>
+        <EmbeddedResource Include="Data\SqlScripts\Songs\CreateSong.sql"/>
+        <EmbeddedResource Include="Data\SqlScripts\Songs\DeleteSong.sql"/>
+        <EmbeddedResource Include="Data\SqlScripts\Songs\GetSongById.sql"/>
+        <EmbeddedResource Include="Data\SqlScripts\Songs\GetAllSongs.sql"/>
+        <EmbeddedResource Include="Data\SqlScripts\Songs\UpdateSong.sql"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Dapper" Version="2.0.123" />
-    <PackageReference Include="FluentMigrator.Runner" Version="3.3.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.11" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.25.0" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.4" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.0" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Dapper" Version="2.0.123"/>
+        <PackageReference Include="FluentMigrator.Runner" Version="3.3.2"/>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.11"/>
+        <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.25.0"/>
+        <PackageReference Include="System.Data.SqlClient" Version="4.8.4"/>
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.0"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Melody.Core\Melody.Core.csproj" />
-    <ProjectReference Include="..\Melody.SharedKernel\Melody.SharedKernel.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Melody.Core\Melody.Core.csproj"/>
+        <ProjectReference Include="..\Melody.SharedKernel\Melody.SharedKernel.csproj"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="Data\SqlScriptsResource.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SqlScriptsResource.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
+    <ItemGroup>
+        <Compile Update="Data\SqlScriptsResource.Designer.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>SqlScriptsResource.resx</DependentUpon>
+        </Compile>
+    </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Update="Data\SqlScriptsResource.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>SqlScriptsResource.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Update="Data\SqlScriptsResource.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>SqlScriptsResource.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+    </ItemGroup>
 
 </Project>

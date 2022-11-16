@@ -10,6 +10,7 @@ namespace Melody.Infrastructure.Data.Repositories;
 public class PlaylistRepository : IPlaylistRepository
 {
     private readonly DapperContext _context;
+
     public PlaylistRepository(DapperContext context)
     {
         _context = context;
@@ -20,14 +21,16 @@ public class PlaylistRepository : IPlaylistRepository
         using var connection = _context.CreateConnection();
 
         var playlists = await connection.QueryAsync<PlaylistDb>(SqlScriptsResource.GetAllPlaylists);
-        return playlists.Select(record => new Playlist(record.Name, record.Link, record.AuthorId, record.Id)).ToList().AsReadOnly();
+        return playlists.Select(record => new Playlist(record.Name, record.Link, record.AuthorId, record.Id)).ToList()
+            .AsReadOnly();
     }
 
     public async Task<Playlist?> GetById(long id)
     {
         using var connection = _context.CreateConnection();
 
-        var record = await connection.QuerySingleOrDefaultAsync<PlaylistDb>(SqlScriptsResource.GetPlaylistById, new { id });
+        var record =
+            await connection.QuerySingleOrDefaultAsync<PlaylistDb>(SqlScriptsResource.GetPlaylistById, new { id });
         return record == null ? null : new Playlist(record.Name, record.Link, record.AuthorId, record.Id);
     }
 
@@ -55,7 +58,7 @@ public class PlaylistRepository : IPlaylistRepository
         using var connection = _context.CreateConnection();
 
         await connection.ExecuteAsync(SqlScriptsResource.UpdatePlaylist, parameters);
-    }   
+    }
 
     public async Task Delete(long id)
     {

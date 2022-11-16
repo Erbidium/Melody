@@ -21,6 +21,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddScoped<ITokenService, TokenService>();
     }
+
     public static void RegisterCustomRepositories(this IServiceCollection services)
     {
         services.AddScoped<ISongRepository, SongRepository>();
@@ -30,14 +31,17 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IRoleRepository, RoleRepository>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
     }
+
     public static void AddAutoMapper(this IServiceCollection services)
     {
         services.AddAutoMapper(Assembly.GetAssembly(typeof(UserProfile)));
     }
+
     public static void AddValidation(this IServiceCollection services)
     {
         services.AddValidatorsFromAssemblyContaining<NewUserDtoValidator>();
     }
+
     public static void AddIdentityStores(this IServiceCollection services)
     {
         services.AddScoped<IUserStore<UserIdentity>, UserStore>();
@@ -46,26 +50,27 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IUserPasswordStore<UserIdentity>, UserStore>();
         services.AddScoped<IRoleStore<RoleIdentity>, RoleStore>();
     }
+
     public static void AddJwtBearerAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddAuthentication(options =>
-        {
-            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        })
-        .AddJwtBearer(options =>
-        {
-            options.TokenValidationParameters = new TokenValidationParameters
             {
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-                ValidIssuer = configuration["Jwt:Issuer"],
-                ValidAudience = configuration["Jwt:Audience"],
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration
-                    ["Jwt:Key"]))
-            };
-        });
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = configuration["Jwt:Issuer"],
+                    ValidAudience = configuration["Jwt:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration
+                        ["Jwt:Key"]))
+                };
+            });
     }
 }

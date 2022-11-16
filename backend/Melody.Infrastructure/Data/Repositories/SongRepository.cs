@@ -9,6 +9,7 @@ namespace Melody.Infrastructure.Data.Repositories;
 public class SongRepository : ISongRepository
 {
     private readonly DapperContext _context;
+
     public SongRepository(DapperContext context)
     {
         _context = context;
@@ -19,7 +20,8 @@ public class SongRepository : ISongRepository
         using var connection = _context.CreateConnection();
 
         var songs = await connection.QueryAsync<SongDb>(SqlScriptsResource.GetAllSongs);
-        return songs.Select(record => new Song(record.UserId, record.Name, record.Path, record.AuthorName, record.Year, record.GenreId, record.SizeBytes, record.UploadedAt, record.Id)).ToList().AsReadOnly();
+        return songs.Select(record => new Song(record.UserId, record.Name, record.Path, record.AuthorName, record.Year,
+            record.GenreId, record.SizeBytes, record.UploadedAt, record.Id)).ToList().AsReadOnly();
     }
 
     public async Task<Song?> GetById(long id)
@@ -27,7 +29,10 @@ public class SongRepository : ISongRepository
         using var connection = _context.CreateConnection();
 
         var record = await connection.QuerySingleOrDefaultAsync<SongDb>(SqlScriptsResource.GetSongById, new { id });
-        return record == null ? null : new Song(record.UserId, record.Name, record.Path, record.AuthorName, record.Year, record.GenreId, record.SizeBytes, record.UploadedAt, record.Id);
+        return record == null
+            ? null
+            : new Song(record.UserId, record.Name, record.Path, record.AuthorName, record.Year, record.GenreId,
+                record.SizeBytes, record.UploadedAt, record.Id);
     }
 
     public async Task<Song> Create(Song song)
@@ -46,7 +51,8 @@ public class SongRepository : ISongRepository
 
         var id = await connection.ExecuteScalarAsync<long>(SqlScriptsResource.CreateSong, parameters);
 
-        return new Song(song.UserId, song.Name, song.Path, song.AuthorName, song.Year, song.GenreId, song.SizeBytes, song.UploadedAt, id);
+        return new Song(song.UserId, song.Name, song.Path, song.AuthorName, song.Year, song.GenreId, song.SizeBytes,
+            song.UploadedAt, id);
     }
 
     public async Task Update(Song song)
@@ -77,6 +83,7 @@ public class SongRepository : ISongRepository
     {
         using var connection = _context.CreateConnection();
 
-        return await connection.ExecuteScalarAsync<long>(SqlScriptsResource.GetUserTotalUploadsSize, new { UserId = userId });
+        return await connection.ExecuteScalarAsync<long>(SqlScriptsResource.GetUserTotalUploadsSize,
+            new { UserId = userId });
     }
 }

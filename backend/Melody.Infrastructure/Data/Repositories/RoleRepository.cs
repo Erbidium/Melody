@@ -8,10 +8,12 @@ namespace Melody.Infrastructure.Data.Repositories;
 public class RoleRepository : IRoleRepository
 {
     private readonly DapperContext _context;
+
     public RoleRepository(DapperContext context)
     {
         _context = context;
     }
+
     public async Task<bool> CreateAsync(RoleIdentity role)
     {
         using var connection = _context.CreateConnection();
@@ -33,13 +35,15 @@ public class RoleRepository : IRoleRepository
     public async Task<RoleIdentity> FindByIdAsync(long roleId)
     {
         using var connection = _context.CreateConnection();
-        return await connection.QuerySingleOrDefaultAsync<RoleIdentity>(SqlScriptsResource.CreateRole, new { Id = roleId });
+        return await connection.QuerySingleOrDefaultAsync<RoleIdentity>(SqlScriptsResource.CreateRole,
+            new { Id = roleId });
     }
 
     public async Task<RoleIdentity> FindByNameAsync(string normalizedName)
     {
         using var connection = _context.CreateConnection();
-        return await connection.QuerySingleOrDefaultAsync<RoleIdentity>(SqlScriptsResource.GetRoleByName, new { NormalizedName = normalizedName });
+        return await connection.QuerySingleOrDefaultAsync<RoleIdentity>(SqlScriptsResource.GetRoleByName,
+            new { NormalizedName = normalizedName });
     }
 
     public async Task<bool> UpdateAsync(RoleIdentity role)

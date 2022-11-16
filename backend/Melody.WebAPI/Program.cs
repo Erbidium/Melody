@@ -20,10 +20,10 @@ builder.Services.AddAutoMapper();
 builder.Services.AddValidation();
 
 builder.Services.AddLogging(c => c.AddFluentMigratorConsole())
-.AddFluentMigratorCore()
-        .ConfigureRunner(c => c.AddSqlServer2016()
-            .WithGlobalConnectionString(builder.Configuration.GetConnectionString("MelodyDBConnection"))
-            .ScanIn(Assembly.GetAssembly(typeof(DapperContext))).For.Migrations());
+    .AddFluentMigratorCore()
+    .ConfigureRunner(c => c.AddSqlServer2016()
+        .WithGlobalConnectionString(builder.Configuration.GetConnectionString("MelodyDBConnection"))
+        .ScanIn(Assembly.GetAssembly(typeof(DapperContext))).For.Migrations());
 
 builder.Services.AddControllers();
 
