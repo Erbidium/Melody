@@ -58,7 +58,7 @@ public class InitialTables_202211031808 : Migration
             .WithColumn("UploadedAt").AsDateTime().NotNullable()
             .WithColumn("SizeBytes").AsInt64().NotNullable()
             .WithColumn("Name").AsString(50).NotNullable()
-            .WithColumn("Path").AsString().NotNullable()
+            .WithColumn("Path").AsString(int.MaxValue).NotNullable()
             .WithColumn("AuthorName").AsString(50).NotNullable()
             .WithColumn("Year").AsInt32().NotNullable()
             .WithColumn("GenreId").AsInt64().NotNullable().ForeignKey("Genres", "Id")

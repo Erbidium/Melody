@@ -60,27 +60,7 @@ public class SongController : ControllerBase
 
     [Authorize]
     [HttpPost]
-    public async Task<ActionResult<Song>> CreateSong(NewSongDto newSong)
-    {
-        // validate path
-        ValidationResult result = await _newSongDtoValidator.ValidateAsync(newSong);
-        if (!result.IsValid)
-        {
-            result.AddToModelState(ModelState);
-            return BadRequest(ModelState);
-        }
-
-        var identity = HttpContext.User.Identity as ClaimsIdentity;
-        var currentUserFromToken = _tokenService.GetCurrentUser(identity);
-        var user = await _userManager.FindByEmailAsync(currentUserFromToken.Email);
-        var song = new Song(user.Id, newSong.Name, newSong.Path, newSong.AuthorName, newSong.Year, newSong.GenreId,
-            newSong.SizeInBytes, DateTime.Now);
-        return Ok(await _songRepository.Create(song));
-    }
-
-    [Authorize]
-    [HttpPost("Upload")]
-    public async Task<IActionResult> UploadFile(IFormFile uploadedSoundFile)
+    public async Task<ActionResult<Song>> CreateSong([FromForm] NewSongDto newSong, IFormFile uploadedSoundFile)
     {
         var identity = HttpContext.User.Identity as ClaimsIdentity;
         var currentUserFromToken = _tokenService.GetCurrentUser(identity);
@@ -89,16 +69,29 @@ public class SongController : ControllerBase
         var userUploadsSize = await _songRepository.GetTotalBytesSumUploadsByUser(user.Id);
         if (userUploadsSize + uploadedSoundFile.Length > userUploadsLimit)
         {
-            return BadRequest("You have reached your upload limit 1 Gb");
+            throw new Exception("You have reached your upload limit 1 Gb");
         }
 
         var extension = Path.GetExtension(uploadedSoundFile.FileName);
         if (extension != soundExtension)
         {
-            return BadRequest();
+            throw new Exception("Your sound file has wrong extension");
         }
 
-        return Ok(new { Path = await WriteFile(uploadedSoundFile), Size = uploadedSoundFile.Length });
+        var uploadedResult = await WriteFile(uploadedSoundFile);
+        
+        newSong.Path = uploadedResult;
+        newSong.SizeInBytes = uploadedSoundFile.Length;
+        // validate path
+        ValidationResult result = await _newSongDtoValidator.ValidateAsync(newSong);
+        if (!result.IsValid)
+        {
+            result.AddToModelState(ModelState);
+            return BadRequest(ModelState);
+        }
+        var song = new Song(user.Id, newSong.Name, newSong.Path, newSong.AuthorName, newSong.Year, newSong.GenreId,
+            newSong.SizeInBytes, DateTime.Now);
+        return Ok(await _songRepository.Create(song));
     }
 
     [HttpPut]
