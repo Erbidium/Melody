@@ -64,9 +64,8 @@ public class SongController : ControllerBase
     {
         var identity = HttpContext.User.Identity as ClaimsIdentity;
         var currentUserFromToken = _tokenService.GetCurrentUser(identity);
-        var user = await _userManager.FindByEmailAsync(currentUserFromToken.Email);
 
-        var userUploadsSize = await _songRepository.GetTotalBytesSumUploadsByUser(user.Id);
+        var userUploadsSize = await _songRepository.GetTotalBytesSumUploadsByUser(currentUserFromToken.UserId);
         if (userUploadsSize + uploadedSoundFile.Length > userUploadsLimit)
         {
             throw new Exception("You have reached your upload limit 1 Gb");
@@ -87,7 +86,7 @@ public class SongController : ControllerBase
             result.AddToModelState(ModelState);
             return BadRequest(ModelState);
         }
-        var song = new Song(user.Id, newSong.Name, path, newSong.AuthorName, newSong.Year, newSong.GenreId,
+        var song = new Song(currentUserFromToken.UserId, newSong.Name, path, newSong.AuthorName, newSong.Year, newSong.GenreId,
             uploadedSoundFile.Length, DateTime.Now);
         return Ok(await _songRepository.Create(song));
     }

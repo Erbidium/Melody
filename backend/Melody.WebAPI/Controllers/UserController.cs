@@ -52,7 +52,7 @@ public class UserController : ControllerBase
     {
         var identity = HttpContext.User.Identity as ClaimsIdentity;
         var currentUser = _tokenService.GetCurrentUser(identity);
-        return Ok($"Hi {currentUser.Email}, you are an {currentUser.Roles.FirstOrDefault()}");
+        return Ok($"Hi {currentUser.UserId}, you are an {currentUser.Roles.FirstOrDefault()}");
     }
 
     [HttpGet("AdminsAndUsers")]
@@ -61,7 +61,7 @@ public class UserController : ControllerBase
     {
         var identity = HttpContext.User.Identity as ClaimsIdentity;
         var currentUser = _tokenService.GetCurrentUser(identity);
-        return Ok($"Hi {currentUser.Email}, you are an {currentUser.Roles.FirstOrDefault()}");
+        return Ok($"Hi {currentUser.UserId}, you are an {currentUser.Roles.FirstOrDefault()}");
     }
 
     [HttpGet("Public")]

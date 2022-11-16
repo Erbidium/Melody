@@ -43,8 +43,7 @@ public class TokenService : ITokenService
 
         var claims = new List<Claim>()
         {
-            new Claim(ClaimTypes.NameIdentifier, user.UserName),
-            new Claim(ClaimTypes.Email, user.Email),
+            new Claim("UserId", user.Id.ToString()),
         };
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)).ToArray());
 
@@ -75,8 +74,7 @@ public class TokenService : ITokenService
         var userClaims = identity.Claims;
         return new UserToken
         {
-            UserName = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.NameIdentifier)?.Value,
-            Email = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Email)?.Value,
+            UserId = long.Parse(userClaims.FirstOrDefault(o => o.Type == "UserId")?.Value),
             Roles = userClaims.Where(o => o.Type == ClaimTypes.Role).Select(r => r.Value),
         };
     }
