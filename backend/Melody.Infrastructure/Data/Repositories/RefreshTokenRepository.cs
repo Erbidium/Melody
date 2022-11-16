@@ -24,16 +24,15 @@ namespace Melody.Infrastructure.Data.Repositories
             using var connection = _context.CreateConnection();
             if (entry == null)
             {
-                var insertQuery = "INSERT INTO UserRefreshTokens(UserId, RefreshToken) VALUES (@UserId, @Token)";
                 var parameters = new DynamicParameters();
                 parameters.Add("UserId", userId, DbType.Int64);
                 parameters.Add("Token", token, DbType.String);
 
-                await connection.ExecuteAsync(insertQuery, parameters);
+                await connection.ExecuteAsync(SqlScriptsResource.CreateRefreshToken, parameters);
             }
             else
             {
-                await connection.ExecuteAsync("UPDATE UserRefreshTokens SET RefreshToken = @Token, WHERE UserId = @Id;",
+                await connection.ExecuteAsync(SqlScriptsResource.UpdateRefreshToken,
                     new { Token = token, Id = userId });
             }
 
@@ -44,16 +43,15 @@ namespace Melody.Infrastructure.Data.Repositories
         {
             using var connection = _context.CreateConnection();
             var rowsDeleted =
-                await connection.ExecuteAsync("DELETE FROM UserRefreshTokens WHERE RefreshToken = @Token;",
+                await connection.ExecuteAsync(SqlScriptsResource.DeleteRefreshToken,
                     new { Token });
             return rowsDeleted == 1;
         }
 
         public async Task<RefreshTokenDb> FindAsync(string token)
         {
-            var query = "SELECT * FROM UserRefreshTokens WHERE RefreshToken = @Token";
             using var connection = _context.CreateConnection();
-            return await connection.QuerySingleOrDefaultAsync<RefreshTokenDb>(query, new { Token = token });
+            return await connection.QuerySingleOrDefaultAsync<RefreshTokenDb>(SqlScriptsResource.FindRefreshToken, new { Token = token });
         }
     }
 }

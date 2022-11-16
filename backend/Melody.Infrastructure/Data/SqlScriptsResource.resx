@@ -1,275 +1,252 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-    <!-- 
-      Microsoft ResX Schema 
-      
-      Version 2.0
-      
-      The primary goals of this format is to allow a simple XML format 
-      that is mostly human readable. The generation and parsing of the 
-      various data types are done through the TypeConverter classes 
-      associated with the data types.
-      
-      Example:
-      
-      ... ado.net/XML headers & schema ...
-      <resheader name="resmimetype">text/microsoft-resx</resheader>
-      <resheader name="version">2.0</resheader>
-      <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-      <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-      <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
-      <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-      <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-          <value>[base64 mime encoded serialized .NET Framework object]</value>
-      </data>
-      <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-          <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
-          <comment>This is a comment</comment>
-      </data>
-                  
-      There are any number of "resheader" rows that contain simple 
-      name/value pairs.
-      
-      Each data row contains a name, and value. The row also contains a 
-      type or mimetype. Type corresponds to a .NET class that support 
-      text/value conversion through the TypeConverter architecture. 
-      Classes that don't support this are serialized and stored with the 
-      mimetype set.
-      
-      The mimetype is used for serialized objects, and tells the 
-      ResXResourceReader how to depersist the object. This is currently not 
-      extensible. For a given mimetype the value must be set accordingly:
-      
-      Note - application/x-microsoft.net.object.binary.base64 is the format 
-      that the ResXResourceWriter will generate, however the reader can 
-      read any of the formats listed below.
-      
-      mimetype: application/x-microsoft.net.object.binary.base64
-      value   : The object must be serialized with 
-              : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
-              : and then encoded with base64 encoding.
-      
-      mimetype: application/x-microsoft.net.object.soap.base64
-      value   : The object must be serialized with 
-              : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-              : and then encoded with base64 encoding.
-  
-      mimetype: application/x-microsoft.net.object.bytearray.base64
-      value   : The object must be serialized into a byte array 
-              : using a System.ComponentModel.TypeConverter
-              : and then encoded with base64 encoding.
-      -->
-    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-                xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-        <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
-        <xsd:element name="root" msdata:IsDataSet="true">
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
             <xsd:complexType>
-                <xsd:choice maxOccurs="unbounded">
-                    <xsd:element name="metadata">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" use="required" type="xsd:string"/>
-                            <xsd:attribute name="type" type="xsd:string"/>
-                            <xsd:attribute name="mimetype" type="xsd:string"/>
-                            <xsd:attribute ref="xml:space"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="assembly">
-                        <xsd:complexType>
-                            <xsd:attribute name="alias" type="xsd:string"/>
-                            <xsd:attribute name="name" type="xsd:string"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="data">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-                            <xsd:attribute ref="xml:space"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="resheader">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" use="required"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                </xsd:choice>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
-        </xsd:element>
-    </xsd:schema>
-    <resheader name="resmimetype">
-        <value>text/microsoft-resx</value>
-    </resheader>
-    <resheader name="version">
-        <value>2.0</value>
-    </resheader>
-    <resheader name="reader">
-        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089
-        </value>
-    </resheader>
-    <resheader name="writer">
-        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089
-        </value>
-    </resheader>
-    <assembly alias="System.Windows.Forms"
-              name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"/>
-    <data name="CreatePlaylist" type="System.Resources.ResXFileRef, System.Windows.Forms">
-        <value>sqlscripts\playlists\createplaylist.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089;utf-8
-        </value>
-    </data>
-    <data name="CreateRole" type="System.Resources.ResXFileRef, System.Windows.Forms">
-        <value>sqlscripts\roles\createrole.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089;utf-8
-        </value>
-    </data>
-    <data name="CreateSong" type="System.Resources.ResXFileRef, System.Windows.Forms">
-        <value>sqlscripts\songs\createsong.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089;utf-8
-        </value>
-    </data>
-    <data name="CreateUser" type="System.Resources.ResXFileRef, System.Windows.Forms">
-        <value>sqlscripts\users\createuser.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089;utf-8
-        </value>
-    </data>
-    <data name="DeletePlaylist" type="System.Resources.ResXFileRef, System.Windows.Forms">
-        <value>sqlscripts\playlists\deleteplaylist.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089;utf-8
-        </value>
-    </data>
-    <data name="DeleteRole" type="System.Resources.ResXFileRef, System.Windows.Forms">
-        <value>sqlscripts\roles\deleterole.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089;utf-8
-        </value>
-    </data>
-    <data name="DeleteRoles" type="System.Resources.ResXFileRef, System.Windows.Forms">
-        <value>sqlscripts\users\deleteroles.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089;utf-8
-        </value>
-    </data>
-    <data name="DeleteSong" type="System.Resources.ResXFileRef, System.Windows.Forms">
-        <value>sqlscripts\songs\deletesong.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089;utf-8
-        </value>
-    </data>
-    <data name="DeleteUser" type="System.Resources.ResXFileRef, System.Windows.Forms">
-        <value>sqlscripts\users\deleteuser.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089;utf-8
-        </value>
-    </data>
-    <data name="GetAllGenres" type="System.Resources.ResXFileRef, System.Windows.Forms">
-        <value>sqlscripts\genres\getallgenres.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089;utf-8
-        </value>
-    </data>
-    <data name="GetAllPlaylists" type="System.Resources.ResXFileRef, System.Windows.Forms">
-        <value>sqlscripts\playlists\getallplaylists.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089;utf-8
-        </value>
-    </data>
-    <data name="GetAllSongs" type="System.Resources.ResXFileRef, System.Windows.Forms">
-        <value>sqlscripts\songs\getallsongs.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089;utf-8
-        </value>
-    </data>
-    <data name="GetGenreById" type="System.Resources.ResXFileRef, System.Windows.Forms">
-        <value>sqlscripts\genres\getgenrebyid.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089;utf-8
-        </value>
-    </data>
-    <data name="GetPlaylistById" type="System.Resources.ResXFileRef, System.Windows.Forms">
-        <value>sqlscripts\playlists\getplaylistbyid.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089;utf-8
-        </value>
-    </data>
-    <data name="GetRoleById" type="System.Resources.ResXFileRef, System.Windows.Forms">
-        <value>sqlscripts\roles\getrolebyid.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089;utf-8
-        </value>
-    </data>
-    <data name="GetRoleByName" type="System.Resources.ResXFileRef, System.Windows.Forms">
-        <value>sqlscripts\roles\getrolebyname.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089;utf-8
-        </value>
-    </data>
-    <data name="GetRoles" type="System.Resources.ResXFileRef, System.Windows.Forms">
-        <value>sqlscripts\users\getroles.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089;utf-8
-        </value>
-    </data>
-    <data name="GetSongById" type="System.Resources.ResXFileRef, System.Windows.Forms">
-        <value>sqlscripts\songs\getsongbyid.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089;utf-8
-        </value>
-    </data>
-    <data name="GetSongs" xml:space="preserve">
-    <value/>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="CreatePlaylist" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\playlists\createplaylist.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-    <data name="GetUserByEmail" type="System.Resources.ResXFileRef, System.Windows.Forms">
-        <value>sqlscripts\users\getuserbyemail.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089;utf-8
-        </value>
-    </data>
-    <data name="GetUserById" type="System.Resources.ResXFileRef, System.Windows.Forms">
-        <value>sqlscripts\users\getuserbyid.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089;utf-8
-        </value>
-    </data>
-    <data name="GetUserByName" type="System.Resources.ResXFileRef, System.Windows.Forms">
-        <value>sqlscripts\users\getuserbyname.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089;utf-8
-        </value>
-    </data>
-    <data name="GetUserRoles" type="System.Resources.ResXFileRef, System.Windows.Forms">
-        <value>sqlscripts\users\getuserroles.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089;utf-8
-        </value>
-    </data>
-    <data name="GetUsersInRole" type="System.Resources.ResXFileRef, System.Windows.Forms">
-        <value>sqlscripts\users\getusersinrole.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089;utf-8
-        </value>
-    </data>
-    <data name="GetUserTotalUploadsSize" type="System.Resources.ResXFileRef, System.Windows.Forms">
-        <value>sqlscripts\songs\getusertotaluploadssize.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089;utf-8
-        </value>
-    </data>
-    <data name="InsertRoles" type="System.Resources.ResXFileRef, System.Windows.Forms">
-        <value>sqlscripts\users\insertroles.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089;utf-8
-        </value>
-    </data>
-    <data name="UpdatePlaylist" type="System.Resources.ResXFileRef, System.Windows.Forms">
-        <value>sqlscripts\playlists\updateplaylist.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089;utf-8
-        </value>
-    </data>
-    <data name="UpdateRole" type="System.Resources.ResXFileRef, System.Windows.Forms">
-        <value>sqlscripts\roles\updaterole.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089;utf-8
-        </value>
-    </data>
-    <data name="UpdateSong" type="System.Resources.ResXFileRef, System.Windows.Forms">
-        <value>sqlscripts\songs\updatesong.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089;utf-8
-        </value>
-    </data>
-    <data name="UpdateUser" type="System.Resources.ResXFileRef, System.Windows.Forms">
-        <value>sqlscripts\users\updateuser.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089;utf-8
-        </value>
-    </data>
+  <data name="CreateRefreshToken" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\refreshtokens\createrefreshtoken.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="CreateRole" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\roles\createrole.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="CreateSong" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\songs\createsong.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="CreateUser" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\users\createuser.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="DeletePlaylist" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\playlists\deleteplaylist.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="DeleteRefreshToken" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\refreshtokens\deleterefreshtoken.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="DeleteRole" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\roles\deleterole.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="DeleteRoles" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\users\deleteroles.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="DeleteSong" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\songs\deletesong.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="DeleteUser" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\users\deleteuser.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="FindRefreshToken" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\refreshtokens\findrefreshtoken.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="GetAllGenres" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\genres\getallgenres.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="GetAllPlaylists" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\playlists\getallplaylists.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="GetAllSongs" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\songs\getallsongs.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="GetGenreById" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\genres\getgenrebyid.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="GetPlaylistById" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\playlists\getplaylistbyid.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="GetRoleById" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\roles\getrolebyid.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="GetRoleByName" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\roles\getrolebyname.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="GetRoles" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\users\getroles.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="GetSongById" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\songs\getsongbyid.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="GetSongs" xml:space="preserve">
+    <value />
+  </data>
+  <data name="GetUserByEmail" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\users\getuserbyemail.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="GetUserById" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\users\getuserbyid.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="GetUserByName" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\users\getuserbyname.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="GetUserRoles" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\users\getuserroles.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="GetUsersInRole" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\users\getusersinrole.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="GetUserTotalUploadsSize" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\songs\getusertotaluploadssize.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="InsertRoles" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\users\insertroles.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="UpdatePlaylist" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\playlists\updateplaylist.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="UpdateRefreshToken" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\refreshtokens\updaterefreshtoken.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="UpdateRole" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\roles\updaterole.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="UpdateSong" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\songs\updatesong.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="UpdateUser" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\users\updateuser.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
 </root>
