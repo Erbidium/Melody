@@ -78,10 +78,8 @@ public class SongController : ControllerBase
             throw new Exception("Your sound file has wrong extension");
         }
 
-        var uploadedResult = await WriteFile(uploadedSoundFile);
-        
-        newSong.Path = uploadedResult;
-        newSong.SizeInBytes = uploadedSoundFile.Length;
+        var path = await WriteFile(uploadedSoundFile);
+
         // validate path
         ValidationResult result = await _newSongDtoValidator.ValidateAsync(newSong);
         if (!result.IsValid)
@@ -89,8 +87,8 @@ public class SongController : ControllerBase
             result.AddToModelState(ModelState);
             return BadRequest(ModelState);
         }
-        var song = new Song(user.Id, newSong.Name, newSong.Path, newSong.AuthorName, newSong.Year, newSong.GenreId,
-            newSong.SizeInBytes, DateTime.Now);
+        var song = new Song(user.Id, newSong.Name, path, newSong.AuthorName, newSong.Year, newSong.GenreId,
+            uploadedSoundFile.Length, DateTime.Now);
         return Ok(await _songRepository.Create(song));
     }
 
