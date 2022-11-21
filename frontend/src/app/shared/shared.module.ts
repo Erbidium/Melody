@@ -7,6 +7,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatTabsModule } from "@angular/material/tabs";
 import { RouterLinkActive, RouterLinkWithHref } from "@angular/router";
+import { MatIconModule } from "@angular/material/icon";
 
 @NgModule({
     declarations: [
@@ -24,6 +25,7 @@ import { RouterLinkActive, RouterLinkWithHref } from "@angular/router";
     MatTabsModule,
     RouterLinkWithHref,
     RouterLinkActive,
+    MatIconModule,
   ],
 })
 export class SharedModule { }
