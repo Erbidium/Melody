@@ -5,7 +5,7 @@ import { HttpInternalService } from '@core/services/http-internal-service';
     providedIn: 'root',
 })
 export class AuthService {
-    public routePrefix = '/register';
+    public routePrefix = '/api/user/register';
 
     // eslint-disable-next-line no-empty-function
     constructor(private httpService: HttpInternalService) {}
