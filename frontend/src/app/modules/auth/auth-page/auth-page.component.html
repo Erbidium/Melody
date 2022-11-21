@@ -4,7 +4,21 @@
       <div class="application-name">Melody</div>
     </div>
     <mat-card-content>
-      Content
+      <form>
+        <div class="form-inputs">
+          <mat-label>Email</mat-label>
+          <mat-form-field appearance="outline">
+            <input matInput id="email" type="email" placeholder="email@email.com" />
+          </mat-form-field>
+          <mat-label>Password</mat-label>
+          <mat-form-field appearance="outline">
+            <input matInput id="password" type="password" placeholder="●●●●●●●●●●" />
+          </mat-form-field>
+        </div>
+        <div class="form-buttons">
+          <button mat-flat-button color="primary" type="submit">Sign In</button>
+        </div>
+      </form>
     </mat-card-content>
   </mat-card>
 </div>
