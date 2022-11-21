@@ -4,21 +4,50 @@
       <div class="application-name">Melody</div>
     </div>
     <mat-card-content>
-      <form>
-        <div class="form-inputs">
-          <mat-label>Email</mat-label>
-          <mat-form-field appearance="outline">
-            <input matInput id="email" type="email" placeholder="email@email.com" />
-          </mat-form-field>
-          <mat-label>Password</mat-label>
-          <mat-form-field appearance="outline">
-            <input matInput id="password" type="password" placeholder="●●●●●●●●●●" />
-          </mat-form-field>
-        </div>
-        <div class="form-buttons">
-          <button mat-flat-button color="primary" type="submit">Sign In</button>
-        </div>
-      </form>
+      <mat-tab-group>
+        <mat-tab label="Login">
+          <form>
+            <div class="form-inputs">
+              <mat-label>Email</mat-label>
+              <mat-form-field appearance="outline">
+                <input matInput id="email" type="email" placeholder="email@email.com" />
+              </mat-form-field>
+              <mat-label>Password</mat-label>
+              <mat-form-field appearance="outline">
+                <input matInput id="password" type="password" placeholder="●●●●●●●●●●" />
+              </mat-form-field>
+            </div>
+            <div class="form-buttons">
+              <button mat-flat-button color="primary" type="submit">Sign In</button>
+            </div>
+          </form>
+        </mat-tab>
+        <mat-tab label="Registration">
+          <form>
+            <div class="form-inputs">
+              <mat-label>Username</mat-label>
+              <mat-form-field appearance="outline">
+                <input matInput id="username-new" type="text" placeholder="Username" />
+              </mat-form-field>
+              <mat-label>Email</mat-label>
+              <mat-form-field appearance="outline">
+                <input matInput id="email-new" type="email" placeholder="email@email.com" />
+              </mat-form-field>
+              <mat-label>Phone number</mat-label>
+              <mat-form-field appearance="outline">
+                <input matInput id="phone-new" type="text" placeholder="+380000000000" />
+              </mat-form-field>
+              <mat-label>Password</mat-label>
+              <mat-form-field appearance="outline">
+                <input matInput id="password-new" type="password" placeholder="●●●●●●●●●●" />
+              </mat-form-field>
+            </div>
+            <div class="form-buttons">
+              <button mat-flat-button color="primary" type="submit">Sign up</button>
+            </div>
+          </form>
+        </mat-tab>
+      </mat-tab-group>
     </mat-card-content>
   </mat-card>
 </div>
