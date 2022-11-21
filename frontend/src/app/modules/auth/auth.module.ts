@@ -9,20 +9,22 @@ import { MaterialModule } from '@shared/material/material.module';
 import { SharedModule } from '@shared/shared.module';
 
 import { AuthPageComponent } from './auth-page/auth-page.component';
+import { ReactiveFormsModule } from "@angular/forms";
 
 @NgModule({
     declarations: [
         AuthPageComponent,
     ],
-    imports: [
-        CommonModule,
-        AuthRoutingModule,
-        SharedModule,
-        MaterialModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
-        MatTabsModule,
-    ],
+  imports: [
+    CommonModule,
+    AuthRoutingModule,
+    SharedModule,
+    MaterialModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatTabsModule,
+    ReactiveFormsModule,
+  ],
 })
 export class AuthModule { }

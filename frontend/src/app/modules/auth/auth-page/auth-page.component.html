@@ -23,23 +23,24 @@
           </form>
         </mat-tab>
         <mat-tab label="Registration">
-          <form>
+          <form [formGroup]="signUpForm" (ngSubmit)="onSignUp()">
             <div class="form-inputs">
               <mat-label>Юзернейм</mat-label>
               <mat-form-field appearance="outline">
-                <input matInput id="username-new" type="text" placeholder="Username" />
+                <input matInput id="username-new" type="text" formControlName="username" placeholder="Username" />
               </mat-form-field>
               <mat-label>Email</mat-label>
               <mat-form-field appearance="outline">
-                <input matInput id="email-new" type="email" placeholder="email@email.com" />
+                <input matInput id="email-new" type="email" formControlName="email" placeholder="email@email.com" />
+                <mat-error *ngIf="signUpForm.controls['email'].invalid">{{ "Email is invalid" }}</mat-error>
               </mat-form-field>
               <mat-label>Номер телефону</mat-label>
               <mat-form-field appearance="outline">
-                <input matInput id="phone-new" type="text" placeholder="+380000000000" />
+                <input matInput id="phone-new" type="text" formControlName="phone" placeholder="+380000000000" />
               </mat-form-field>
               <mat-label>Пароль</mat-label>
               <mat-form-field appearance="outline">
-                <input matInput id="password-new" type="password" placeholder="●●●●●●●●●●" />
+                <input matInput id="password-new" type="password" formControlName="password" placeholder="●●●●●●●●●●" />
               </mat-form-field>
             </div>
             <div class="form-buttons">
