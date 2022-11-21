@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { SpinnerService } from '@core/services/spinner.service';
 
 @Component({
@@ -6,12 +6,8 @@ import { SpinnerService } from '@core/services/spinner.service';
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.sass'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
     // eslint-disable-next-line no-empty-function
     constructor(private spinner: SpinnerService) {
-    }
-
-    ngOnInit() {
-        this.spinner.show();
     }
 }
