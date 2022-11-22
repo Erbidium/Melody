@@ -29,6 +29,17 @@ export class AuthPageComponent extends BaseComponent {
         }),
     });
 
+    public signInForm = new FormGroup({
+        email: new FormControl('', {
+            validators: [Validators.required, Validators.email],
+            updateOn: 'blur',
+        }),
+        password: new FormControl('', {
+            validators: [Validators.required, Validators.minLength(8), Validators.maxLength(30)],
+            updateOn: 'blur',
+        }),
+    });
+
     constructor(private authService: AuthService) {
         super();
     }
@@ -48,6 +59,14 @@ export class AuthPageComponent extends BaseComponent {
 
             this.authService
                 .signUp(email, password, name, phone)
+                .subscribe({ error: () => this.setCredentialsIncorrect() });
+        }
+    }
+
+    public onSignIn(): void {
+        if (this.signInForm.valid) {
+            this.authService
+                .signIn(this.signInForm.value.email!, this.signInForm.value.password!)
                 .subscribe({ error: () => this.setCredentialsIncorrect() });
         }
     }
