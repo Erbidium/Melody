@@ -1,0 +1,16 @@
+<mat-toolbar color="primary">
+  <span>Melody</span>
+  <nav mat-tab-nav-bar>
+    <a
+      mat-tab-link
+      class="link-btn"
+      *ngFor="let link of navLinks"
+      [routerLink]="link.path"
+      routerLinkActive
+      #rla="routerLinkActive"
+      [active]="rla.isActive">
+      {{ link.label }}
+    </a>
+  </nav>
+  <mat-icon>person</mat-icon>
+</mat-toolbar>

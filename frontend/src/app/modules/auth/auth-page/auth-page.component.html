@@ -1,0 +1,54 @@
+<div class="wrapper">
+  <mat-card class="auth-card">
+    <div class="card-header">
+      <div class="application-name">Melody</div>
+    </div>
+    <mat-card-content>
+      <mat-tab-group>
+        <mat-tab label="Login">
+          <form [formGroup]="signInForm" (ngSubmit)="onSignIn()">
+            <div class="form-inputs">
+              <mat-label>Email</mat-label>
+              <mat-form-field appearance="outline">
+                <input matInput id="email" type="email" formControlName="emailRegistered" placeholder="email@email.com" />
+              </mat-form-field>
+              <mat-label>Пароль</mat-label>
+              <mat-form-field appearance="outline">
+                <input matInput id="password" type="password" formControlName="passwordRegistered" placeholder="●●●●●●●●●●" />
+              </mat-form-field>
+            </div>
+            <div class="form-buttons">
+              <button mat-flat-button color="primary" type="submit">Sign In</button>
+            </div>
+          </form>
+        </mat-tab>
+        <mat-tab label="Registration">
+          <form [formGroup]="signUpForm" (ngSubmit)="onSignUp()">
+            <div class="form-inputs">
+              <mat-label>Юзернейм</mat-label>
+              <mat-form-field appearance="outline">
+                <input matInput id="username-new" type="text" formControlName="username" placeholder="Username" />
+              </mat-form-field>
+              <mat-label>Email</mat-label>
+              <mat-form-field appearance="outline">
+                <input matInput id="email-new" type="email" formControlName="email" placeholder="email@email.com" />
+                <mat-error *ngIf="signUpForm.controls['email'].invalid">{{ "Email is invalid" }}</mat-error>
+              </mat-form-field>
+              <mat-label>Номер телефону</mat-label>
+              <mat-form-field appearance="outline">
+                <input matInput id="phone-new" type="text" formControlName="phone" placeholder="+380000000000" />
+              </mat-form-field>
+              <mat-label>Пароль</mat-label>
+              <mat-form-field appearance="outline">
+                <input matInput id="password-new" type="password" formControlName="password" placeholder="●●●●●●●●●●" />
+              </mat-form-field>
+            </div>
+            <div class="form-buttons">
+              <button mat-flat-button color="primary" type="submit">Sign up</button>
+            </div>
+          </form>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card-content>
+  </mat-card>
+</div>
