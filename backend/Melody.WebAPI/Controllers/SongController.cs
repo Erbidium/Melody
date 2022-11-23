@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Melody.Core.Interfaces;
 
 namespace Melody.WebAPI.Controllers;
 
@@ -19,6 +20,7 @@ namespace Melody.WebAPI.Controllers;
 public class SongController : ControllerBase
 {
     private readonly ISongRepository _songRepository;
+    private readonly IGenreRepository _genreRepository;
     private readonly ITokenService _tokenService;
     private readonly UserManager<UserIdentity> _userManager;
     private readonly IMapper _mapper;
@@ -28,11 +30,12 @@ public class SongController : ControllerBase
     private const string folderName = "Sounds";
     private const long userUploadsLimit = 1000000000;
 
-    public SongController(ISongRepository songRepository, IMapper mapper, IValidator<NewSongDto> newSongDtoValidator,
+    public SongController(ISongRepository songRepository, IGenreRepository genreRepository, IMapper mapper, IValidator<NewSongDto> newSongDtoValidator,
         IValidator<UpdateSongDto> updateSongDtoValidator, ITokenService tokenService,
         UserManager<UserIdentity> userManager)
     {
         _songRepository = songRepository;
+        _genreRepository = genreRepository;
         _mapper = mapper;
         _newSongDtoValidator = newSongDtoValidator;
         _updateSongDtoValidator = updateSongDtoValidator;
@@ -58,6 +61,13 @@ public class SongController : ControllerBase
         return Ok(song);
     }
 
+    [Authorize]
+    [HttpGet("genres")]
+    public async Task<ActionResult<IEnumerable<Genre>>> GetGenres()
+    {
+        return Ok(await _genreRepository.GetAll());
+    }
+        
     [Authorize]
     [HttpPost]
     public async Task<ActionResult<Song>> CreateSong([FromForm] NewSongDto newSong, IFormFile uploadedSoundFile)

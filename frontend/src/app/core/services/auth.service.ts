@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpInternalService } from '@core/services/http-internal-service';
 import { NotificationService } from '@core/services/notification.service';
-import {first, Observable, tap} from 'rxjs';
+import { Observable, tap } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
