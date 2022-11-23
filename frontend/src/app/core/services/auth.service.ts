@@ -41,7 +41,7 @@ export class AuthService {
     }
 
     public isLoggedIn(): boolean {
-        return JSON.parse(localStorage.getItem('access-token')!) as boolean;
+        return !!localStorage.getItem('access-token');
     }
 
     public signOut(): Observable<void> {
