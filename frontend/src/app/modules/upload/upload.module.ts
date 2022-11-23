@@ -6,10 +6,12 @@ import { MaterialModule } from '@shared/material/material.module';
 import { SharedModule } from '@shared/shared.module';
 
 import { UploadPageComponent } from './upload-page/upload-page.component';
+import { UserUploadsPageComponent } from './user-uploads-page/user-uploads-page.component';
 
 @NgModule({
     declarations: [
         UploadPageComponent,
+        UserUploadsPageComponent,
     ],
     imports: [
         CommonModule,
