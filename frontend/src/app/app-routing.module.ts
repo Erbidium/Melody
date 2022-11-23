@@ -22,6 +22,10 @@ const routes: Routes = [
         path: 'recommendations',
         loadChildren: () => import('./modules/recommendations/recommendations.module').then((m) => m.RecommendationsModule),
     },
+    {
+        path: 'statistics',
+        loadChildren: () => import('./modules/statistics/statistics.module').then((m) => m.StatisticsModule),
+    },
     { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
 
