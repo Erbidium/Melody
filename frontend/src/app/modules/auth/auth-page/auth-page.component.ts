@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import {BaseComponent} from "@core/base/base.component";
-import {AuthService} from "@core/services/auth.service";
-import {Router} from "@angular/router";
+import { Router } from '@angular/router';
+import { BaseComponent } from '@core/base/base.component';
+import { AuthService } from '@core/services/auth.service';
 
 @Component({
     selector: 'app-auth-page',
@@ -10,7 +10,6 @@ import {Router} from "@angular/router";
     styleUrls: ['./auth-page.component.sass'],
 })
 export class AuthPageComponent extends BaseComponent {
-
     public signUpForm = new FormGroup({
         username: new FormControl('', {
             validators: [Validators.required, Validators.minLength(8), Validators.maxLength(30)],

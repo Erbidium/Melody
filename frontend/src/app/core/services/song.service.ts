@@ -1,7 +1,7 @@
-import {Injectable, OnInit} from '@angular/core';
+import { Injectable } from '@angular/core';
 import { IGenre } from '@core/models/IGenre';
+import { ISong } from '@core/models/ISong';
 import { HttpInternalService } from '@core/services/http-internal-service';
-import {ISong} from "@core/models/ISong";
 
 @Injectable({ providedIn: 'root' })
 export class SongService {

@@ -24,12 +24,10 @@ export class AuthService {
         return this.httpService.postRequest<{ accessToken: string }>('/api/login', { email, password }).pipe(
             tap({
                 next: (accessToken: { accessToken: string }) => {
-                    console.log(accessToken);
                     this.notificationService.showSuccessMessage('Authentication successful');
                     localStorage.setItem('access-token', accessToken.accessToken);
                 },
-                error: (e) => {
-                    console.log(e);
+                error: () => {
                     this.notificationService.showErrorMessage("You've entered wrong password or email! Please try again.");
                 },
             }),

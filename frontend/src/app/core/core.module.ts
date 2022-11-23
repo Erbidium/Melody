@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { SharedModule } from '@shared/shared.module';
 
 import { BaseComponent } from './base/base.component';
-import {AuthInterceptor } from './interceptors/auth.interceptor';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 @NgModule({
     imports: [

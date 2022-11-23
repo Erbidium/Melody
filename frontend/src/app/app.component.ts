@@ -8,6 +8,5 @@ import { SpinnerService } from '@core/services/spinner.service';
 })
 export class AppComponent {
     // eslint-disable-next-line no-empty-function
-    constructor(private spinner: SpinnerService) {
-    }
+    constructor(private spinner: SpinnerService) {}
 }

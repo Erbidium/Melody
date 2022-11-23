@@ -58,8 +58,6 @@ export class UploadPageComponent extends BaseComponent implements OnInit {
     }
 
     upload() {
-        console.log(this.fileToUpload);
-        console.log(this.selectedGenre);
         if (this.fileToUpload && this.selectedGenre) {
             const formData = new FormData();
 
