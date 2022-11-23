@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { BaseComponent } from '@core/base/base.component';
 import { IGenre } from '@core/models/IGenre';
+import { NotificationService } from '@core/services/notification.service';
 import { SongService } from '@core/services/song.service';
-import {FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
     selector: 'app-upload-page',
@@ -14,7 +15,9 @@ export class UploadPageComponent extends BaseComponent implements OnInit {
 
     selectedGenre?: IGenre;
 
-    constructor(private songService: SongService) {
+    fileToUpload?: File;
+
+    constructor(private songService: SongService, private notificationService: NotificationService) {
         super();
     }
 
@@ -41,4 +44,35 @@ export class UploadPageComponent extends BaseComponent implements OnInit {
             updateOn: 'blur',
         }),
     });
+
+    loadSoundFile(event: Event) {
+        const target = event.target as HTMLInputElement;
+
+        // eslint-disable-next-line prefer-destructuring
+        const fileList = target.files as FileList;
+
+        if (fileList.length > 0) {
+            // eslint-disable-next-line prefer-destructuring
+            this.fileToUpload = fileList[0];
+        }
+    }
+
+    upload() {
+        console.log(this.fileToUpload);
+        console.log(this.selectedGenre);
+        if (this.fileToUpload && this.selectedGenre) {
+            const formData = new FormData();
+
+            formData.append('Name', this.uploadForm.value.name!);
+            formData.append('AuthorName', this.uploadForm.value.author!);
+            formData.append('Year', this.uploadForm.value.year!);
+            formData.append('GenreId', this.selectedGenre.id.toString());
+            formData.append('uploadedSoundFile', this.fileToUpload);
+            this.songService.createSong(formData)
+                .subscribe({
+                    next: () => this.notificationService.showSuccessMessage('Song was successfully uploaded'),
+                    error: (e) => this.notificationService.showErrorMessage(e),
+                });
+        }
+    }
 }
