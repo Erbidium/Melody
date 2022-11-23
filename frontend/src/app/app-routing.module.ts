@@ -18,6 +18,10 @@ const routes: Routes = [
         path: 'profile',
         loadChildren: () => import('./modules/profile/profile.module').then((m) => m.ProfileModule),
     },
+    {
+        path: 'recommendations',
+        loadChildren: () => import('./modules/recommendations/recommendations.module').then((m) => m.RecommendationsModule),
+    },
     { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
 
