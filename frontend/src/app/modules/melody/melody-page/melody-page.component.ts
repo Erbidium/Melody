@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { BaseComponent } from '@core/base/base.component';
 
 @Component({
-    selector: 'app-melody-age',
+    selector: 'app-melody-page',
     templateUrl: './melody-page.component.html',
     styleUrls: ['./melody-page.component.sass'],
 })

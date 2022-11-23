@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { MelodyPageComponent } from '@modules/melody/melody-page/melody-page.component';
 import { MelodyRoutingModule } from '@modules/melody/melody-routing.module';
 import { SharedModule } from '@shared/shared.module';
+import {MaterialModule} from "@shared/material/material.module";
 
 @NgModule({
     declarations: [
@@ -12,6 +13,7 @@ import { SharedModule } from '@shared/shared.module';
         CommonModule,
         MelodyRoutingModule,
         SharedModule,
+        MaterialModule,
     ],
 })
 export class MelodyModule { }
