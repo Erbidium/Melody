@@ -30,11 +30,11 @@ export class AuthPageComponent extends BaseComponent {
     });
 
     public signInForm = new FormGroup({
-        email: new FormControl('', {
+        emailRegistered: new FormControl('', {
             validators: [Validators.required, Validators.email],
             updateOn: 'blur',
         }),
-        password: new FormControl('', {
+        passwordRegistered: new FormControl('', {
             validators: [Validators.required, Validators.minLength(8), Validators.maxLength(30)],
             updateOn: 'blur',
         }),
@@ -66,7 +66,7 @@ export class AuthPageComponent extends BaseComponent {
     public onSignIn(): void {
         if (this.signInForm.valid) {
             this.authService
-                .signIn(this.signInForm.value.email!, this.signInForm.value.password!)
+                .signIn(this.signInForm.value.emailRegistered!, this.signInForm.value.passwordRegistered!)
                 .subscribe({ error: () => this.setCredentialsIncorrect() });
         }
     }

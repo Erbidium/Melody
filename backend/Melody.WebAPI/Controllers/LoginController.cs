@@ -41,7 +41,8 @@ namespace Melody.WebAPI.Controllers
                 var accessToken = _tokenService.GenerateAccessToken(user, roles);
                 var refreshToken = _tokenService.GenerateRefreshToken(user);
                 await _refreshTokenRepository.CreateOrUpdateAsync(refreshToken, user.Id);
-                return Ok(new { accessToken, refreshToken });
+                Response.Cookies.Append("X-Refresh-Token", refreshToken, new CookieOptions { HttpOnly = true, SameSite = SameSiteMode.Strict });
+                return Ok(new {accessToken});
             }
 
             return NotFound("User not found");
