@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {BaseComponent} from "@core/base/base.component";
 import {AuthService} from "@core/services/auth.service";
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'app-auth-page',
@@ -40,7 +41,7 @@ export class AuthPageComponent extends BaseComponent {
         }),
     });
 
-    constructor(private authService: AuthService) {
+    constructor(private authService: AuthService, private router: Router) {
         super();
     }
 
@@ -67,7 +68,10 @@ export class AuthPageComponent extends BaseComponent {
         if (this.signInForm.valid) {
             this.authService
                 .signIn(this.signInForm.value.emailRegistered!, this.signInForm.value.passwordRegistered!)
-                .subscribe({ error: () => this.setCredentialsIncorrect() });
+                .subscribe({
+                    next: () => this.router.navigateByUrl('upload'),
+                    error: () => this.setCredentialsIncorrect(),
+                });
         }
     }
 }
