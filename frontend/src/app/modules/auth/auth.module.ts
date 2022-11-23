@@ -20,10 +20,6 @@ import { AuthPageComponent } from './auth-page/auth-page.component';
         AuthRoutingModule,
         SharedModule,
         MaterialModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
-        MatTabsModule,
         ReactiveFormsModule,
     ],
 })

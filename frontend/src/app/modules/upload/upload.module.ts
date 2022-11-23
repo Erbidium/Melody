@@ -11,6 +11,7 @@ import { UploadRoutingModule } from '@modules/upload/upload-routing-module';
 import { SharedModule } from '@shared/shared.module';
 
 import { UploadPageComponent } from './upload-page/upload-page.component';
+import {MaterialModule} from "@shared/material/material.module";
 
 @NgModule({
     declarations: [
@@ -20,13 +21,8 @@ import { UploadPageComponent } from './upload-page/upload-page.component';
         CommonModule,
         UploadRoutingModule,
         SharedModule,
-        MatFormFieldModule,
-        MatInputModule,
+        MaterialModule,
         ReactiveFormsModule,
-        MatCardModule,
-        MatSelectModule,
-        MatIconModule,
-        MatButtonModule,
     ],
 })
 export class UploadModule { }
