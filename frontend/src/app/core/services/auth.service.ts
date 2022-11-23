@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpInternalService } from '@core/services/http-internal-service';
 import { NotificationService } from '@core/services/notification.service';
-import { tap } from 'rxjs';
+import {first, Observable, tap} from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -32,6 +32,36 @@ export class AuthService {
                     console.log(e);
                     this.notificationService.showErrorMessage("You've entered wrong password or email! Please try again.");
                 },
+            }),
+        );
+    }
+
+    public getAccessToken() {
+        return localStorage.getItem('access-token');
+    }
+
+    public isLoggedIn(): boolean {
+        return JSON.parse(localStorage.getItem('access-token')!) as boolean;
+    }
+
+    public signOut(): Observable<void> {
+        return this.httpService.postRequest<void>('/api/logout', {}).pipe(
+            tap({
+                next: () => {
+                    localStorage.removeItem('access-token');
+                },
+                error: (e) => this.notificationService.showErrorMessage(e.message),
+            }),
+        );
+    }
+
+    public refreshToken() {
+        return this.httpService.postRequest<{ accessToken: string }>('/api/login/refresh', {}).pipe(
+            tap({
+                next: (token) => {
+                    localStorage.setItem('access-token', token.accessToken);
+                },
+                error: (e) => this.notificationService.showErrorMessage(e.message),
             }),
         );
     }
