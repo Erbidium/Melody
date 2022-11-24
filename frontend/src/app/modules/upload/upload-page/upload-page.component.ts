@@ -4,6 +4,7 @@ import { BaseComponent } from '@core/base/base.component';
 import { IGenre } from '@core/models/IGenre';
 import { NotificationService } from '@core/services/notification.service';
 import { SongService } from '@core/services/song.service';
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'app-upload-page',
@@ -17,7 +18,7 @@ export class UploadPageComponent extends BaseComponent implements OnInit {
 
     fileToUpload?: File;
 
-    constructor(private songService: SongService, private notificationService: NotificationService) {
+    constructor(private songService: SongService, private notificationService: NotificationService, private router: Router) {
         super();
     }
 
@@ -76,5 +77,9 @@ export class UploadPageComponent extends BaseComponent implements OnInit {
                     error: (e) => this.notificationService.showErrorMessage(e),
                 });
         }
+    }
+
+    reset() {
+        this.router.navigateByUrl('melody');
     }
 }
