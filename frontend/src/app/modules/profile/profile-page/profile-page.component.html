@@ -1,8 +1,10 @@
 <app-header>
 </app-header>
-<h1>UserName</h1>
+<h1>{{currentUser?.userName}}</h1>
 <button mat-raised-button (click)="logOut()">Log out</button>
-<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At blanditiis consectetur dignissimos distinctio dolor eaque error explicabo fugit hic inventore ipsum modi mollitia nihil perspiciatis quaerat, quibusdam reprehenderit repudiandae tempore!</p>
+<p>Welcome to your profile page!</p>
+<p>Your email: {{currentUser?.email}}</p>
+<p>Your phone number: {{currentUser?.phoneNumber}}</p>
 <h1>
     Created playlists
 </h1>
