@@ -68,7 +68,11 @@ export class UploadPageComponent extends BaseComponent implements OnInit {
             formData.append('uploadedSoundFile', this.fileToUpload);
             this.songService.createSong(formData)
                 .subscribe({
-                    next: () => this.notificationService.showSuccessMessage('Song was successfully uploaded'),
+                    next: () => {
+                        this.notificationService.showSuccessMessage('Song was successfully uploaded');
+                        this.uploadForm.reset();
+                        this.selectedGenre = undefined;
+                    },
                     error: (e) => this.notificationService.showErrorMessage(e),
                 });
         }
