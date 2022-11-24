@@ -59,7 +59,13 @@ export class AuthPageComponent extends BaseComponent {
 
             this.authService
                 .signUp(email, password, name, phone)
-                .subscribe({ error: () => this.setCredentialsIncorrect() });
+                .subscribe({
+                    next: () => {
+                        this.signUpForm.reset();
+                        this.router.navigateByUrl('upload');
+                    },
+                    error: () => this.setCredentialsIncorrect()
+                });
         }
     }
 
@@ -68,7 +74,10 @@ export class AuthPageComponent extends BaseComponent {
             this.authService
                 .signIn(this.signInForm.value.emailRegistered!, this.signInForm.value.passwordRegistered!)
                 .subscribe({
-                    next: () => this.router.navigateByUrl('upload'),
+                    next: () => {
+                        this.signInForm.reset();
+                        this.router.navigateByUrl('upload');
+                    },
                     error: () => this.setCredentialsIncorrect(),
                 });
         }
