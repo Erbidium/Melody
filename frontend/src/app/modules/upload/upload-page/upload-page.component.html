@@ -3,16 +3,16 @@
 <div class="wrapper">
     <form [formGroup]="uploadForm">
         <mat-form-field appearance="outline">
-            <input matInput id="name" type="text" formControlName="name" placeholder="Song name" />
+            <input matInput id="name" type="text" formControlName="name" placeholder="Назва пісні" />
         </mat-form-field>
         <mat-form-field appearance="outline">
-            <input matInput id="author" type="text" formControlName="author" placeholder="Author" />
+            <input matInput id="author" type="text" formControlName="author" placeholder="Автор" />
         </mat-form-field>
         <mat-form-field appearance="outline">
-            <input matInput id="year" type="number" formControlName="year" placeholder="Year" />
+            <input matInput id="year" type="number" formControlName="year" placeholder="Рік" />
         </mat-form-field>
         <mat-form-field class="genre" appearance="fill">
-            <mat-label>Genre</mat-label>
+            <mat-label>Жанр</mat-label>
             <mat-select [(value)]="selectedGenre">
                 <mat-option *ngFor="let genre of genres" [value]="genre">
                     {{genre.name}}
@@ -32,6 +32,6 @@
     (change)="loadSoundFile($event)"/>
 <div class="avatar-buttons">
 <mat-icon (click)="file.click()">cloud_upload</mat-icon>
-<h2>Upload song file from device</h2>
-<button mat-raised-button>Cancel</button>
-<button mat-raised-button (click)="upload()">Upload</button>
+<h2>Завантажити пісню з пристрою</h2>
+<button mat-raised-button>Відмінити</button>
+<button mat-raised-button (click)="upload()">Завантажити</button>

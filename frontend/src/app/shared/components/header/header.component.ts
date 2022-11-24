@@ -9,10 +9,10 @@ import { BaseComponent } from '@core/base/base.component';
 })
 export class HeaderComponent extends BaseComponent {
     public navLinks = [
-        { path: '/melody', label: 'Main' },
-        { path: '/recommendations', label: 'Recommendations' },
-        { path: '/statistics', label: 'Statistics' },
-        { path: '/upload', label: 'Load song' },
+        { path: '/melody', label: 'Головна' },
+        { path: '/recommendations', label: 'Рекомендації' },
+        { path: '/statistics', label: 'Статистика' },
+        { path: '/upload', label: 'Завантажити пісню' },
     ];
 
     constructor(

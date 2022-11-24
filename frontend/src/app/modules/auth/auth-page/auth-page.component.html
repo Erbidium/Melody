@@ -5,7 +5,7 @@
     </div>
     <mat-card-content>
       <mat-tab-group>
-        <mat-tab label="Login">
+        <mat-tab label="Логін">
           <form [formGroup]="signInForm" (ngSubmit)="onSignIn()">
             <div class="form-inputs">
               <mat-label>Email</mat-label>
@@ -18,11 +18,11 @@
               </mat-form-field>
             </div>
             <div class="form-buttons">
-              <button mat-flat-button color="primary" type="submit">Sign In</button>
+              <button mat-flat-button color="primary" type="submit">Увійти</button>
             </div>
           </form>
         </mat-tab>
-        <mat-tab label="Registration">
+        <mat-tab label="Реєстрація">
           <form [formGroup]="signUpForm" (ngSubmit)="onSignUp()">
             <div class="form-inputs">
               <mat-label>Юзернейм</mat-label>
@@ -44,7 +44,7 @@
               </mat-form-field>
             </div>
             <div class="form-buttons">
-              <button mat-flat-button color="primary" type="submit">Sign up</button>
+              <button mat-flat-button color="primary" type="submit">Зареєструватися</button>
             </div>
           </form>
         </mat-tab>
