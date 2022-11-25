@@ -3,9 +3,9 @@ import { Router } from '@angular/router';
 import { BaseComponent } from '@core/base/base.component';
 import { IUser } from '@core/models/IUser';
 import { AuthService } from '@core/services/auth.service';
+import { NotificationService } from '@core/services/notification.service';
 import { SpinnerService } from '@core/services/spinner.service';
 import { UserService } from '@core/services/user.service';
-import {NotificationService} from "@core/services/notification.service";
 
 @Component({
     selector: 'app-profile-page',

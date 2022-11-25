@@ -64,7 +64,7 @@ export class AuthPageComponent extends BaseComponent {
                         this.signUpForm.reset();
                         this.router.navigateByUrl('upload');
                     },
-                    error: () => this.setCredentialsIncorrect()
+                    error: () => this.setCredentialsIncorrect(),
                 });
         }
     }

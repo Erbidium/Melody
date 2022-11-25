@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { BaseComponent } from '@core/base/base.component';
 import { IGenre } from '@core/models/IGenre';
 import { NotificationService } from '@core/services/notification.service';
 import { SongService } from '@core/services/song.service';
-import {Router} from "@angular/router";
 
 @Component({
     selector: 'app-upload-page',

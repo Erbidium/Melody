@@ -6,9 +6,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterLinkActive, RouterLinkWithHref } from '@angular/router';
 import { MaterialModule } from '@shared/material/material.module';
 
+import { BackButtonComponent } from './components/back-button/back-button.component';
 import { HeaderComponent } from './components/header/header.component';
 import { LoadingSpinnerComponent } from './components/loading-spinner/loading-spinner.component';
-import { BackButtonComponent } from './components/back-button/back-button.component';
 
 @NgModule({
     declarations: [
