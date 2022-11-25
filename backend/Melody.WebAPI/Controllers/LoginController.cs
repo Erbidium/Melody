@@ -41,7 +41,7 @@ namespace Melody.WebAPI.Controllers
                 var accessToken = _tokenService.GenerateAccessToken(user, roles);
                 var refreshToken = _tokenService.GenerateRefreshToken(user);
                 await _refreshTokenRepository.CreateOrUpdateAsync(refreshToken, user.Id);
-                Response.Cookies.Append("X-Refresh-Token", refreshToken, new CookieOptions { HttpOnly = true, SameSite = SameSiteMode.Strict });
+                Response.Cookies.Append("X-Refresh-Token", refreshToken, new CookieOptions { HttpOnly = true, SameSite = SameSiteMode.Strict, Expires = DateTimeOffset.Now.AddDays(60) });
                 return Ok(new {accessToken});
             }
 
@@ -88,7 +88,7 @@ namespace Melody.WebAPI.Controllers
             var currentUser = _tokenService.GetCurrentUser(identity);
             var user = await _userManager.FindByIdAsync(currentUser.UserId.ToString());
             var refreshToken = _tokenService.GenerateRefreshToken(user, true);
-            Response.Cookies.Append("X-Refresh-Token", refreshToken, new CookieOptions { HttpOnly = true, SameSite = SameSiteMode.Strict });
+            Response.Cookies.Append("X-Refresh-Token", refreshToken, new CookieOptions { HttpOnly = true, SameSite = SameSiteMode.Strict, Expires = DateTimeOffset.Now.AddDays(-1)});
             return Ok();
         }
         

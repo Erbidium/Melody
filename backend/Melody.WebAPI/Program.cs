@@ -48,9 +48,10 @@ if (app.Environment.IsDevelopment())
 app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 app.UseCors(opt => opt
-    .AllowAnyHeader()
     .AllowAnyMethod()
-    .AllowAnyOrigin());
+    .AllowAnyHeader()
+    .AllowCredentials()
+    .SetIsOriginAllowed(_ => true));
 
 app.UseHttpsRedirection();
 
