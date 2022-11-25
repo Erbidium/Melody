@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Melody.WebAPI.DTO.User;
 
 namespace Melody.WebAPI.Controllers;
 
@@ -48,11 +49,11 @@ public class UserController : ControllerBase
 
     [Authorize]
     [HttpGet]
-    public async Task<IActionResult> GetCurrentUser()
+    public async Task<ActionResult<UserDto>> GetCurrentUser()
     {
         var identity = HttpContext.User.Identity as ClaimsIdentity;
         var userId = _tokenService.GetCurrentUser(identity).UserId;
-        return Ok(await _userManager.FindByIdAsync(userId.ToString()));
+        return Ok(new UserDto(await _userManager.FindByIdAsync(userId.ToString())));
     }
 
     [HttpGet("Admins")]
