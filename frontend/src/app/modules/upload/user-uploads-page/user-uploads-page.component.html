@@ -3,8 +3,22 @@
 <h1>На цій сторінці ти можеш побачити список всіх твоїх заватажених на платформу пісень</h1>
 <audio
     controls
-    src="https://localhost:7284/api/Song/file/10">
+    src="https://localhost:7284/api/Song/file/{{currentSongIdForMusicPlayer}}">
 </audio>
 <div *ngFor="let song of uploadedSongs">
     {{song.name}} {{song.authorName}} {{song.year}}
 </div>
+<table mat-table [dataSource]="uploadedSongs" class="mat-elevation-z8">
+    <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Name </th>
+        <td mat-cell *matCellDef="let song"> {{song.name}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="author">
+        <th mat-header-cell *matHeaderCellDef> Author </th>
+        <td mat-cell *matCellDef="let song"> {{song.authorName}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+    <tr mat-row *matRowDef="let row; columns: columnsToDisplay" (click)="selectSong(row.id)"></tr>
+</table>

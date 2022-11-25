@@ -7,6 +7,7 @@ import { SharedModule } from '@shared/shared.module';
 
 import { UploadPageComponent } from './upload-page/upload-page.component';
 import { UserUploadsPageComponent } from './user-uploads-page/user-uploads-page.component';
+import {MatTableModule} from "@angular/material/table";
 
 @NgModule({
     declarations: [
@@ -19,6 +20,7 @@ import { UserUploadsPageComponent } from './user-uploads-page/user-uploads-page.
         SharedModule,
         MaterialModule,
         ReactiveFormsModule,
+        MatTableModule,
     ],
 })
 export class UploadModule { }

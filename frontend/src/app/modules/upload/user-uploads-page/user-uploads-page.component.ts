@@ -11,6 +11,10 @@ import {ISong} from "@core/models/ISong";
 export class UserUploadsPageComponent extends BaseComponent implements OnInit {
     uploadedSongs: ISong[] = [];
 
+    columnsToDisplay = ['name', 'author'];
+
+    currentSongIdForMusicPlayer?: number;
+
     constructor(private songService: SongService) {
         super();
     }
@@ -22,5 +26,9 @@ export class UserUploadsPageComponent extends BaseComponent implements OnInit {
             .subscribe((resp) => {
                 this.uploadedSongs = resp;
             });
+    }
+
+    selectSong(songId: number) {
+        this.currentSongIdForMusicPlayer = songId;
     }
 }
