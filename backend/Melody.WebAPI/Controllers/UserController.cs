@@ -56,6 +56,13 @@ public class UserController : ControllerBase
         return Ok(new UserDto(await _userManager.FindByIdAsync(userId.ToString())));
     }
 
+    [AllowAnonymous]
+    [HttpGet("check-email")]
+    public async Task<ActionResult<bool>> CheckExistingEmail(string email)
+    {
+        return Ok(await _userManager.FindByEmailAsync(email) != null);
+    }
+
     [HttpGet("Admins")]
     [Authorize(Roles = "Admin")]
     public IActionResult AdminsEndpoint()

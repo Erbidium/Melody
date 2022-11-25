@@ -3,6 +3,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BaseComponent } from '@core/base/base.component';
 import { AuthService } from '@core/services/auth.service';
+import { UserService } from '@core/services/user.service';
+import { EmailValidator } from '@modules/auth/validators/email-validator';
 
 @Component({
     selector: 'app-auth-page',
@@ -10,37 +12,41 @@ import { AuthService } from '@core/services/auth.service';
     styleUrls: ['./auth-page.component.sass'],
 })
 export class AuthPageComponent extends BaseComponent {
-    public signUpForm = new FormGroup({
-        username: new FormControl('', {
-            validators: [Validators.required, Validators.minLength(8), Validators.maxLength(30)],
+    public signUpForm = new FormGroup(
+        {
+            username: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(30)]),
+            email: new FormControl(
+                '',
+                [Validators.required, Validators.email],
+                [EmailValidator.signUpEmailValidator(this.userService)],
+            ),
+            password: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(30)]),
+            phone: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(30)]),
+        },
+        {
             updateOn: 'blur',
-        }),
-        email: new FormControl('', {
-            validators: [Validators.required, Validators.email],
-            updateOn: 'blur',
-        }),
-        password: new FormControl('', {
-            validators: [Validators.required, Validators.minLength(8), Validators.maxLength(30)],
-            updateOn: 'blur',
-        }),
-        phone: new FormControl('', {
-            validators: [Validators.required, Validators.minLength(8), Validators.maxLength(30)],
-            updateOn: 'blur',
-        }),
-    });
+        },
+    );
 
-    public signInForm = new FormGroup({
-        emailRegistered: new FormControl('', {
-            validators: [Validators.required, Validators.email],
+    public signInForm = new FormGroup(
+        {
+            emailRegistered: new FormControl(
+                '',
+                [Validators.required, Validators.email],
+                [EmailValidator.loginEmailValidator(this.userService)],
+            ),
+            passwordRegistered: new FormControl('', [
+                Validators.required,
+                Validators.minLength(8),
+                Validators.maxLength(30),
+            ]),
+        },
+        {
             updateOn: 'blur',
-        }),
-        passwordRegistered: new FormControl('', {
-            validators: [Validators.required, Validators.minLength(8), Validators.maxLength(30)],
-            updateOn: 'blur',
-        }),
-    });
+        },
+    );
 
-    constructor(private authService: AuthService, private router: Router) {
+    constructor(private authService: AuthService, private userService: UserService, private router: Router) {
         super();
     }
 
@@ -57,15 +63,13 @@ export class AuthPageComponent extends BaseComponent {
             const name = this.signUpForm.value.username!;
             const phone = this.signUpForm.value.phone!;
 
-            this.authService
-                .signUp(email, password, name, phone)
-                .subscribe({
-                    next: () => {
-                        this.signUpForm.reset();
-                        this.router.navigateByUrl('melody');
-                    },
-                    error: () => this.setCredentialsIncorrect(),
-                });
+            this.authService.signUp(email, password, name, phone).subscribe({
+                next: () => {
+                    this.signUpForm.reset();
+                    this.router.navigateByUrl('melody');
+                },
+                error: () => this.setCredentialsIncorrect(),
+            });
         }
     }
 

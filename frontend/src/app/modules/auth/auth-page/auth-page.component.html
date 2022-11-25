@@ -11,6 +11,9 @@
               <mat-label>Email</mat-label>
               <mat-form-field appearance="outline">
                 <input matInput id="email" type="email" formControlName="emailRegistered" placeholder="email@email.com" />
+                  <mat-error *ngIf="signInForm.controls['emailRegistered'].hasError('email')">Email format is invalid</mat-error>
+                  <mat-error *ngIf="signInForm.controls['emailRegistered'].hasError('required')">Email is required field</mat-error>
+                  <mat-error *ngIf="signInForm.controls['emailRegistered'].hasError('userInNotExist')">User with entered email address doesn't exist</mat-error>
               </mat-form-field>
               <mat-label>Пароль</mat-label>
               <mat-form-field appearance="outline">
@@ -32,7 +35,9 @@
               <mat-label>Email</mat-label>
               <mat-form-field appearance="outline">
                 <input matInput id="email-new" type="email" formControlName="email" placeholder="email@email.com" />
-                <mat-error *ngIf="signUpForm.controls['email'].invalid">{{ "Email is invalid" }}</mat-error>
+                  <mat-error *ngIf="signUpForm.controls['email'].hasError('email')">Email format is invalid</mat-error>
+                  <mat-error *ngIf="signUpForm.controls['email'].hasError('required')">Email is required field</mat-error>
+                  <mat-error *ngIf="signUpForm.controls['email'].hasError('userAlreadyExists')">User with entered email already exists</mat-error>
               </mat-form-field>
               <mat-label>Номер телефону</mat-label>
               <mat-form-field appearance="outline">
