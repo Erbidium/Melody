@@ -68,6 +68,9 @@ namespace Melody.WebAPI.Controllers
                     var email = principal.FindFirst(c => c.Type == ClaimTypes.Email).Value;
                     var user = await _userManager.FindByEmailAsync(email);
                     var roles = await _userManager.GetRolesAsync(user);
+                    var refreshToken = _tokenService.GenerateRefreshToken(user);
+                    await _refreshTokenRepository.CreateOrUpdateAsync(refreshToken, user.Id);
+                    Response.Cookies.Append("X-Refresh-Token", refreshToken, new CookieOptions { HttpOnly = true, SameSite = SameSiteMode.None, Secure = true, Expires = DateTimeOffset.Now.AddDays(60) });
                     return Ok(_tokenService.GenerateAccessToken(user, roles));
                 }
 
