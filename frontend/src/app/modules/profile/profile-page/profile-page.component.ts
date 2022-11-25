@@ -5,6 +5,7 @@ import { IUser } from '@core/models/IUser';
 import { AuthService } from '@core/services/auth.service';
 import { SpinnerService } from '@core/services/spinner.service';
 import { UserService } from '@core/services/user.service';
+import {NotificationService} from "@core/services/notification.service";
 
 @Component({
     selector: 'app-profile-page',
@@ -19,6 +20,7 @@ export class ProfilePageComponent extends BaseComponent implements OnInit {
         private userService: UserService,
         private spinnerService: SpinnerService,
         private router: Router,
+        private notificationService: NotificationService,
     ) {
         super();
     }
@@ -35,7 +37,12 @@ export class ProfilePageComponent extends BaseComponent implements OnInit {
     }
 
     logOut() {
-        this.authService.signOut();
-        this.router.navigateByUrl('auth');
+        this.authService.signOut()
+            .pipe(this.untilThis)
+            .subscribe(() => {
+                this.notificationService.showSuccessMessage('Ти успішно вийшов з свого акаунту');
+                localStorage.removeItem('access-token');
+                this.router.navigateByUrl('auth');
+            });
     }
 }
