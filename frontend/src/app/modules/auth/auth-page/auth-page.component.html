@@ -31,6 +31,7 @@
               <mat-label>Юзернейм</mat-label>
               <mat-form-field appearance="outline">
                 <input matInput id="username-new" type="text" formControlName="username" placeholder="Username" />
+                  <mat-error *ngIf="signUpForm.controls['username'].hasError('required')">Username is required field</mat-error>
               </mat-form-field>
               <mat-label>Email</mat-label>
               <mat-form-field appearance="outline">
@@ -42,10 +43,12 @@
               <mat-label>Номер телефону</mat-label>
               <mat-form-field appearance="outline">
                 <input matInput id="phone-new" type="text" formControlName="phone" placeholder="+380000000000" />
+                  <mat-error *ngIf="signUpForm.controls['phone'].hasError('required')">Phone is required field</mat-error>
               </mat-form-field>
               <mat-label>Пароль</mat-label>
               <mat-form-field appearance="outline">
                 <input matInput id="password-new" type="password" formControlName="password" placeholder="●●●●●●●●●●" />
+                  <mat-error *ngIf="signUpForm.controls['password'].hasError('required')">Password is required field</mat-error>
               </mat-form-field>
             </div>
             <div class="form-buttons">
