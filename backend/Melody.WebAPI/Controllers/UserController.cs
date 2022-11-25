@@ -62,6 +62,13 @@ public class UserController : ControllerBase
     {
         return Ok(await _userManager.FindByEmailAsync(email) != null);
     }
+    
+    [AllowAnonymous]
+    [HttpGet("check-username")]
+    public async Task<ActionResult<bool>> CheckExistingUsername(string username)
+    {
+        return Ok(await _userManager.FindByNameAsync(username) != null);
+    }
 
     [HttpGet("Admins")]
     [Authorize(Roles = "Admin")]

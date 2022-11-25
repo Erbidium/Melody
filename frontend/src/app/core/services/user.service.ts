@@ -23,4 +23,15 @@ export class UserService {
             }),
         );
     }
+
+    public checkUsername(username: string): Observable<boolean> {
+        const usernameEncoded = encodeURIComponent(username);
+
+        return this.httpService.getRequest<boolean>(`/api/user/check-username?username=${usernameEncoded}`).pipe(
+            tap({
+                error: () =>
+                    this.notificationService.showErrorMessage('Something went wrong. Failed to verify username exists.'),
+            }),
+        );
+    }
 }

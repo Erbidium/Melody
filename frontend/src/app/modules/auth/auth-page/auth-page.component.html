@@ -33,6 +33,7 @@
               <mat-form-field appearance="outline">
                 <input matInput id="username-new" type="text" formControlName="username" placeholder="Username" />
                   <mat-error *ngIf="signUpForm.controls['username'].hasError('required')">Username is required field</mat-error>
+                  <mat-error *ngIf="signUpForm.controls['username'].hasError('userAlreadyExists')">User with entered username already exists</mat-error>
               </mat-form-field>
               <mat-label>Email</mat-label>
               <mat-form-field appearance="outline">

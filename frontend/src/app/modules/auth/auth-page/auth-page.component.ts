@@ -5,6 +5,7 @@ import { BaseComponent } from '@core/base/base.component';
 import { AuthService } from '@core/services/auth.service';
 import { UserService } from '@core/services/user.service';
 import { EmailValidator } from '@modules/auth/validators/email-validator';
+import { UsernameValidator } from '@modules/auth/validators/username-validator';
 
 @Component({
     selector: 'app-auth-page',
@@ -14,7 +15,11 @@ import { EmailValidator } from '@modules/auth/validators/email-validator';
 export class AuthPageComponent extends BaseComponent {
     public signUpForm = new FormGroup(
         {
-            username: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(30)]),
+            username: new FormControl(
+                '',
+                [Validators.required, Validators.minLength(8), Validators.maxLength(30)],
+                [UsernameValidator.signUpUsernameValidator(this.userService)],
+            ),
             email: new FormControl(
                 '',
                 [Validators.required, Validators.email],
