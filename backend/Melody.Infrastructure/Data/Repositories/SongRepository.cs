@@ -86,4 +86,13 @@ public class SongRepository : ISongRepository
         return await connection.ExecuteScalarAsync<long>(SqlScriptsResource.GetUserTotalUploadsSize,
             new { UserId = userId });
     }
+
+    public async Task<IReadOnlyCollection<Song>> GetSongsUploadedByUserId(long userId)
+    {
+        using var connection = _context.CreateConnection();
+
+        var songs = await connection.QueryAsync<SongDb>(SqlScriptsResource.GetSongsUploadedByUserId, new { UserId = userId });
+        return songs.Select(record => new Song(record.UserId, record.Name, record.Path, record.AuthorName, record.Year,
+            record.GenreId, record.SizeBytes, record.UploadedAt, record.Id)).ToList().AsReadOnly();
+    }
 }

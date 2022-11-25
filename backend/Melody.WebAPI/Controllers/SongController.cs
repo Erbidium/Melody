@@ -45,10 +45,13 @@ public class SongController : ControllerBase
         _userManager = userManager;
     }
 
+    [Authorize]
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Song>>> GetSongs()
+    public async Task<ActionResult<IEnumerable<Song>>> GetSongsUploadedByUser()
     {
-        return Ok(await _songRepository.GetAll());
+        var identity = HttpContext.User.Identity as ClaimsIdentity;
+        var currentUserFromToken = _tokenService.GetCurrentUser(identity);
+        return Ok(await _songRepository.GetSongsUploadedByUserId(currentUserFromToken.UserId));
     }
 
     [HttpGet("file/{id}")]

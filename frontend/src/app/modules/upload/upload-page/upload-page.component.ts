@@ -24,7 +24,7 @@ export class UploadPageComponent extends BaseComponent implements OnInit {
 
     ngOnInit(): void {
         this.songService
-            .getAll()
+            .getAllGenres()
             .pipe(this.untilThis)
             .subscribe((resp) => {
                 this.genres = resp;

@@ -5,3 +5,6 @@
     controls
     src="https://localhost:7284/api/Song/file/10">
 </audio>
+<div *ngFor="let song of uploadedSongs">
+    {{song.name}} {{song.authorName}} {{song.year}}
+</div>
