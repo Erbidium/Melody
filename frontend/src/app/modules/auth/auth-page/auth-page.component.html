@@ -18,6 +18,7 @@
               <mat-label>Пароль</mat-label>
               <mat-form-field appearance="outline">
                 <input matInput id="password" type="password" formControlName="passwordRegistered" placeholder="●●●●●●●●●●" />
+                  <mat-error *ngIf="signInForm.controls['passwordRegistered'].hasError('required')">Password is required field</mat-error>
               </mat-form-field>
             </div>
             <div class="form-buttons">
