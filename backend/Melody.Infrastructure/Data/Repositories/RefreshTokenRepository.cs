@@ -51,7 +51,8 @@ namespace Melody.Infrastructure.Data.Repositories
         public async Task<RefreshTokenDb> FindAsync(string token)
         {
             using var connection = _context.CreateConnection();
-            return await connection.QuerySingleOrDefaultAsync<RefreshTokenDb>(SqlScriptsResource.FindRefreshToken, new { Token = token });
+            return await connection.QuerySingleOrDefaultAsync<RefreshTokenDb>(SqlScriptsResource.FindRefreshToken,
+                new { Token = token });
         }
     }
 }

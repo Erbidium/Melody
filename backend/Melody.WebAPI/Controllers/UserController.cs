@@ -45,7 +45,7 @@ public class UserController : ControllerBase
         await _userManager.AddToRoleAsync(user, "User");
         return StatusCode(201);
     }
-    
+
     [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetCurrentUser()
@@ -54,7 +54,7 @@ public class UserController : ControllerBase
         var userId = _tokenService.GetCurrentUser(identity).UserId;
         return Ok(await _userManager.FindByIdAsync(userId.ToString()));
     }
-    
+
     [HttpGet("Admins")]
     [Authorize(Roles = "Admin")]
     public IActionResult AdminsEndpoint()

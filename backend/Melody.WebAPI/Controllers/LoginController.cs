@@ -41,8 +41,13 @@ namespace Melody.WebAPI.Controllers
                 var accessToken = _tokenService.GenerateAccessToken(user, roles);
                 var refreshToken = _tokenService.GenerateRefreshToken(user);
                 await _refreshTokenRepository.CreateOrUpdateAsync(refreshToken, user.Id);
-                Response.Cookies.Append("X-Refresh-Token", refreshToken, new CookieOptions { HttpOnly = true, SameSite = SameSiteMode.None, Secure = true, Expires = DateTimeOffset.Now.AddDays(60) });
-                return Ok(new {accessToken});
+                Response.Cookies.Append("X-Refresh-Token", refreshToken,
+                    new CookieOptions
+                    {
+                        HttpOnly = true, SameSite = SameSiteMode.None, Secure = true,
+                        Expires = DateTimeOffset.Now.AddDays(60)
+                    });
+                return Ok(new { accessToken });
             }
 
             return NotFound("User not found");
@@ -54,7 +59,7 @@ namespace Melody.WebAPI.Controllers
         {
             if (!Request.Cookies.TryGetValue("X-Refresh-Token", out var refreshTokenString))
                 return BadRequest();
-            
+
             var tokenHandler = new JwtSecurityTokenHandler();
             var validationParameters = _tokenService.GetValidationParameters();
             try
@@ -70,7 +75,12 @@ namespace Melody.WebAPI.Controllers
                     var roles = await _userManager.GetRolesAsync(user);
                     var refreshToken = _tokenService.GenerateRefreshToken(user);
                     await _refreshTokenRepository.CreateOrUpdateAsync(refreshToken, user.Id);
-                    Response.Cookies.Append("X-Refresh-Token", refreshToken, new CookieOptions { HttpOnly = true, SameSite = SameSiteMode.None, Secure = true, Expires = DateTimeOffset.Now.AddDays(60) });
+                    Response.Cookies.Append("X-Refresh-Token", refreshToken,
+                        new CookieOptions
+                        {
+                            HttpOnly = true, SameSite = SameSiteMode.None, Secure = true,
+                            Expires = DateTimeOffset.Now.AddDays(60)
+                        });
                     return Ok(_tokenService.GenerateAccessToken(user, roles));
                 }
 
@@ -82,7 +92,7 @@ namespace Melody.WebAPI.Controllers
                 return Unauthorized();
             }
         }
-        
+
         [Authorize]
         [HttpPost("/api/logout")]
         public async Task<IActionResult> Logout()
@@ -91,10 +101,15 @@ namespace Melody.WebAPI.Controllers
             var currentUser = _tokenService.GetCurrentUser(identity);
             var user = await _userManager.FindByIdAsync(currentUser.UserId.ToString());
             var refreshToken = _tokenService.GenerateRefreshToken(user, true);
-            Response.Cookies.Append("X-Refresh-Token", refreshToken, new CookieOptions { HttpOnly = true, SameSite = SameSiteMode.None, Secure = true, Expires = DateTimeOffset.Now.AddDays(-1)});
+            Response.Cookies.Append("X-Refresh-Token", refreshToken,
+                new CookieOptions
+                {
+                    HttpOnly = true, SameSite = SameSiteMode.None, Secure = true,
+                    Expires = DateTimeOffset.Now.AddDays(-1)
+                });
             return Ok();
         }
-        
+
 
         private async Task<UserIdentity?> Authenticate(UserLogin userLogin)
         {

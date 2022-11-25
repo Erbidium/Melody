@@ -31,7 +31,8 @@ public class SongController : ControllerBase
     private const string folderName = "Sounds";
     private const long userUploadsLimit = 1000000000;
 
-    public SongController(ISongRepository songRepository, IGenreRepository genreRepository, IMapper mapper, IValidator<NewSongDto> newSongDtoValidator,
+    public SongController(ISongRepository songRepository, IGenreRepository genreRepository, IMapper mapper,
+        IValidator<NewSongDto> newSongDtoValidator,
         IValidator<UpdateSongDto> updateSongDtoValidator, ITokenService tokenService,
         UserManager<UserIdentity> userManager)
     {
@@ -61,8 +62,8 @@ public class SongController : ControllerBase
 
         FileStream fs = System.IO.File.OpenRead(song.Path);
         FileStreamResult result = File(
-            fileStream: fs, 
-            contentType: "audio/mpeg", 
+            fileStream: fs,
+            contentType: "audio/mpeg",
             enableRangeProcessing: true
         );
         return result;
@@ -74,7 +75,7 @@ public class SongController : ControllerBase
     {
         return Ok(await _genreRepository.GetAll());
     }
-        
+
     [Authorize]
     [HttpPost]
     public async Task<ActionResult<Song>> CreateSong([FromForm] NewSongDto newSong, IFormFile uploadedSoundFile)
@@ -103,7 +104,9 @@ public class SongController : ControllerBase
             result.AddToModelState(ModelState);
             return BadRequest(ModelState);
         }
-        var song = new Song(currentUserFromToken.UserId, newSong.Name, path, newSong.AuthorName, newSong.Year, newSong.GenreId,
+
+        var song = new Song(currentUserFromToken.UserId, newSong.Name, path, newSong.AuthorName, newSong.Year,
+            newSong.GenreId,
             uploadedSoundFile.Length, DateTime.Now);
         return Ok(await _songRepository.Create(song));
     }
