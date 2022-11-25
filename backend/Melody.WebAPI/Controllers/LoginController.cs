@@ -15,15 +15,13 @@ namespace Melody.WebAPI.Controllers
     [ApiController]
     public class LoginController : ControllerBase
     {
-        private readonly IConfiguration _configuration;
         private readonly UserManager<UserIdentity> _userManager;
         private readonly IRefreshTokenRepository _refreshTokenRepository;
         private readonly ITokenService _tokenService;
 
-        public LoginController(IConfiguration configuration, UserManager<UserIdentity> userManager,
+        public LoginController(UserManager<UserIdentity> userManager,
             IRefreshTokenRepository refreshTokenRepository, ITokenService tokenService)
         {
-            _configuration = configuration;
             _userManager = userManager;
             _refreshTokenRepository = refreshTokenRepository;
             _tokenService = tokenService;

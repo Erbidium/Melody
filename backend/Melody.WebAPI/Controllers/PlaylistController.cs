@@ -61,7 +61,7 @@ public class PlaylistController : ControllerBase
     [HttpPut]
     public async Task<IActionResult> UpdatePlaylist(UpdatePlaylistDto playlist)
     {
-        ValidationResult result = await _updatePlaylistDtoValidator.ValidateAsync(playlist);
+        var result = await _updatePlaylistDtoValidator.ValidateAsync(playlist);
         if (!result.IsValid)
         {
             result.AddToModelState(ModelState);

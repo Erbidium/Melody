@@ -157,7 +157,7 @@ public class SongController : ControllerBase
         }
 
         var fullPath = Path.Combine(pathToSave, guidSubFolders, guidFileName);
-        using var stream = new FileStream(fullPath, FileMode.Create);
+        await using var stream = new FileStream(fullPath, FileMode.Create);
         await uploadedSoundFile.CopyToAsync(stream);
         return Path.Combine(folderName, guidSubFolders, guidFileName);
     }
