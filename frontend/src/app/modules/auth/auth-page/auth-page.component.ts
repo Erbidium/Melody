@@ -62,7 +62,7 @@ export class AuthPageComponent extends BaseComponent {
                 .subscribe({
                     next: () => {
                         this.signUpForm.reset();
-                        this.router.navigateByUrl('upload');
+                        this.router.navigateByUrl('melody');
                     },
                     error: () => this.setCredentialsIncorrect(),
                 });
@@ -76,7 +76,7 @@ export class AuthPageComponent extends BaseComponent {
                 .subscribe({
                     next: () => {
                         this.signInForm.reset();
-                        this.router.navigateByUrl('upload');
+                        this.router.navigateByUrl('melody');
                     },
                     error: () => this.setCredentialsIncorrect(),
                 });
