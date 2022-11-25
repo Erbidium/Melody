@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Melody.Core.Interfaces;
+using Microsoft.Net.Http.Headers;
 
 namespace Melody.WebAPI.Controllers;
 
@@ -49,8 +50,8 @@ public class SongController : ControllerBase
         return Ok(await _songRepository.GetAll());
     }
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult<Song>> GetSong(long id)
+    [HttpGet("file/{id}")]
+    public async Task<FileStreamResult> GetSong(long id)
     {
         var song = await _songRepository.GetById(id);
         if (song is null)
@@ -58,7 +59,13 @@ public class SongController : ControllerBase
             throw new KeyNotFoundException("Song is not found");
         }
 
-        return Ok(song);
+        FileStream fs = System.IO.File.OpenRead(song.Path);
+        FileStreamResult result = File(
+            fileStream: fs, 
+            contentType: "audio/mpeg", 
+            enableRangeProcessing: true
+        );
+        return result;
     }
 
     [Authorize]
