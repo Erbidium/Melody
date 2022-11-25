@@ -54,13 +54,6 @@ app.UseCors(opt => opt
 
 app.UseHttpsRedirection();
 
-app.UseStaticFiles();
-app.UseStaticFiles(new StaticFileOptions()
-{
-    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Sounds")),
-    RequestPath = new PathString("/Sounds")
-});
-
 app.UseAuthentication();
 
 app.UseAuthorization();
