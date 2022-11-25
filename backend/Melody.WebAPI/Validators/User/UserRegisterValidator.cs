@@ -1,13 +1,13 @@
 ﻿using FluentValidation;
-using Melody.WebAPI.DTO.User;
+using Melody.Infrastructure.Auth.Models;
 
 namespace Melody.WebAPI.Validators.User;
 
-public class NewUserDtoValidator : AbstractValidator<NewUserDto>
+public class UserRegisterValidator : AbstractValidator<UserRegister>
 {
-    public NewUserDtoValidator()
+    public UserRegisterValidator()
     {
-        RuleFor(u => u.Name)
+        RuleFor(u => u.UserName)
             .NotEmpty()
             .MaximumLength(50);
 
@@ -16,6 +16,10 @@ public class NewUserDtoValidator : AbstractValidator<NewUserDto>
             .MaximumLength(50);
 
         RuleFor(u => u.PhoneNumber)
+            .NotEmpty()
+            .MaximumLength(50);
+        
+        RuleFor(u => u.Password)
             .NotEmpty()
             .MaximumLength(50);
     }

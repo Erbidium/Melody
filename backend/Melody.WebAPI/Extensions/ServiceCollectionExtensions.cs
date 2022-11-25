@@ -34,12 +34,12 @@ public static class ServiceCollectionExtensions
 
     public static void AddAutoMapper(this IServiceCollection services)
     {
-        services.AddAutoMapper(Assembly.GetAssembly(typeof(UserProfile)));
+        services.AddAutoMapper(Assembly.GetAssembly(typeof(SongProfile)));
     }
 
     public static void AddValidation(this IServiceCollection services)
     {
-        services.AddValidatorsFromAssemblyContaining<NewUserDtoValidator>();
+        services.AddValidatorsFromAssemblyContaining<UserRegisterValidator>();
     }
 
     public static void AddIdentityStores(this IServiceCollection services)
