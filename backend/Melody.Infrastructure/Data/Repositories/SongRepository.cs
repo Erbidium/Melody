@@ -44,7 +44,7 @@ public class SongRepository : ISongRepository
         parameters.Add("AuthorName", song.AuthorName, DbType.String);
         parameters.Add("Year", song.Year, DbType.Int32);
         parameters.Add("SizeBytes", song.SizeBytes, DbType.Int32);
-        parameters.Add("UploadedAt", song.UploadedAt, DbType.Date);
+        parameters.Add("UploadedAt", song.UploadedAt, DbType.DateTime);
         parameters.Add("GenreId", song.GenreId, DbType.Int64);
         parameters.Add("Duration", song.Duration, DbType.Time);
 
