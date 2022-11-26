@@ -11,7 +11,7 @@ import {ISong} from "@core/models/ISong";
 export class UserUploadsPageComponent extends BaseComponent implements OnInit {
     uploadedSongs: ISong[] = [];
 
-    columnsToDisplay = ['name', 'author'];
+    columnsToDisplay = ['position', 'name', 'author', 'duration'];
 
     currentSongIdForMusicPlayer?: number;
 
