@@ -9,17 +9,20 @@ import { MaterialModule } from '@shared/material/material.module';
 import { BackButtonComponent } from './components/back-button/back-button.component';
 import { HeaderComponent } from './components/header/header.component';
 import { LoadingSpinnerComponent } from './components/loading-spinner/loading-spinner.component';
+import { DateAgoPipe } from './pipes/date-ago.pipe';
 
 @NgModule({
     declarations: [
         LoadingSpinnerComponent,
         HeaderComponent,
         BackButtonComponent,
+        DateAgoPipe,
     ],
     exports: [
         LoadingSpinnerComponent,
         HeaderComponent,
         BackButtonComponent,
+        DateAgoPipe,
     ],
     imports: [
         CommonModule,
