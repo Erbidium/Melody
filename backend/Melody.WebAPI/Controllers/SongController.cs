@@ -112,7 +112,7 @@ public class SongController : ControllerBase
 
         var song = new Song(currentUserFromToken.UserId, newSong.Name, path, newSong.AuthorName, newSong.Year,
             newSong.GenreId,
-            uploadedSoundFile.Length, DateTime.Now);
+            uploadedSoundFile.Length, DateTime.Now, duration);
         return Ok(await _songRepository.Create(song));
     }
 

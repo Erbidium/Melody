@@ -6,7 +6,7 @@ namespace Melody.Core.Entities;
 public class Song : IEntityBase<long>
 {
     public Song(long userId, string name, string path, string authorName, int year, long genreId, long sizeBytes,
-        DateTime uploadedAt, long id = -1)
+        DateTime uploadedAt, TimeSpan duration, long id = -1)
     {
         Id = id;
         UserId = userId;
@@ -17,6 +17,7 @@ public class Song : IEntityBase<long>
         GenreId = genreId;
         SizeBytes = sizeBytes;
         UploadedAt = uploadedAt;
+        Duration = duration;
     }
 
     private long _id;
@@ -33,6 +34,7 @@ public class Song : IEntityBase<long>
     public string AuthorName { get; }
     public int Year { get; }
     public long SizeBytes { get; }
+    public TimeSpan Duration { get; }
     public DateTime UploadedAt { get; }
     public long GenreId { get; }
 }

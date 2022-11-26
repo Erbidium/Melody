@@ -21,7 +21,7 @@ public class SongRepository : ISongRepository
 
         var songs = await connection.QueryAsync<SongDb>(SqlScriptsResource.GetAllSongs);
         return songs.Select(record => new Song(record.UserId, record.Name, record.Path, record.AuthorName, record.Year,
-            record.GenreId, record.SizeBytes, record.UploadedAt, record.Id)).ToList().AsReadOnly();
+            record.GenreId, record.SizeBytes, record.UploadedAt, record.Duration, record.Id)).ToList().AsReadOnly();
     }
 
     public async Task<Song?> GetById(long id)
@@ -32,7 +32,7 @@ public class SongRepository : ISongRepository
         return record == null
             ? null
             : new Song(record.UserId, record.Name, record.Path, record.AuthorName, record.Year, record.GenreId,
-                record.SizeBytes, record.UploadedAt, record.Id);
+                record.SizeBytes, record.UploadedAt, record.Duration, record.Id);
     }
 
     public async Task<Song> Create(Song song)
@@ -46,13 +46,14 @@ public class SongRepository : ISongRepository
         parameters.Add("SizeBytes", song.SizeBytes, DbType.Int32);
         parameters.Add("UploadedAt", song.UploadedAt, DbType.Date);
         parameters.Add("GenreId", song.GenreId, DbType.Int64);
+        parameters.Add("Duration", song.Duration, DbType.Time);
 
         using var connection = _context.CreateConnection();
 
         var id = await connection.ExecuteScalarAsync<long>(SqlScriptsResource.CreateSong, parameters);
 
         return new Song(song.UserId, song.Name, song.Path, song.AuthorName, song.Year, song.GenreId, song.SizeBytes,
-            song.UploadedAt, id);
+            song.UploadedAt, song.Duration, id);
     }
 
     public async Task Update(Song song)
@@ -66,6 +67,7 @@ public class SongRepository : ISongRepository
         parameters.Add("SizeBytes", song.SizeBytes, DbType.Int32);
         parameters.Add("UploadedAt", song.UploadedAt, DbType.Date);
         parameters.Add("GenreId", song.GenreId, DbType.Int64);
+        parameters.Add("Duration", song.Duration, DbType.Time);
 
         using var connection = _context.CreateConnection();
 
@@ -93,6 +95,6 @@ public class SongRepository : ISongRepository
 
         var songs = await connection.QueryAsync<SongDb>(SqlScriptsResource.GetSongsUploadedByUserId, new { UserId = userId });
         return songs.Select(record => new Song(record.UserId, record.Name, record.Path, record.AuthorName, record.Year,
-            record.GenreId, record.SizeBytes, record.UploadedAt, record.Id)).ToList().AsReadOnly();
+            record.GenreId, record.SizeBytes, record.UploadedAt, record.Duration, record.Id)).ToList().AsReadOnly();
     }
 }

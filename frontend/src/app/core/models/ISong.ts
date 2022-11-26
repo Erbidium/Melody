@@ -7,4 +7,5 @@ export interface ISong {
     sizeBytes: number;
     uploadedAt: Date;
     genreId: number;
+    duration: string;
 }

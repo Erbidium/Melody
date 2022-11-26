@@ -7,6 +7,7 @@
        AuthorName,
        Year,
        GenreId,
+       Duration,
        IsDeleted
 FROM Songs
 WHERE IsDeleted = 0
