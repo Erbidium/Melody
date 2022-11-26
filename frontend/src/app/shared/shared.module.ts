@@ -10,6 +10,7 @@ import { BackButtonComponent } from './components/back-button/back-button.compon
 import { HeaderComponent } from './components/header/header.component';
 import { LoadingSpinnerComponent } from './components/loading-spinner/loading-spinner.component';
 import { DateAgoPipe } from './pipes/date-ago.pipe';
+import { TimePipe } from './pipes/time.pipe';
 
 @NgModule({
     declarations: [
@@ -17,12 +18,14 @@ import { DateAgoPipe } from './pipes/date-ago.pipe';
         HeaderComponent,
         BackButtonComponent,
         DateAgoPipe,
+        TimePipe,
     ],
     exports: [
         LoadingSpinnerComponent,
         HeaderComponent,
         BackButtonComponent,
         DateAgoPipe,
+        TimePipe,
     ],
     imports: [
         CommonModule,
