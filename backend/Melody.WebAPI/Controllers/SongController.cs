@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Melody.Core.Interfaces;
-using Microsoft.Net.Http.Headers;
+using NAudio.Wave;
 
 namespace Melody.WebAPI.Controllers;
 
@@ -99,6 +99,8 @@ public class SongController : ControllerBase
         }
 
         var path = await WriteFile(uploadedSoundFile);
+        var reader = new MediaFoundationReader(path);
+        var duration = reader.TotalTime;
 
         // validate path
         ValidationResult result = await _newSongDtoValidator.ValidateAsync(newSong);
