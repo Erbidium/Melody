@@ -3,12 +3,11 @@ using Melody.SharedKernel.Interfaces;
 
 namespace Melody.Core.Entities;
 
-public class Song : IEntityBase<long>
+public class Song : EntityBase<long>
 {
     public Song(long userId, string name, string path, string authorName, int year, long genreId, long sizeBytes,
-        DateTime uploadedAt, TimeSpan duration, long id = -1)
+        DateTime uploadedAt, TimeSpan duration)
     {
-        Id = id;
         UserId = userId;
         Name = name;
         Path = path;
@@ -19,15 +18,6 @@ public class Song : IEntityBase<long>
         UploadedAt = uploadedAt;
         Duration = duration;
     }
-
-    private long _id;
-
-    public long Id
-    {
-        get => _id < 0 ? throw new WrongIdException() : _id;
-        private set => _id = value;
-    }
-
     public long UserId { get; }
     public string Name { get; }
     public string Path { get; }

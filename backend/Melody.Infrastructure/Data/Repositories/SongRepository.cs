@@ -3,6 +3,7 @@ using Melody.Core.Entities;
 using Melody.Infrastructure.Data.Context;
 using Melody.Infrastructure.Data.Records;
 using System.Data;
+using Melody.Core.Interfaces;
 
 namespace Melody.Infrastructure.Data.Repositories;
 
@@ -21,7 +22,7 @@ public class SongRepository : ISongRepository
 
         var songs = await connection.QueryAsync<SongDb>(SqlScriptsResource.GetAllSongs);
         return songs.Select(record => new Song(record.UserId, record.Name, record.Path, record.AuthorName, record.Year,
-            record.GenreId, record.SizeBytes, record.UploadedAt, record.Duration, record.Id)).ToList().AsReadOnly();
+            record.GenreId, record.SizeBytes, record.UploadedAt, record.Duration){Id = record.Id}).ToList().AsReadOnly();
     }
 
     public async Task<Song?> GetById(long id)
@@ -32,7 +33,7 @@ public class SongRepository : ISongRepository
         return record == null
             ? null
             : new Song(record.UserId, record.Name, record.Path, record.AuthorName, record.Year, record.GenreId,
-                record.SizeBytes, record.UploadedAt, record.Duration, record.Id);
+                record.SizeBytes, record.UploadedAt, record.Duration){Id = record.Id};
     }
 
     public async Task<Song> Create(Song song)
@@ -53,7 +54,7 @@ public class SongRepository : ISongRepository
         var id = await connection.ExecuteScalarAsync<long>(SqlScriptsResource.CreateSong, parameters);
 
         return new Song(song.UserId, song.Name, song.Path, song.AuthorName, song.Year, song.GenreId, song.SizeBytes,
-            song.UploadedAt, song.Duration, id);
+            song.UploadedAt, song.Duration){Id = song.Id};
     }
 
     public async Task Update(Song song)
@@ -95,6 +96,6 @@ public class SongRepository : ISongRepository
 
         var songs = await connection.QueryAsync<SongDb>(SqlScriptsResource.GetSongsUploadedByUserId, new { UserId = userId });
         return songs.Select(record => new Song(record.UserId, record.Name, record.Path, record.AuthorName, record.Year,
-            record.GenreId, record.SizeBytes, record.UploadedAt, record.Duration, record.Id)).ToList().AsReadOnly();
+            record.GenreId, record.SizeBytes, record.UploadedAt, record.Duration){Id = record.Id}).ToList().AsReadOnly();
     }
 }

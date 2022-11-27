@@ -147,7 +147,7 @@ public class SongController : ControllerBase
         }
 
         //string fileName = Path.GetFileName(uploadedSoundFile.FileName);
-        var guidFileName = Guid.NewGuid().ToString() + soundExtension;
+        var guidFileName = Guid.NewGuid() + soundExtension;
         var guidSubFolders = string.Empty;
         for (int i = 0; i < 6; i += 2)
         {

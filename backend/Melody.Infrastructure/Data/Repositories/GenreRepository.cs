@@ -20,7 +20,7 @@ public class GenreRepository : IGenreRepository
         using var connection = _context.CreateConnection();
 
         var genres = await connection.QueryAsync<GenreDb>(SqlScriptsResource.GetAllGenres);
-        return genres.Select(record => new Genre(record.Id, record.Name)).ToList().AsReadOnly();
+        return genres.Select(record => new Genre(record.Name){Id = record.Id}).ToList().AsReadOnly();
     }
 
     public async Task<Genre?> GetById(long id)
@@ -28,6 +28,6 @@ public class GenreRepository : IGenreRepository
         using var connection = _context.CreateConnection();
 
         var record = await connection.QuerySingleOrDefaultAsync<GenreDb>(SqlScriptsResource.GetGenreById, new { id });
-        return record == null ? null : new Genre(record.Id, record.Name);
+        return record == null ? null : new Genre(record.Name){Id = record.Id};
     }
 }

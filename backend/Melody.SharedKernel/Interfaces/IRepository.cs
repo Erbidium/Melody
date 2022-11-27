@@ -1,6 +1,6 @@
 ﻿namespace Melody.SharedKernel.Interfaces;
 
-public interface IRepository<T, TId> where T : IEntityBase<TId>
+public interface IRepository<T, TId> where T : EntityBase<TId>
 {
     Task<T> Create(T song);
     Task<T?> GetById(TId id);

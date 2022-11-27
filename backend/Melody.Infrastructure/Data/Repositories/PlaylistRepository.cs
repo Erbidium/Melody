@@ -21,7 +21,7 @@ public class PlaylistRepository : IPlaylistRepository
         using var connection = _context.CreateConnection();
 
         var playlists = await connection.QueryAsync<PlaylistDb>(SqlScriptsResource.GetAllPlaylists);
-        return playlists.Select(record => new Playlist(record.Name, record.Link, record.AuthorId, record.Id)).ToList()
+        return playlists.Select(record => new Playlist(record.Name, record.Link, record.AuthorId){Id = record.Id}).ToList()
             .AsReadOnly();
     }
 
@@ -31,7 +31,7 @@ public class PlaylistRepository : IPlaylistRepository
 
         var record =
             await connection.QuerySingleOrDefaultAsync<PlaylistDb>(SqlScriptsResource.GetPlaylistById, new { id });
-        return record == null ? null : new Playlist(record.Name, record.Link, record.AuthorId, record.Id);
+        return record == null ? null : new Playlist(record.Name, record.Link, record.AuthorId){Id = record.Id};
     }
 
     public async Task<Playlist> Create(Playlist playlist)
@@ -45,7 +45,7 @@ public class PlaylistRepository : IPlaylistRepository
 
         var id = await connection.ExecuteScalarAsync<long>(SqlScriptsResource.CreatePlaylist, parameters);
 
-        return new Playlist(playlist.Name, playlist.Link, playlist.AuthorId, playlist.Id);
+        return new Playlist(playlist.Name, playlist.Link, playlist.AuthorId){Id = playlist.Id};
     }
 
     public async Task Update(Playlist playlist)
