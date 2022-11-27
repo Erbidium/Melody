@@ -92,9 +92,9 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на INSERT INTO Songs (UserId, Name, Path, AuthorName, Year, SizeBytes, UploadedAt, GenreId)
+        ///   Ищет локализованную строку, похожую на INSERT INTO Songs (UserId, Name, Path, AuthorName, Year, SizeBytes, UploadedAt, GenreId, Duration)
         ///OUTPUT Inserted.Id
-        ///VALUES (@UserId, @Name, @Path, @AuthorName, @Year, @SizeBytes, @UploadedAt, @GenreId).
+        ///VALUES (@UserId, @Name, @Path, @AuthorName, @Year, @SizeBytes, @UploadedAt, @GenreId, @Duration).
         /// </summary>
         internal static string CreateSong {
             get {
@@ -224,6 +224,7 @@ namespace Melody.Infrastructure.Data {
         ///       AuthorName,
         ///       Year,
         ///       GenreId,
+        ///       Duration,
         ///       IsDeleted
         ///FROM Songs
         ///WHERE IsDeleted = 0
@@ -303,6 +304,7 @@ namespace Melody.Infrastructure.Data {
         ///       AuthorName,
         ///       Year,
         ///       GenreId,
+        ///       Duration,
         ///       IsDeleted
         ///FROM Songs
         ///WHERE Id = @Id
@@ -325,17 +327,22 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на SELECT Id,
+        ///   Ищет локализованную строку, похожую на SELECT Songs.Id,
         ///       UserId,
         ///       UploadedAt,
         ///       SizeBytes,
-        ///       Name,
+        ///       Songs.Name,
         ///       Path,
         ///       AuthorName,
         ///       Year,
         ///       GenreId,
-        ///       IsDeleted
+        ///       Duration,
+        ///       IsDeleted,
+        ///       Genres.Id,
+        ///       Genres.Name
         ///FROM Songs
+        ///INNER JOIN Genres
+        ///ON Songs.GenreId = Genres.Id
         ///WHERE IsDeleted = 0 AND UserId = @UserId.
         /// </summary>
         internal static string GetSongsUploadedByUserId {
@@ -505,7 +512,8 @@ namespace Melody.Infrastructure.Data {
         ///    Year       = @Year,
         ///    SizeBytes  = @SizeBytes,
         ///    UploadedAt = @UploadedAt,
-        ///    GenreId    = @GenreId
+        ///    GenreId    = @GenreId,
+        ///    Duration   = @Duration,
         ///WHERE Id = @Id
         ///  AND IsDeleted = 0.
         /// </summary>

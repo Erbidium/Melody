@@ -1,5 +1,4 @@
-﻿using Melody.Core.Exceptions;
-using Melody.SharedKernel.Interfaces;
+﻿using Melody.SharedKernel.Interfaces;
 
 namespace Melody.Core.Entities;
 
@@ -27,4 +26,5 @@ public class Song : EntityBase<long>
     public TimeSpan Duration { get; }
     public DateTime UploadedAt { get; }
     public long GenreId { get; }
+    public Genre? Genre { get; set; }
 }

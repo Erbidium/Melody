@@ -29,7 +29,7 @@
 
         <ng-container matColumnDef="genre">
             <th mat-header-cell *matHeaderCellDef> Genre </th>
-            <td mat-cell *matCellDef="let song"> {{song.genreId}} </td>
+            <td mat-cell *matCellDef="let song"> {{song.genre.name}} </td>
         </ng-container>
 
         <ng-container matColumnDef="date">

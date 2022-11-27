@@ -1,3 +1,5 @@
+import {IGenre} from "@core/models/IGenre";
+
 export interface ISong {
     userId: number;
     name: string;
@@ -8,4 +10,5 @@ export interface ISong {
     uploadedAt: Date;
     genreId: number;
     duration: string;
+    genre?: IGenre;
 }

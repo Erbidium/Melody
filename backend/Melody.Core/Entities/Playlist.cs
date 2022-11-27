@@ -1,5 +1,4 @@
-﻿using Melody.Core.Exceptions;
-using Melody.SharedKernel.Interfaces;
+﻿using Melody.SharedKernel.Interfaces;
 
 namespace Melody.Core.Entities;
 
