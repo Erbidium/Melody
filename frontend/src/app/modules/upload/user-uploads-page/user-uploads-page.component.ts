@@ -1,8 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { BaseComponent } from '@core/base/base.component';
-import {SongService} from "@core/services/song.service";
-import {ISong} from "@core/models/ISong";
-import {switchMap} from "rxjs/operators";
+import { ISong } from '@core/models/ISong';
+import { SongService } from '@core/services/song.service';
+import { PlayerComponent } from '@shared/components/player/player.component';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
     selector: 'app-user-uploads-page',

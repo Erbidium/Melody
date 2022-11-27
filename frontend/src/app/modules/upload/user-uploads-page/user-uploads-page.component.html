@@ -1,12 +1,6 @@
 <app-header></app-header>
 <app-back-button></app-back-button>
 <h1>На цій сторінці ти можеш побачити список всіх твоїх заватажених на платформу пісень</h1>
-<audio
-    *ngIf="currentSongIdForMusicPlayer"
-    autoplay
-    controls
-    src="https://localhost:7284/api/Song/file/{{currentSongIdForMusicPlayer}}">
-</audio>
 <div *ngIf="uploadedSongs.length === 0; else songs">
     Ти ще не завантажив жодної пісні. Спробуй завантажити пісню, щоб побачити її на цій сторінці
 </div>
@@ -51,4 +45,4 @@
         <tr mat-row *matRowDef="let row; columns: columnsToDisplay" (click)="selectSong(row.id)"></tr>
     </table>
 </ng-template>
-<app-player></app-player>
+<app-player [currentSongIdSetter]="currentSongIdForMusicPlayer" [files]="uploadedSongs"></app-player>

@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import { MatSliderChange } from '@angular/material/slider';
 import { StreamState } from '@core/interfaces/stream-state';
+import { ISong } from '@core/models/ISong';
 import { AudioService } from '@core/services/audio.service';
-import { CloudService } from '@core/services/cloud.service';
 
 @Component({
     selector: 'app-player',
@@ -10,43 +10,43 @@ import { CloudService } from '@core/services/cloud.service';
     styleUrls: ['./player.component.sass'],
 })
 export class PlayerComponent {
-    files: Array<any> = [
-        { name: 'First Song', artist: 'Inder' },
-        { name: 'Second Song', artist: 'You' },
-    ];
-
-    currentFile: any = {};
+    @Input() files: Array<ISong> = [];
 
     // @ts-ignore
     state: StreamState;
 
-    constructor(
-        public audioService: AudioService,
-        public cloudService: CloudService,
-    ) {
-        // get media files
-        cloudService.getFiles().subscribe(files => {
-            this.files = files;
-        });
+    songId?: number;
 
+    constructor(public audioService: AudioService) {
         // listen to stream state
-        this.audioService.getState().subscribe(state => {
+        this.audioService.getState().subscribe((state) => {
             this.state = state;
         });
     }
 
     playStream(url: string) {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
-        this.audioService.playStream(url).subscribe(events => {
+        this.audioService.playStream(url).subscribe((events) => {
             // listening for fun here
         });
     }
 
+    @Input() set currentSongIdSetter(songId: number | undefined) {
+        if (songId && songId !== this.songId) {
+            this.songId = songId;
+            this.openFile(songId);
+        }
+    }
+
+    currentSongId?: number;
+
     // @ts-ignore
-    openFile(file, index: number) {
-        this.currentFile = { index, file };
+    openFile(fileId: number) {
+        console.log(fileId);
+        this.currentSongId = fileId;
         this.audioService.stop();
-        this.playStream(file.url);
+        console.log(fileId);
+        this.playStream(`https://localhost:7284/api/Song/file/${this.currentSongId}`);
     }
 
     pause() {
@@ -62,25 +62,25 @@ export class PlayerComponent {
     }
 
     next() {
-        const index = this.currentFile.index + 1;
+        const index = this.currentSongId ? this.files.findIndex(file => file.id === this.currentSongId) + 1 : 0;
         const file = this.files[index];
 
-        this.openFile(file, index);
+        this.openFile(file.id);
     }
 
     previous() {
-        const index = this.currentFile.index - 1;
+        const index = this.currentSongId ? this.files.findIndex(file => file.id === this.currentSongId) - 1 : 0;
         const file = this.files[index];
 
-        this.openFile(file, index);
+        this.openFile(file.id);
     }
 
-    isFirstPlaying() {
-        return this.currentFile.index === 0;
+    isFirstPlaying(): boolean {
+        return this.currentSongId !== undefined && this.files.findIndex(file => file.id === this.currentSongId) === 0;
     }
 
-    isLastPlaying() {
-        return this.currentFile.index === this.files.length - 1;
+    isLastPlaying(): boolean {
+        return this.currentSongId !== undefined && this.files.findIndex(file => file.id === this.currentSongId) === this.files.length - 1;
     }
 
     onSliderChangeEnd(change: MatSliderChange) {

@@ -1,6 +1,7 @@
 import {IGenre} from "@core/models/IGenre";
 
 export interface ISong {
+    id: number;
     userId: number;
     name: string;
     path: string;
