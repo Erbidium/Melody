@@ -121,7 +121,6 @@ export class AudioService {
 
     private streamObservable(url: string) {
         return new Observable(observer => {
-            // Play audio
             this.audioObj.src = url;
             this.audioObj.load();
             this.audioObj.play();
@@ -134,12 +133,9 @@ export class AudioService {
             this.addEvents(this.audioObj, this.audioEvents, handler);
 
             return () => {
-                // Stop Playing
                 this.audioObj.pause();
                 this.audioObj.currentTime = 0;
-                // remove event listeners
                 this.removeEvents(this.audioObj, this.audioEvents, handler);
-                // reset state
                 this.resetState();
             };
         });
