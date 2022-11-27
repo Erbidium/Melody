@@ -137,6 +137,7 @@ export class AudioService {
                 this.audioObj.currentTime = 0;
                 this.removeEvents(this.audioObj, this.audioEvents, handler);
                 this.resetState();
+                this.stateChange.next(this.state);
             };
         });
     }

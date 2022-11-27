@@ -40,8 +40,11 @@ export class UserUploadsPageComponent extends BaseComponent implements OnInit {
 
     deleteSong(id: number, event: MouseEvent) {
         event.stopPropagation();
-        this.songService.deleteSong(id)
+        this.songService
+            .deleteSong(id)
             .pipe(switchMap(async () => this.loadSongsUploadedByUser()))
-            .subscribe();
+            .subscribe(() => {
+                this.currentSongIdForMusicPlayer = undefined;
+            });
     }
 }

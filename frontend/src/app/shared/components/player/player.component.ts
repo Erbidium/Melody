@@ -29,6 +29,9 @@ export class PlayerComponent {
     @Input() set currentSongIdSetter(songId: number | undefined) {
         if (songId && songId !== this.currentSongId) {
             this.openFile(songId);
+        } else {
+            this.stop();
+            this.currentSongId = undefined;
         }
     }
 
