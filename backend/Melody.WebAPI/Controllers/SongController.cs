@@ -134,7 +134,6 @@ public class SongController : ControllerBase
     public async Task<IActionResult> DeleteSong(long id)
     {
         await _songRepository.Delete(id);
-        // TODO: delete files
         return NoContent();
     }
 

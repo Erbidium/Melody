@@ -19,4 +19,8 @@ export class SongService {
     public createSong(formData: FormData) {
         return this.httpService.postRequest<ISong>('/api/song', formData);
     }
+
+    public deleteSong(id: number) {
+        return this.httpService.deleteRequest(`/api/song/${id}`);
+    }
 }
