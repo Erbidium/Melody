@@ -40,12 +40,9 @@ export class PlayerComponent {
 
     currentSongId?: number;
 
-    // @ts-ignore
     openFile(fileId: number) {
-        console.log(fileId);
         this.currentSongId = fileId;
         this.audioService.stop();
-        console.log(fileId);
         this.playStream(`https://localhost:7284/api/Song/file/${this.currentSongId}`);
     }
 

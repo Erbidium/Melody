@@ -8,7 +8,7 @@ import { takeUntil } from 'rxjs/operators';
     providedIn: 'root',
 })
 export class AudioService {
-    private stop$ = new Subject();
+    private stop$ = new Subject<void>();
 
     private audioObj = new Audio();
 
@@ -63,7 +63,6 @@ export class AudioService {
     }
 
     stop() {
-        // @ts-ignore
         this.stop$.next();
     }
 
