@@ -3,13 +3,14 @@ import { MatSliderChange } from '@angular/material/slider';
 import { StreamState } from '@core/interfaces/stream-state';
 import { ISong } from '@core/models/ISong';
 import { AudioService } from '@core/services/audio.service';
+import { BaseComponent } from '@core/base/base.component';
 
 @Component({
     selector: 'app-player',
     templateUrl: './player.component.html',
     styleUrls: ['./player.component.sass'],
 })
-export class PlayerComponent {
+export class PlayerComponent extends BaseComponent {
     @Input() files: Array<ISong> = [];
 
     state?: StreamState;
@@ -17,13 +18,17 @@ export class PlayerComponent {
     currentSongId?: number;
 
     constructor(public audioService: AudioService) {
-        this.audioService.getState().subscribe((state) => {
-            this.state = state;
-        });
+        super();
+        this.audioService
+            .getState()
+            .pipe(this.untilThis)
+            .subscribe((state) => {
+                this.state = state;
+            });
     }
 
     playStream(url: string) {
-        this.audioService.playStream(url).subscribe(() => {});
+        this.audioService.playStream(url).pipe(this.untilThis).subscribe(() => {});
     }
 
     @Input() set currentSongIdSetter(songId: number | undefined) {
