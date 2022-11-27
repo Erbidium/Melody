@@ -11,6 +11,9 @@ import { HeaderComponent } from './components/header/header.component';
 import { LoadingSpinnerComponent } from './components/loading-spinner/loading-spinner.component';
 import { DateAgoPipe } from './pipes/date-ago.pipe';
 import { TimePipe } from './pipes/time.pipe';
+import { PlayerComponent } from './components/player/player.component';
+import {MatListModule} from "@angular/material/list";
+import {MatSliderModule} from "@angular/material/slider";
 
 @NgModule({
     declarations: [
@@ -19,6 +22,7 @@ import { TimePipe } from './pipes/time.pipe';
         BackButtonComponent,
         DateAgoPipe,
         TimePipe,
+        PlayerComponent,
     ],
     exports: [
         LoadingSpinnerComponent,
@@ -26,6 +30,7 @@ import { TimePipe } from './pipes/time.pipe';
         BackButtonComponent,
         DateAgoPipe,
         TimePipe,
+        PlayerComponent,
     ],
     imports: [
         CommonModule,
@@ -35,6 +40,8 @@ import { TimePipe } from './pipes/time.pipe';
         RouterLinkWithHref,
         RouterLinkActive,
         MatIconModule,
+        MatListModule,
+        MatSliderModule,
     ],
 })
 export class SharedModule { }
