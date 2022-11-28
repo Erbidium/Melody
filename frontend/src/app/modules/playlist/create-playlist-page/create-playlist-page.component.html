@@ -5,7 +5,7 @@
         Завантаж пісні або додай до списку улюблених, щоб мати можливість створити плейлист
     </div>
     <ng-template #createPlaylist>
-        <form [formGroup]="createPlaylistForm" (submit)="create()">
+        <form [formGroup]="createPlaylistForm">
             <mat-form-field appearance="outline">
                 <input matInput id="name" type="text" formControlName="name" placeholder="Назва плейлисту" />
             </mat-form-field>
@@ -15,7 +15,7 @@
                     <mat-option *ngFor="let song of uploadedSongs" [value]="song.id">{{song.name}}</mat-option>
                 </mat-select>
             </mat-form-field>
-            <button mat-raised-button type="submit">Створити</button>
+            <button mat-raised-button type="button" (click)="create()">Створити</button>
         </form>
     </ng-template>
 </div>

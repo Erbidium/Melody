@@ -19,7 +19,7 @@ export class CreatePlaylistPageComponent extends BaseComponent implements OnInit
             validators: [Validators.required, Validators.minLength(8), Validators.maxLength(30)],
             updateOn: 'blur',
         }),
-        songs: new FormControl('', {
+        songs: new FormControl([] as number[], {
             validators: [Validators.required],
             updateOn: 'blur',
         }),
@@ -46,6 +46,11 @@ export class CreatePlaylistPageComponent extends BaseComponent implements OnInit
             });
     }
 
+    initialFormValue = {
+        name: '',
+        songs: [] as number[],
+    };
+
     create() {
         this.playlistService
             .createPlaylist(
@@ -54,7 +59,10 @@ export class CreatePlaylistPageComponent extends BaseComponent implements OnInit
             )
             .pipe(this.untilThis)
             .subscribe({
-                next: () => this.notificationService.showSuccessMessage('Плейлист успішно створено!'),
+                next: () => {
+                    this.notificationService.showSuccessMessage('Плейлист успішно створено!');
+                    this.createPlaylistForm.reset();
+                },
                 error: () => this.notificationService.showErrorMessage('Сталася помилка під час спроби створити плейлист'),
             });
     }
