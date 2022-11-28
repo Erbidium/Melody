@@ -26,7 +26,11 @@ const routes: Routes = [
         path: 'statistics',
         loadChildren: () => import('./modules/statistics/statistics.module').then((m) => m.StatisticsModule),
     },
-    { path: '**', redirectTo: '', pathMatch: 'full' },
+    {
+        path: 'playlist',
+        loadChildren: () => import('./modules/playlist/playlist.module').then((m) => m.PlaylistModule),
+    },
+    { path: '**', redirectTo: 'melody', pathMatch: 'full' },
 ];
 
 @NgModule({
