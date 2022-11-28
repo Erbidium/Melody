@@ -1,1 +1,16 @@
-<p>create-playlist-page works!</p>
+<app-header>
+</app-header>
+<div class="wrapper">
+    <form [formGroup]="createPlaylistForm" (submit)="create()">
+        <mat-form-field appearance="outline">
+            <input matInput id="name" type="text" formControlName="name" placeholder="Назва плейлисту" />
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Пісні</mat-label>
+            <mat-select formControlName="songs" multiple>
+                <mat-option *ngFor="let song of uploadedSongs" [value]="song.id">{{song.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <button mat-raised-button type="submit">Створити</button>
+    </form>
+</div>
