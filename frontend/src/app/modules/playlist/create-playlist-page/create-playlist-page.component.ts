@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { BaseComponent } from '@core/base/base.component';
 import { ISong } from '@core/models/ISong';
+import { NotificationService } from '@core/services/notification.service';
+import { PlaylistService } from '@core/services/playlist.service';
 import { SongService } from '@core/services/song.service';
-import {FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
     selector: 'app-create-playlist-page',
@@ -23,7 +25,11 @@ export class CreatePlaylistPageComponent extends BaseComponent implements OnInit
         }),
     });
 
-    constructor(private songService: SongService) {
+    constructor(
+        private songService: SongService,
+        private playlistService: PlaylistService,
+        private notificationService: NotificationService,
+    ) {
         super();
     }
 
@@ -41,6 +47,15 @@ export class CreatePlaylistPageComponent extends BaseComponent implements OnInit
     }
 
     create() {
-        console.log(this.createPlaylistForm.value.songs);
+        this.playlistService
+            .createPlaylist(
+                this.createPlaylistForm.value.name ?? '',
+                this.createPlaylistForm.value.songs as unknown as number[],
+            )
+            .pipe(this.untilThis)
+            .subscribe({
+                next: () => this.notificationService.showSuccessMessage('Плейлист успішно створено!'),
+                error: () => this.notificationService.showErrorMessage('Сталася помилка під час спроби створити плейлист'),
+            });
     }
 }

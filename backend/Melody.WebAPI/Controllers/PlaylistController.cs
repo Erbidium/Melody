@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using AutoMapper;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -5,6 +6,7 @@ using FluentValidation.Results;
 using Melody.Core.Entities;
 using Melody.Core.Interfaces;
 using Melody.WebAPI.DTO.Playlist;
+using Melody.WebAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,14 +20,16 @@ public class PlaylistController : ControllerBase
     private readonly IMapper _mapper;
     private readonly IValidator<NewPlaylistDto> _newPlaylistDtoValidator;
     private readonly IValidator<UpdatePlaylistDto> _updatePlaylistDtoValidator;
+    private readonly ITokenService _tokenService;
 
     public PlaylistController(IPlaylistRepository playlistRepository, IMapper mapper,
-        IValidator<NewPlaylistDto> newPlaylistDtoValidator, IValidator<UpdatePlaylistDto> updatePlaylistDtoValidator)
+        IValidator<NewPlaylistDto> newPlaylistDtoValidator, IValidator<UpdatePlaylistDto> updatePlaylistDtoValidator, ITokenService tokenService)
     {
         _playlistRepository = playlistRepository;
         _mapper = mapper;
         _newPlaylistDtoValidator = newPlaylistDtoValidator;
         _updatePlaylistDtoValidator = updatePlaylistDtoValidator;
+        _tokenService = tokenService;
     }
 
     [HttpGet]
@@ -50,6 +54,8 @@ public class PlaylistController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Song>> CreatePlaylist(NewPlaylistDto playlist)
     {
+        var identity = HttpContext.User.Identity as ClaimsIdentity;
+        var currentUserFromToken = _tokenService.GetCurrentUser(identity);
         var result = await _newPlaylistDtoValidator.ValidateAsync(playlist);
         if (!result.IsValid)
         {
@@ -57,7 +63,8 @@ public class PlaylistController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        return Ok(await _playlistRepository.Create(new CreatePlaylist{Name = playlist.Name, SongIds = playlist.SongIds}));
+        await _playlistRepository.Create(new CreatePlaylist { Name = playlist.Name, SongIds = playlist.SongIds, AuthorId = currentUserFromToken.UserId});
+        return Ok();
     }
 
     [HttpPut("{id}")]

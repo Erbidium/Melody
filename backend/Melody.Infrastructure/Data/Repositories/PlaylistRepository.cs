@@ -44,7 +44,7 @@ public class PlaylistRepository : IPlaylistRepository
         parameters.Add("Name", playlist.Name, DbType.String);
         parameters.Add("AuthorId", playlist.AuthorId, DbType.Int64);
 
-        var id = await connection.ExecuteScalarAsync<long>(SqlScriptsResource.CreatePlaylist, parameters);
+        var id = await connection.ExecuteScalarAsync<long>(SqlScriptsResource.CreatePlaylist, parameters, transaction);
 
         foreach (var songId in playlist.SongIds)
         {     
