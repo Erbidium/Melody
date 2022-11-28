@@ -1,4 +1,4 @@
-﻿using Melody.Infrastructure.Data.Records;
+﻿using Melody.Infrastructure.Data.DbEntites;
 
 namespace Melody.Infrastructure.Data.Interfaces;
 

@@ -3,7 +3,6 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using FluentValidation.Results;
 using Melody.Core.Entities;
-using Melody.Infrastructure.Data.Records;
 using Melody.Infrastructure.Data.Repositories;
 using Melody.WebAPI.DTO.Song;
 using Melody.WebAPI.Services;
@@ -12,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Melody.Core.Interfaces;
+using Melody.Infrastructure.Data.DbEntites;
 using NAudio.Wave;
 
 namespace Melody.WebAPI.Controllers;

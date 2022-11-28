@@ -2,7 +2,6 @@
 using Melody.Core.Interfaces;
 using Melody.Infrastructure.Auth.Stores;
 using Melody.Infrastructure.Data.Interfaces;
-using Melody.Infrastructure.Data.Records;
 using Melody.Infrastructure.Data.Repositories;
 using Melody.WebAPI.MappingProfiles;
 using Melody.WebAPI.Services;
@@ -12,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
 using System.Text;
+using Melody.Infrastructure.Data.DbEntites;
 
 namespace Melody.WebAPI.Extensions;
 

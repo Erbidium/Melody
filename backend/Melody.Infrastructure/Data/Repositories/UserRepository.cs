@@ -1,8 +1,8 @@
 ﻿using Dapper;
 using Melody.Infrastructure.Data.Context;
 using Melody.Infrastructure.Data.Interfaces;
-using Melody.Infrastructure.Data.Records;
 using System.Data;
+using Melody.Infrastructure.Data.DbEntites;
 
 namespace Melody.Infrastructure.Data.Repositories;
 

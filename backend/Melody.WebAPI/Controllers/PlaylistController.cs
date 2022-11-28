@@ -5,6 +5,7 @@ using FluentValidation.Results;
 using Melody.Core.Entities;
 using Melody.Core.Interfaces;
 using Melody.WebAPI.DTO.Playlist;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Melody.WebAPI.Controllers;
@@ -28,7 +29,7 @@ public class PlaylistController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Song>>> GetPlaylist()
+    public async Task<ActionResult<IEnumerable<Song>>> GetPlaylists()
     {
         return Ok(await _playlistRepository.GetAll());
     }
@@ -45,21 +46,22 @@ public class PlaylistController : ControllerBase
         return Ok(playlist);
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<Song>> CreatePlaylist(NewPlaylistDto playlist)
     {
-        ValidationResult result = await _newPlaylistDtoValidator.ValidateAsync(playlist);
+        var result = await _newPlaylistDtoValidator.ValidateAsync(playlist);
         if (!result.IsValid)
         {
             result.AddToModelState(ModelState);
             return BadRequest(ModelState);
         }
 
-        return Ok(await _playlistRepository.Create(_mapper.Map<Playlist>(playlist)));
+        return Ok(await _playlistRepository.Create(new CreatePlaylist{Name = playlist.Name, SongIds = playlist.SongIds}));
     }
 
-    [HttpPut]
-    public async Task<IActionResult> UpdatePlaylist(UpdatePlaylistDto playlist)
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdatePlaylist([FromBody]UpdatePlaylistDto playlist, long id)
     {
         var result = await _updatePlaylistDtoValidator.ValidateAsync(playlist);
         if (!result.IsValid)
@@ -68,7 +70,7 @@ public class PlaylistController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        await _playlistRepository.Update(_mapper.Map<Playlist>(playlist));
+        await _playlistRepository.Update(new UpdatePlaylist{Id = id, Name = playlist.Name, SongIds = playlist.SongIds});
         return NoContent();
     }
 

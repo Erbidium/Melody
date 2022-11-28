@@ -1,3 +1,3 @@
-﻿namespace Melody.Infrastructure.Data.Records;
+﻿namespace Melody.Infrastructure.Data.DbEntites;
 
 public record PlaylistSongDb(long PlaylistId, long SongId);

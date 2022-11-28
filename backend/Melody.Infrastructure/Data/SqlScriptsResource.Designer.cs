@@ -61,9 +61,9 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на INSERT INTO Playlists (Name, Link, AuthorId)
+        ///   Ищет локализованную строку, похожую на INSERT INTO Playlists (Name, AuthorId)
         ///OUTPUT Inserted.Id
-        ///VALUES (@Name, @Link, @AuthorId).
+        ///VALUES (@Name, @AuthorId).
         /// </summary>
         internal static string CreatePlaylist {
             get {
@@ -453,6 +453,16 @@ namespace Melody.Infrastructure.Data {
         internal static string GetUserTotalUploadsSize {
             get {
                 return ResourceManager.GetString("GetUserTotalUploadsSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на INSERT INTO PlaylistSongs (PlaylistId, SongId)
+        ///VALUES (@PlaylistId, @SongId).
+        /// </summary>
+        internal static string InsertPlaylistSong {
+            get {
+                return ResourceManager.GetString("InsertPlaylistSong", resourceCulture);
             }
         }
         

@@ -1,7 +1,7 @@
 ﻿using Melody.Infrastructure.Auth.Models;
-using Melody.Infrastructure.Data.Records;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using Melody.Infrastructure.Data.DbEntites;
 
 namespace Melody.WebAPI.Services;
 

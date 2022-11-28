@@ -1,3 +1,3 @@
-﻿INSERT INTO Playlists (Name, Link, AuthorId)
+﻿INSERT INTO Playlists (Name, AuthorId)
 OUTPUT Inserted.Id
-VALUES (@Name, @Link, @AuthorId)
+VALUES (@Name, @AuthorId)

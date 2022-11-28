@@ -1,11 +1,11 @@
 using FluentMigrator.Runner;
 using Melody.Infrastructure.Data.Context;
 using Melody.Infrastructure.Data.Migrations;
-using Melody.Infrastructure.Data.Records;
 using Melody.WebAPI.Extensions;
 using Melody.WebAPI.Middlewares;
 using Microsoft.Extensions.FileProviders;
 using System.Reflection;
+using Melody.Infrastructure.Data.DbEntites;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,10 +1,10 @@
 ﻿using Melody.Infrastructure.Auth.Models;
-using Melody.Infrastructure.Data.Records;
 using Melody.WebAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Melody.Infrastructure.Data.DbEntites;
 using Melody.WebAPI.DTO.User;
 
 namespace Melody.WebAPI.Controllers;

@@ -74,7 +74,6 @@ public class InitialTables_202211031808 : Migration
         Create.Table("Playlists")
             .WithColumn("Id").AsInt64().PrimaryKey().Identity()
             .WithColumn("Name").AsString(50).NotNullable()
-            .WithColumn("Link").AsString(50).NotNullable().Unique()
             .WithColumn("AuthorId").AsInt64().NotNullable().ForeignKey("Users", "Id")
             .WithColumn("IsDeleted").AsBoolean().NotNullable().WithDefaultValue(0);
 

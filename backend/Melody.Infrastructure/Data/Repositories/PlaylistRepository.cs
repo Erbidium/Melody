@@ -2,8 +2,8 @@
 using Melody.Core.Entities;
 using Melody.Core.Interfaces;
 using Melody.Infrastructure.Data.Context;
-using Melody.Infrastructure.Data.Records;
 using System.Data;
+using Melody.Infrastructure.Data.DbEntites;
 
 namespace Melody.Infrastructure.Data.Repositories;
 
@@ -21,7 +21,7 @@ public class PlaylistRepository : IPlaylistRepository
         using var connection = _context.CreateConnection();
 
         var playlists = await connection.QueryAsync<PlaylistDb>(SqlScriptsResource.GetAllPlaylists);
-        return playlists.Select(record => new Playlist(record.Name, record.Link, record.AuthorId){Id = record.Id}).ToList()
+        return playlists.Select(record => new Playlist(record.Name, record.AuthorId){Id = record.Id}).ToList()
             .AsReadOnly();
     }
 
@@ -31,29 +31,42 @@ public class PlaylistRepository : IPlaylistRepository
 
         var record =
             await connection.QuerySingleOrDefaultAsync<PlaylistDb>(SqlScriptsResource.GetPlaylistById, new { id });
-        return record == null ? null : new Playlist(record.Name, record.Link, record.AuthorId){Id = record.Id};
+        return record == null ? null : new Playlist(record.Name, record.AuthorId){Id = record.Id};
     }
 
-    public async Task<Playlist> Create(Playlist playlist)
+    public async Task<bool> Create(CreatePlaylist playlist)
     {
+        using var connection = _context.CreateConnection();
+        connection.Open();
+        using var transaction = connection.BeginTransaction();
+        
         var parameters = new DynamicParameters();
         parameters.Add("Name", playlist.Name, DbType.String);
-        parameters.Add("Link", playlist.Link, DbType.String);
         parameters.Add("AuthorId", playlist.AuthorId, DbType.Int64);
-
-        using var connection = _context.CreateConnection();
 
         var id = await connection.ExecuteScalarAsync<long>(SqlScriptsResource.CreatePlaylist, parameters);
 
-        return new Playlist(playlist.Name, playlist.Link, playlist.AuthorId){Id = playlist.Id};
+        foreach (var songId in playlist.SongIds)
+        {     
+            await connection.ExecuteAsync(SqlScriptsResource.InsertPlaylistSong, new { PlaylistId =  id, SongId = songId }, transaction);
+        }
+
+        try
+        {
+            transaction.Commit();
+        }
+        catch
+        {
+            transaction.Rollback();
+            return false;
+        }
+        return true;
     }
 
-    public async Task Update(Playlist playlist)
+    public async Task Update(UpdatePlaylist playlist)
     {
         var parameters = new DynamicParameters();
         parameters.Add("Name", playlist.Name, DbType.String);
-        parameters.Add("Link", playlist.Link, DbType.String);
-        parameters.Add("AuthorId", playlist.AuthorId, DbType.Int64);
 
         using var connection = _context.CreateConnection();
 

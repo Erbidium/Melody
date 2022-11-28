@@ -10,9 +10,5 @@ public class UpdatePlaylistDtoValidator : AbstractValidator<UpdatePlaylistDto>
         RuleFor(p => p.Name)
             .NotEmpty()
             .MaximumLength(50);
-
-        RuleFor(p => p.Link)
-            .NotEmpty()
-            .MaximumLength(50);
     }
 }
