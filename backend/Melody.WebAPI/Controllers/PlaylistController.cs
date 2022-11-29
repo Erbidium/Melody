@@ -2,7 +2,6 @@ using System.Security.Claims;
 using AutoMapper;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using FluentValidation.Results;
 using Melody.Core.Entities;
 using Melody.Core.Interfaces;
 using Melody.WebAPI.DTO.Playlist;
@@ -23,7 +22,8 @@ public class PlaylistController : ControllerBase
     private readonly ITokenService _tokenService;
 
     public PlaylistController(IPlaylistRepository playlistRepository, IMapper mapper,
-        IValidator<NewPlaylistDto> newPlaylistDtoValidator, IValidator<UpdatePlaylistDto> updatePlaylistDtoValidator, ITokenService tokenService)
+        IValidator<NewPlaylistDto> newPlaylistDtoValidator, IValidator<UpdatePlaylistDto> updatePlaylistDtoValidator,
+        ITokenService tokenService)
     {
         _playlistRepository = playlistRepository;
         _mapper = mapper;
@@ -33,9 +33,22 @@ public class PlaylistController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Song>>> GetPlaylists()
+    public async Task<ActionResult<IEnumerable<Playlist>>> GetPlaylists()
     {
         return Ok(await _playlistRepository.GetAll());
+    }
+
+    [Authorize]
+    [HttpGet("created")]
+    public async Task<ActionResult<IEnumerable<Playlist>>> GetPlaylistsCreatedByUser()
+    {
+        var identity = HttpContext.User.Identity as ClaimsIdentity;
+        var currentUserFromToken = _tokenService.GetCurrentUser(identity);
+        var playlists = await _playlistRepository.GetPlaylistsCreatedByUser(currentUserFromToken.UserId);
+        return Ok(playlists.Select(p => new PlaylistWithPerformersDto
+        {
+            Id = p.Id, Name = p.Name, AuthorId = p.AuthorId, PerformersNames = p.Songs.Select(s => s.Name).ToList()
+        }));
     }
 
     [HttpGet("{id}")]
@@ -52,7 +65,7 @@ public class PlaylistController : ControllerBase
 
     [Authorize]
     [HttpPost]
-    public async Task<ActionResult<Song>> CreatePlaylist(NewPlaylistDto playlist)
+    public async Task<IActionResult> CreatePlaylist(NewPlaylistDto playlist)
     {
         var identity = HttpContext.User.Identity as ClaimsIdentity;
         var currentUserFromToken = _tokenService.GetCurrentUser(identity);
@@ -63,12 +76,13 @@ public class PlaylistController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        await _playlistRepository.Create(new CreatePlaylist { Name = playlist.Name, SongIds = playlist.SongIds, AuthorId = currentUserFromToken.UserId});
+        await _playlistRepository.Create(new CreatePlaylist
+            { Name = playlist.Name, SongIds = playlist.SongIds, AuthorId = currentUserFromToken.UserId });
         return Ok();
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdatePlaylist([FromBody]UpdatePlaylistDto playlist, long id)
+    public async Task<IActionResult> UpdatePlaylist([FromBody] UpdatePlaylistDto playlist, long id)
     {
         var result = await _updatePlaylistDtoValidator.ValidateAsync(playlist);
         if (!result.IsValid)
@@ -77,7 +91,8 @@ public class PlaylistController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        await _playlistRepository.Update(new UpdatePlaylist{Id = id, Name = playlist.Name, SongIds = playlist.SongIds});
+        await _playlistRepository.Update(new UpdatePlaylist
+            { Id = id, Name = playlist.Name, SongIds = playlist.SongIds });
         return NoContent();
     }
 

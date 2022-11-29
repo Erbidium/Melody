@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { BaseComponent } from '@core/base/base.component';
-import {Router} from "@angular/router";
 
 @Component({
     selector: 'app-melody-page',

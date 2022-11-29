@@ -8,5 +8,5 @@ SET UserId     = @UserId,
     UploadedAt = @UploadedAt,
     GenreId    = @GenreId,
     Duration   = @Duration,
-WHERE Id = @Id
-  AND IsDeleted = 0
+    WHERE Id = @Id
+        AND IsDeleted = 0

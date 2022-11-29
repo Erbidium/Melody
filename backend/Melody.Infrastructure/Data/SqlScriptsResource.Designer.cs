@@ -62,7 +62,7 @@ namespace Melody.Infrastructure.Data {
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на INSERT INTO Playlists (Name, AuthorId)
-        ///OUTPUT Inserted.Id
+        ///    OUTPUT Inserted.Id
         ///VALUES (@Name, @AuthorId).
         /// </summary>
         internal static string CreatePlaylist {
@@ -93,7 +93,7 @@ namespace Melody.Infrastructure.Data {
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на INSERT INTO Songs (UserId, Name, Path, AuthorName, Year, SizeBytes, UploadedAt, GenreId, Duration)
-        ///OUTPUT Inserted.Id
+        ///    OUTPUT Inserted.Id
         ///VALUES (@UserId, @Name, @Path, @AuthorName, @Year, @SizeBytes, @UploadedAt, @GenreId, @Duration).
         /// </summary>
         internal static string CreateSong {
@@ -104,7 +104,7 @@ namespace Melody.Infrastructure.Data {
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на INSERT INTO Users (UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, PhoneNumber)
-        ///OUTPUT Inserted.Id
+        ///    OUTPUT Inserted.Id
         ///VALUES (@UserName, @NormalizedUserName, @Email, @NormalizedEmail, @EmailConfirmed, @PasswordHash, @PhoneNumber)
         ///.
         /// </summary>
@@ -221,11 +221,7 @@ namespace Melody.Infrastructure.Data {
         ///       SizeBytes,
         ///       Name,
         ///       Path,
-        ///       AuthorName,
-        ///       Year,
-        ///       GenreId,
-        ///       Duration,
-        ///       IsDeleted
+        ///       AuthorName, Year, GenreId, Duration, IsDeleted
         ///FROM Songs
         ///WHERE IsDeleted = 0
         ///.
@@ -256,6 +252,34 @@ namespace Melody.Infrastructure.Data {
         internal static string GetPlaylistById {
             get {
                 return ResourceManager.GetString("GetPlaylistById", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на SELECT p.Id,
+        ///       p.Name,
+        ///       p.AuthorId,
+        ///       p.IsDeleted,
+        ///       s.Id,
+        ///       s.UserId,
+        ///       s.UploadedAt,
+        ///       s.SizeBytes,
+        ///       s.Name,
+        ///       s.Path,
+        ///       s.AuthorName,
+        ///       s.Year,
+        ///       s.GenreId,
+        ///       s.Duration,
+        ///       s.IsDeleted
+        ///FROM Playlists p
+        ///         INNER JOIN PlaylistSongs ps ON ps.PlaylistId = p.Id
+        ///         INNER JOIN Songs s ON ps.SongId = s.Id
+        ///WHERE s.IsDeleted = 0 AND p.IsDeleted = 0
+        ///  AND AuthorId = @UserId.
+        /// </summary>
+        internal static string GetPlaylistsCreatedByUserId {
+            get {
+                return ResourceManager.GetString("GetPlaylistsCreatedByUserId", resourceCulture);
             }
         }
         
@@ -301,11 +325,7 @@ namespace Melody.Infrastructure.Data {
         ///       SizeBytes,
         ///       Name,
         ///       Path,
-        ///       AuthorName,
-        ///       Year,
-        ///       GenreId,
-        ///       Duration,
-        ///       IsDeleted
+        ///       AuthorName, Year, GenreId, Duration, IsDeleted
         ///FROM Songs
         ///WHERE Id = @Id
         ///  AND IsDeleted = 0
@@ -333,15 +353,9 @@ namespace Melody.Infrastructure.Data {
         ///       SizeBytes,
         ///       Songs.Name,
         ///       Path,
-        ///       AuthorName,
-        ///       Year,
-        ///       GenreId,
-        ///       Duration,
-        ///       IsDeleted,
-        ///       Genres.Id,
-        ///       Genres.Name
+        ///       AuthorName, Year, GenreId, Duration, IsDeleted, Genres.Id, Genres.Name
         ///FROM Songs
-        ///INNER JOIN Genres
+        ///    INNER JOIN Genres
         ///ON Songs.GenreId = Genres.Id
         ///WHERE IsDeleted = 0 AND UserId = @UserId.
         /// </summary>
@@ -524,8 +538,8 @@ namespace Melody.Infrastructure.Data {
         ///    UploadedAt = @UploadedAt,
         ///    GenreId    = @GenreId,
         ///    Duration   = @Duration,
-        ///WHERE Id = @Id
-        ///  AND IsDeleted = 0.
+        ///    WHERE Id = @Id
+        ///        AND IsDeleted = 0.
         /// </summary>
         internal static string UpdateSong {
             get {

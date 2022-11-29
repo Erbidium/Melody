@@ -23,8 +23,8 @@ public class TokenService : ITokenService
 
         var claims = new List<Claim>
         {
-            new (ClaimTypes.NameIdentifier, user.UserName),
-            new (ClaimTypes.Email, user.Email)
+            new(ClaimTypes.NameIdentifier, user.UserName),
+            new(ClaimTypes.Email, user.Email)
         };
 
         var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],

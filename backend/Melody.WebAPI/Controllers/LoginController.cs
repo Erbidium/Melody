@@ -79,7 +79,7 @@ namespace Melody.WebAPI.Controllers
                             HttpOnly = true, SameSite = SameSiteMode.None, Secure = true,
                             Expires = DateTimeOffset.Now.AddDays(60)
                         });
-                    return Ok(new { AccessToken = _tokenService.GenerateAccessToken(user, roles)});
+                    return Ok(new { AccessToken = _tokenService.GenerateAccessToken(user, roles) });
                 }
 
                 return Unauthorized();

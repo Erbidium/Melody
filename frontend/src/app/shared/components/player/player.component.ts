@@ -1,9 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { MatSliderChange } from '@angular/material/slider';
+import { BaseComponent } from '@core/base/base.component';
 import { StreamState } from '@core/interfaces/stream-state';
 import { ISong } from '@core/models/ISong';
 import { AudioService } from '@core/services/audio.service';
-import { BaseComponent } from '@core/base/base.component';
 
 @Component({
     selector: 'app-player',

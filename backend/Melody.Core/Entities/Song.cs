@@ -17,6 +17,7 @@ public class Song : EntityBase<long>
         UploadedAt = uploadedAt;
         Duration = duration;
     }
+
     public long UserId { get; }
     public string Name { get; }
     public string Path { get; }

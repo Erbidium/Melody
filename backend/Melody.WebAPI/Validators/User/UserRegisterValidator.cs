@@ -18,7 +18,7 @@ public class UserRegisterValidator : AbstractValidator<UserRegister>
         RuleFor(u => u.PhoneNumber)
             .NotEmpty()
             .MaximumLength(50);
-        
+
         RuleFor(u => u.Password)
             .NotEmpty()
             .MaximumLength(50);

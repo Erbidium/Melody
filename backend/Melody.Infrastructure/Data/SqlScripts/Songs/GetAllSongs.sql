@@ -4,10 +4,6 @@
        SizeBytes,
        Name,
        Path,
-       AuthorName,
-       Year,
-       GenreId,
-       Duration,
-       IsDeleted
+       AuthorName, Year, GenreId, Duration, IsDeleted
 FROM Songs
 WHERE IsDeleted = 0

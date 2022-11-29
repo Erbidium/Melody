@@ -8,5 +8,6 @@ public class Genre : EntityBase<long>
     {
         Name = name;
     }
+
     public string Name { get; }
 }

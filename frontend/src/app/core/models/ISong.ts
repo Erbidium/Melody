@@ -1,4 +1,4 @@
-import {IGenre} from "@core/models/IGenre";
+import { IGenre } from '@core/models/IGenre';
 
 export interface ISong {
     id: number;
