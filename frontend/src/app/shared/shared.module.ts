@@ -14,6 +14,7 @@ import { LoadingSpinnerComponent } from './components/loading-spinner/loading-sp
 import { PlayerComponent } from './components/player/player.component';
 import { DateAgoPipe } from './pipes/date-ago.pipe';
 import { TimePipe } from './pipes/time.pipe';
+import { TextListPipe } from './pipes/text-list.pipe';
 
 @NgModule({
     declarations: [
@@ -23,6 +24,7 @@ import { TimePipe } from './pipes/time.pipe';
         DateAgoPipe,
         TimePipe,
         PlayerComponent,
+        TextListPipe,
     ],
     exports: [
         LoadingSpinnerComponent,
@@ -31,6 +33,7 @@ import { TimePipe } from './pipes/time.pipe';
         DateAgoPipe,
         TimePipe,
         PlayerComponent,
+        TextListPipe,
     ],
     imports: [
         CommonModule,

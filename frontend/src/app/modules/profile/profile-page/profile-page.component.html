@@ -10,6 +10,14 @@
 </h1>
 <div class="playlists-container">
     <mat-card class="playlist" *ngFor="let playlist of userPlaylists">
-        {{playlist.name}}
+        <mat-card-header>
+            <mat-card-title>{{playlist.name}}</mat-card-title>
+            <mat-icon>favorite_border</mat-icon>
+        </mat-card-header>
+        <mat-card-content>
+            {{playlist.performersNames | textList}}
+        </mat-card-content>
     </mat-card>
 </div>
+<mat-icon>favorite_border</mat-icon>
+<mat-icon>favorite</mat-icon>

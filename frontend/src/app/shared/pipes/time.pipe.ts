@@ -4,7 +4,7 @@ import { Pipe, PipeTransform } from '@angular/core';
     name: 'time',
 })
 export class TimePipe implements PipeTransform {
-    transform(value: string): unknown {
+    transform(value: string): string {
         return value.substring(3, 8);
     }
 }

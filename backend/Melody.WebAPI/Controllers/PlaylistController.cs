@@ -47,7 +47,7 @@ public class PlaylistController : ControllerBase
         var playlists = await _playlistRepository.GetPlaylistsCreatedByUser(currentUserFromToken.UserId);
         return Ok(playlists.Select(p => new PlaylistWithPerformersDto
         {
-            Id = p.Id, Name = p.Name, AuthorId = p.AuthorId, PerformersNames = p.Songs.Select(s => s.Name).ToList()
+            Id = p.Id, Name = p.Name, AuthorId = p.AuthorId, PerformersNames = p.Songs.Select(s => s.AuthorName).ToList()
         }));
     }
 
