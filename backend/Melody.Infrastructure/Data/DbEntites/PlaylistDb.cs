@@ -6,5 +6,5 @@ public class PlaylistDb
     public string Name { get; set; }
     public long AuthorId { get; set; }
     public bool IsDeleted { get; set; }
-    public List<SongDb> Songs { get; set; } = new List<SongDb>();
+    public List<SongDb> Songs { get; set; } = new();
 }

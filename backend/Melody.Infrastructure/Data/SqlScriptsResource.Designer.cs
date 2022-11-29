@@ -259,10 +259,13 @@ namespace Melody.Infrastructure.Data {
         ///    s.Year,
         ///    s.GenreId,
         ///    s.Duration,
-        ///    s.IsDeleted
+        ///    s.IsDeleted,
+        ///    g.Id,
+        ///    g.Name
         ///FROM Playlists p
         ///INNER JOIN PlaylistSongs ps ON ps.PlaylistId = p.Id
         ///INNER JOIN Songs s ON ps.SongId = s.Id
+        ///INNER JOIN Genres g ON s.GenreId = g.Id
         ///WHERE p.Id = @Id AND p.IsDeleted = 0 AND s.IsDeleted = 0.
         /// </summary>
         internal static string GetPlaylistById {
@@ -373,7 +376,13 @@ namespace Melody.Infrastructure.Data {
         ///       SizeBytes,
         ///       Songs.Name,
         ///       Path,
-        ///       AuthorName, Year, GenreId, Duration, IsDeleted, Genres.Id, Genres.Name
+        ///       AuthorName,
+        ///       Year,
+        ///       GenreId,
+        ///       Duration,
+        ///       IsDeleted,
+        ///       Genres.Id,
+        ///       Genres.Name
         ///FROM Songs
         ///    INNER JOIN Genres
         ///ON Songs.GenreId = Genres.Id

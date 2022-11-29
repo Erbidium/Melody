@@ -15,6 +15,10 @@ export class PlaylistPageComponent extends BaseComponent {
 
     private id: number | undefined;
 
+    columnsToDisplay = ['position', 'name', 'author', 'genre', 'date', 'duration'];
+
+    currentSongIdForMusicPlayer?: number;
+
     constructor(
         private activateRoute: ActivatedRoute,
         private playlistService: PlaylistService,
@@ -34,5 +38,9 @@ export class PlaylistPageComponent extends BaseComponent {
                     });
             }
         });
+    }
+
+    selectSong(songId: number) {
+        this.currentSongIdForMusicPlayer = songId;
     }
 }

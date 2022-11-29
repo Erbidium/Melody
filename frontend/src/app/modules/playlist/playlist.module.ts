@@ -7,6 +7,7 @@ import { SharedModule } from '@shared/shared.module';
 
 import { CreatePlaylistPageComponent } from './create-playlist-page/create-playlist-page.component';
 import { PlaylistPageComponent } from './playlist-page/playlist-page.component';
+import {MatTableModule} from "@angular/material/table";
 
 @NgModule({
     declarations: [
@@ -19,6 +20,7 @@ import { PlaylistPageComponent } from './playlist-page/playlist-page.component';
         MaterialModule,
         ReactiveFormsModule,
         SharedModule,
+        MatTableModule,
     ],
 })
 export class PlaylistModule { }

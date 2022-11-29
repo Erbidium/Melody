@@ -61,8 +61,9 @@ public class PlaylistRepository : IPlaylistRepository
         using var connection = _context.CreateConnection();
 
         var records =
-            await connection.QueryAsync<PlaylistDb, SongDb, PlaylistDb>(SqlScriptsResource.GetPlaylistById, (playlist, song) =>
+            await connection.QueryAsync<PlaylistDb, SongDb, GenreDb, PlaylistDb>(SqlScriptsResource.GetPlaylistById, (playlist, song, genre) =>
             {
+                song.Genre = genre;
                 playlist.Songs.Add(song);
                 return playlist;
             }, new { id });
@@ -83,6 +84,7 @@ public class PlaylistRepository : IPlaylistRepository
                 s.GenreId, s.SizeBytes, s.UploadedAt, s.Duration)
             {
                 Id = s.Id,
+                Genre = new Genre(s.Genre.Name) {Id = s.Genre.Id }
             }).ToList();
         var playlist = new Playlist(playlistWithSongs.Name, playlistWithSongs.AuthorId) { Id = playlistWithSongs.Id, Songs = songs };
 
