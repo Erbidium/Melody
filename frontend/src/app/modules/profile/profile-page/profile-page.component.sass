@@ -1,0 +1,28 @@
+.playlists-container
+    display: flex
+    flex-direction: row
+    overflow-y: hidden
+    overflow-x: scroll
+    transform: rotateX(180deg)
+    background: white
+    border: 1px solid gray
+    .playlist
+        min-width: 230px
+        height: 130px
+        transform: rotateX(180deg)
+
+::-webkit-scrollbar-thumb, ::-webkit-scrollbar-track, ::-webkit-scrollbar
+    -webkit-border-radius: 6px
+    background-color: white
+
+::-webkit-scrollbar-track
+    border: 1px solid gray
+
+::-webkit-scrollbar
+    height: 25px
+
+::-webkit-scrollbar-thumb
+    background: lightgray
+
+::-webkit-scrollbar-button
+    display: none

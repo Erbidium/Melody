@@ -8,9 +8,8 @@
 <h1>
     Створені плейлисти
 </h1>
-<mat-card>
-    СКРОЛЛ З ПЛЕЙЛИСТАМИ
-</mat-card>
-<p *ngFor="let playlist of userPlaylists">
-    {{playlist.name}}
-</p>
+<div class="playlists-container">
+    <mat-card class="playlist" *ngFor="let playlist of userPlaylists">
+        {{playlist.name}}
+    </mat-card>
+</div>
