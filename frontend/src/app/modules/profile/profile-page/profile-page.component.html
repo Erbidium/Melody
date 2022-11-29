@@ -8,16 +8,6 @@
 <h1>
     Створені плейлисти
 </h1>
-<div class="playlists-container">
-    <mat-card class="playlist" *ngFor="let playlist of userPlaylists">
-        <mat-card-header>
-            <mat-card-title>{{playlist.name}}</mat-card-title>
-            <mat-icon>favorite_border</mat-icon>
-        </mat-card-header>
-        <mat-card-content>
-            {{playlist.performersNames | textList}}
-        </mat-card-content>
-    </mat-card>
-</div>
+<app-vertical-playlists-scroll [userPlaylists]="userPlaylists"></app-vertical-playlists-scroll>
 <mat-icon>favorite_border</mat-icon>
 <mat-icon>favorite</mat-icon>
