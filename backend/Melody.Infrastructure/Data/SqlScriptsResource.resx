@@ -183,8 +183,7 @@
             PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="GetPlaylistById" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqlscripts\playlists\getplaylistbyid.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089;utf-8</value>
+    <value>sqlscripts\playlists\getplaylistbyid.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="GetPlaylistsCreatedByUserId" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqlscripts\playlists\getplaylistscreatedbyuserid.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
@@ -202,8 +201,7 @@
             PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="GetSongById" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqlscripts\songs\getsongbyid.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089;utf-8</value>
+    <value>sqlscripts\songs\getsongbyid.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="GetSongs" xml:space="preserve">
     <value />

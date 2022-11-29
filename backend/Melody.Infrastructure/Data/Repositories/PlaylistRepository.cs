@@ -60,9 +60,33 @@ public class PlaylistRepository : IPlaylistRepository
     {
         using var connection = _context.CreateConnection();
 
-        var record =
-            await connection.QuerySingleOrDefaultAsync<PlaylistDb>(SqlScriptsResource.GetPlaylistById, new { id });
-        return record == null ? null : new Playlist(record.Name, record.AuthorId) { Id = record.Id };
+        var records =
+            await connection.QueryAsync<PlaylistDb, SongDb, PlaylistDb>(SqlScriptsResource.GetPlaylistById, (playlist, song) =>
+            {
+                playlist.Songs.Add(song);
+                return playlist;
+            }, new { id });
+       
+        var playlistWithSongs = records.GroupBy(p => p.Id).Select(g =>
+        {
+            var playlistWithSong = g.First();
+            playlistWithSong.Songs = g.Select(p => p.Songs.Single()).ToList();
+            return playlistWithSong;
+        }).FirstOrDefault();
+
+        if(playlistWithSongs == null)
+        {
+            return null;
+        }
+
+        var songs = playlistWithSongs.Songs.Select(s => new Song(s.UserId, s.Name, s.Path, s.AuthorName, s.Year,
+                s.GenreId, s.SizeBytes, s.UploadedAt, s.Duration)
+            {
+                Id = s.Id,
+            }).ToList();
+        var playlist = new Playlist(playlistWithSongs.Name, playlistWithSongs.AuthorId) { Id = playlistWithSongs.Id, Songs = songs };
+
+       return playlist;
     }
 
     public async Task<bool> Create(CreatePlaylist playlist)

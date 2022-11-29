@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { IPlaylist } from '@core/models/IPlaylist';
 import { IPlaylistWithPerformers } from '@core/models/IPlaylistWithPerformers';
 import { HttpInternalService } from '@core/services/http-internal-service';
 
@@ -13,5 +14,9 @@ export class PlaylistService {
 
     public getPlaylistsCreatedByUser() {
         return this.httpService.getRequest<IPlaylistWithPerformers[]>('/api/playlist/created');
+    }
+
+    public getPlaylistById(id: number) {
+        return this.httpService.getRequest<IPlaylist>(`/api/playlist/${id}`);
     }
 }

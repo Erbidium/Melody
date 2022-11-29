@@ -6,10 +6,12 @@ import { MaterialModule } from '@shared/material/material.module';
 import { SharedModule } from '@shared/shared.module';
 
 import { CreatePlaylistPageComponent } from './create-playlist-page/create-playlist-page.component';
+import { PlaylistPageComponent } from './playlist-page/playlist-page.component';
 
 @NgModule({
     declarations: [
         CreatePlaylistPageComponent,
+        PlaylistPageComponent,
     ],
     imports: [
         CommonModule,

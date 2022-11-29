@@ -1,5 +1,5 @@
 <div class="playlists-container">
-    <mat-card class="playlist" *ngFor="let playlist of userPlaylists">
+    <mat-card class="playlist" *ngFor="let playlist of userPlaylists" (click)="navigateToPlaylist(playlist.id)">
         <mat-card-header>
             <mat-card-title>{{playlist.name}}</mat-card-title>
             <mat-icon>favorite_border</mat-icon>

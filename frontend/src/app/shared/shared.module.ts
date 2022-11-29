@@ -12,10 +12,10 @@ import { BackButtonComponent } from './components/back-button/back-button.compon
 import { HeaderComponent } from './components/header/header.component';
 import { LoadingSpinnerComponent } from './components/loading-spinner/loading-spinner.component';
 import { PlayerComponent } from './components/player/player.component';
-import { DateAgoPipe } from './pipes/date-ago.pipe';
-import { TimePipe } from './pipes/time.pipe';
-import { TextListPipe } from './pipes/text-list.pipe';
 import { VerticalPlaylistsScrollComponent } from './components/vertical-playlists-scroll/vertical-playlists-scroll.component';
+import { DateAgoPipe } from './pipes/date-ago.pipe';
+import { TextListPipe } from './pipes/text-list.pipe';
+import { TimePipe } from './pipes/time.pipe';
 
 @NgModule({
     declarations: [
