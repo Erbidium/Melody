@@ -6,6 +6,7 @@
         <div class="actions">
             <mat-icon>add</mat-icon>
             <mat-icon (click)="copyPlaylistLink()">share</mat-icon>
+            <mat-icon (click)="deletePlaylist()">delete_forever</mat-icon>
         </div>
     </div>
     <div *ngIf="playlist.songs.length === 0; else songs">

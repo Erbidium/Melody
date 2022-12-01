@@ -1,6 +1,6 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {ActivatedRoute, Route, Router} from '@angular/router';
 import { BaseComponent } from '@core/base/base.component';
 import { IPlaylist } from '@core/models/IPlaylist';
 import { NotificationService } from '@core/services/notification.service';
@@ -28,6 +28,7 @@ export class PlaylistPageComponent extends BaseComponent {
         private spinnerService: SpinnerService,
         private notificationService: NotificationService,
         private clipboard: Clipboard,
+        private router: Router,
     ) {
         super();
         this.activateRoute.params.subscribe((params) => {
@@ -66,10 +67,20 @@ export class PlaylistPageComponent extends BaseComponent {
         if (this.playlist) {
             event.stopPropagation();
             this.playlistService
-                .removeSongFromPlaylist(id, this.playlist?.id)
+                .removeSongFromPlaylist(id, this.playlist.id)
                 .pipe(switchMap(async () => this.loadPlaylist()))
                 .subscribe(() => {
                     this.currentSongIdForMusicPlayer = undefined;
+                });
+        }
+    }
+
+    deletePlaylist() {
+        if (this.playlist) {
+            this.playlistService
+                .deletePlaylist(this.playlist.id)
+                .subscribe(() => {
+                    this.router.navigateByUrl('melody');
                 });
         }
     }

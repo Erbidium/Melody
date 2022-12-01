@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Melody.WebAPI.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class PlaylistController : ControllerBase
@@ -38,7 +39,6 @@ public class PlaylistController : ControllerBase
         return Ok(_mapper.Map<PlaylistDto>(await _playlistRepository.GetAll()));
     }
 
-    [Authorize]
     [HttpGet("created")]
     public async Task<ActionResult<IEnumerable<PlaylistWithPerformersDto>>> GetPlaylistsCreatedByUser()
     {
@@ -63,7 +63,6 @@ public class PlaylistController : ControllerBase
         return Ok(_mapper.Map<PlaylistDto>(playlist));
     }
 
-    [Authorize]
     [HttpPost]
     public async Task<IActionResult> CreatePlaylist(NewPlaylistDto playlist)
     {
@@ -106,6 +105,13 @@ public class PlaylistController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeletePlaylist(long id)
     {
+        var identity = HttpContext.User.Identity as ClaimsIdentity;
+        var currentUserFromToken = _tokenService.GetCurrentUser(identity);
+        var playlist = await _playlistRepository.GetById(id);
+        if (playlist == null || playlist.AuthorId != currentUserFromToken.UserId)
+        {
+            return BadRequest();
+        }
         await _playlistRepository.Delete(id);
         return NoContent();
     }

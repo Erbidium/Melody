@@ -23,4 +23,8 @@ export class PlaylistService {
     public removeSongFromPlaylist(songId: number, playlistId: number) {
         return this.httpService.deleteRequest(`/api/playlist/${playlistId}/song/${songId}`);
     }
+
+    public deletePlaylist(id: number) {
+        return this.httpService.deleteRequest(`/api/playlist/${id}`);
+    }
 }
