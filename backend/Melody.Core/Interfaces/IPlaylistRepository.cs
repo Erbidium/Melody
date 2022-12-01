@@ -10,4 +10,5 @@ public interface IPlaylistRepository
     Task<IReadOnlyCollection<Playlist>> GetAll();
     Task Update(UpdatePlaylist playlist);
     Task Delete(long id);
+    Task DeleteSong(long id, long songId);
 }

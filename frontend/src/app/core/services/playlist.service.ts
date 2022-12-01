@@ -19,4 +19,8 @@ export class PlaylistService {
     public getPlaylistById(id: number) {
         return this.httpService.getRequest<IPlaylist>(`/api/playlist/${id}`);
     }
+
+    public removeSongFromPlaylist(songId: number, playlistId: number) {
+        return this.httpService.deleteRequest(`/api/playlist/${playlistId}/song/${songId}`);
+    }
 }

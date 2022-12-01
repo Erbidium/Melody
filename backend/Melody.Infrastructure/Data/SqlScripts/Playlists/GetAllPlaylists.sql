@@ -1,3 +1,3 @@
-﻿SELECT Id, Name, Link, AuthorId, IsDeleted
+﻿SELECT Id, Name, AuthorId, IsDeleted
 FROM Playlists
 WHERE IsDeleted = 0

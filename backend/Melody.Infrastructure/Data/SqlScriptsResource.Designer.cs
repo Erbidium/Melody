@@ -127,6 +127,16 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на DELETE From PlaylistSongs
+        ///WHERE PlaylistId = @Id AND SongId = @SongId.
+        /// </summary>
+        internal static string DeletePlaylistSong {
+            get {
+                return ResourceManager.GetString("DeletePlaylistSong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на DELETE
         ///FROM UserRefreshTokens
         ///WHERE RefreshToken = @Token;.
@@ -204,7 +214,7 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на SELECT Id, Name, Link, AuthorId, IsDeleted
+        ///   Ищет локализованную строку, похожую на SELECT Id, Name, AuthorId, IsDeleted
         ///FROM Playlists
         ///WHERE IsDeleted = 0.
         /// </summary>
@@ -249,24 +259,30 @@ namespace Melody.Infrastructure.Data {
         ///    p.Name,
         ///    p.AuthorId,
         ///    p.IsDeleted,
-        ///    s.Id,
-        ///    s.UserId,
-        ///    s.UploadedAt,
-        ///    s.SizeBytes,
-        ///    s.Name,
-        ///    s.Path,
-        ///    s.AuthorName,
-        ///    s.Year,
-        ///    s.GenreId,
-        ///    s.Duration,
-        ///    s.IsDeleted,
-        ///    g.Id,
-        ///    g.Name
+        ///    ps.Id,
+        ///    ps.UserId,
+        ///    ps.UploadedAt,
+        ///    ps.SizeBytes,
+        ///    ps.Name,
+        ///    ps.Path,
+        ///    ps.AuthorName,
+        ///    ps.Year,
+        ///    ps.GenreId,
+        ///    ps.Duration,
+        ///    ps.IsDeleted,
+        ///    ps.GenreId as Id,
+        ///    ps.GenreName as Name
         ///FROM Playlists p
-        ///INNER JOIN PlaylistSongs ps ON ps.PlaylistId = p.Id
-        ///INNER JOIN Songs s ON ps.SongId = s.Id
-        ///INNER JOIN Genres g ON s.GenreId = g.Id
-        ///WHERE p.Id = @Id AND p.IsDeleted = 0 AND s.IsDeleted = 0.
+        ///LEFT JOIN
+        ///    (
+        ///        SELECT
+        ///            s.Id,
+        ///            s.UserId,
+        ///            s.UploadedAt,
+        ///            s.SizeBytes,
+        ///            s.Name,
+        ///            s.Path,
+        ///            s.AuthorName [остаток строки не уместился]&quot;;.
         /// </summary>
         internal static string GetPlaylistById {
             get {
@@ -279,22 +295,29 @@ namespace Melody.Infrastructure.Data {
         ///       p.Name,
         ///       p.AuthorId,
         ///       p.IsDeleted,
-        ///       s.Id,
-        ///       s.UserId,
-        ///       s.UploadedAt,
-        ///       s.SizeBytes,
-        ///       s.Name,
-        ///       s.Path,
-        ///       s.AuthorName,
-        ///       s.Year,
-        ///       s.GenreId,
-        ///       s.Duration,
-        ///       s.IsDeleted
+        ///       ps.Id,
+        ///       ps.UserId,
+        ///       ps.UploadedAt,
+        ///       ps.SizeBytes,
+        ///       ps.Name,
+        ///       ps.Path,
+        ///       ps.AuthorName,
+        ///       ps.Year,
+        ///       ps.GenreId,
+        ///       ps.Duration,
+        ///       ps.IsDeleted
         ///FROM Playlists p
-        ///         INNER JOIN PlaylistSongs ps ON ps.PlaylistId = p.Id
-        ///         INNER JOIN Songs s ON ps.SongId = s.Id
-        ///WHERE s.IsDeleted = 0 AND p.IsDeleted = 0
-        ///  AND AuthorId = @UserId.
+        ///LEFT JOIN
+        ///    (
+        ///        SELECT
+        ///            s.Id,
+        ///            s.UserId,
+        ///            s.UploadedAt,
+        ///            s.SizeBytes,
+        ///            s.Name,
+        ///            s.Path,
+        ///            s.AuthorName,
+        ///           [остаток строки не уместился]&quot;;.
         /// </summary>
         internal static string GetPlaylistsCreatedByUserId {
             get {

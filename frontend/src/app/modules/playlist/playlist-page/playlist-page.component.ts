@@ -6,6 +6,7 @@ import { IPlaylist } from '@core/models/IPlaylist';
 import { NotificationService } from '@core/services/notification.service';
 import { PlaylistService } from '@core/services/playlist.service';
 import { SpinnerService } from '@core/services/spinner.service';
+import {switchMap} from "rxjs/operators";
 
 @Component({
     selector: 'app-playlist-page',
@@ -21,8 +22,6 @@ export class PlaylistPageComponent extends BaseComponent {
 
     currentSongIdForMusicPlayer?: number;
 
-    private currentUrl?: string;
-
     constructor(
         private activateRoute: ActivatedRoute,
         private playlistService: PlaylistService,
@@ -33,17 +32,21 @@ export class PlaylistPageComponent extends BaseComponent {
         super();
         this.activateRoute.params.subscribe((params) => {
             this.id = params['id'];
-            this.spinnerService.show();
-            if (this.id) {
-                this.playlistService
-                    .getPlaylistById(this.id)
-                    .pipe(this.untilThis)
-                    .subscribe((playlistResponse) => {
-                        this.playlist = playlistResponse;
-                        this.spinnerService.hide();
-                    });
-            }
+            this.loadPlaylist();
         });
+    }
+
+    loadPlaylist() {
+        this.spinnerService.show();
+        if (this.id) {
+            this.playlistService
+                .getPlaylistById(this.id)
+                .pipe(this.untilThis)
+                .subscribe((playlistResponse) => {
+                    this.playlist = playlistResponse;
+                    this.spinnerService.hide();
+                });
+        }
     }
 
     selectSong(songId: number) {
@@ -56,6 +59,18 @@ export class PlaylistPageComponent extends BaseComponent {
             this.notificationService.showSuccessMessage('Playlist link is successfully copied to clipboard!');
         } else {
             this.notificationService.showErrorMessage('Cannot generate link for the playlist');
+        }
+    }
+
+    deleteSongFromPlaylist(id: number, event: MouseEvent) {
+        if (this.playlist) {
+            event.stopPropagation();
+            this.playlistService
+                .removeSongFromPlaylist(id, this.playlist?.id)
+                .pipe(switchMap(async () => this.loadPlaylist()))
+                .subscribe(() => {
+                    this.currentSongIdForMusicPlayer = undefined;
+                });
         }
     }
 }

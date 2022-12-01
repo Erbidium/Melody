@@ -142,6 +142,9 @@
     <value>sqlscripts\playlists\deleteplaylist.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="DeletePlaylistSong" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\playlists\deleteplaylistsong.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="DeleteRefreshToken" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqlscripts\refreshtokens\deleterefreshtoken.sql;System.String, mscorlib, Version=4.0.0.0,
             Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
@@ -171,8 +174,7 @@
             PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="GetAllPlaylists" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqlscripts\playlists\getallplaylists.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089;utf-8</value>
+    <value>sqlscripts\playlists\getallplaylists.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="GetAllSongs" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqlscripts\songs\getallsongs.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,

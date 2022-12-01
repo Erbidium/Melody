@@ -33,14 +33,15 @@ public class PlaylistRepository : IPlaylistRepository
             SqlScriptsResource.GetPlaylistsCreatedByUserId,
             (playlist, song) =>
             {
-                playlist.Songs.Add(song);
+                if (song != null)
+                    playlist.Songs.Add(song);
                 return playlist;
             },
             new { UserId = userId });
         var playlistsGrouped = playlists.GroupBy(p => p.Id).Select(g =>
         {
             var groupedPlaylistDb = g.First();
-            groupedPlaylistDb.Songs = g.Select(p => p.Songs.Single()).ToList();
+            groupedPlaylistDb.Songs = g.Where(p => p.Songs.Count > 0).Select(p => p.Songs.Single()).ToList();
             return groupedPlaylistDb;
         });
         return playlistsGrouped.Select(p =>
@@ -63,15 +64,18 @@ public class PlaylistRepository : IPlaylistRepository
         var records =
             await connection.QueryAsync<PlaylistDb, SongDb, GenreDb, PlaylistDb>(SqlScriptsResource.GetPlaylistById, (playlist, song, genre) =>
             {
-                song.Genre = genre;
-                playlist.Songs.Add(song);
+                if (song != null)
+                {
+                    song.Genre = genre;
+                    playlist.Songs.Add(song);
+                }
                 return playlist;
             }, new { id });
        
         var playlistWithSongs = records.GroupBy(p => p.Id).Select(g =>
         {
             var playlistWithSong = g.First();
-            playlistWithSong.Songs = g.Select(p => p.Songs.Single()).ToList();
+            playlistWithSong.Songs = g.Where(p => p.Songs.Count > 0).Select(p => p.Songs.Single()).ToList();
             return playlistWithSong;
         }).FirstOrDefault();
 
@@ -137,5 +141,13 @@ public class PlaylistRepository : IPlaylistRepository
         using var connection = _context.CreateConnection();
 
         await connection.ExecuteAsync(SqlScriptsResource.DeletePlaylist, new { id });
+    }
+
+    public async Task DeleteSong(long id, long songId)
+    {
+        using var connection = _context.CreateConnection();
+        
+        await connection.ExecuteAsync(SqlScriptsResource.DeletePlaylistSong, new { id, songId });
+
     }
 }

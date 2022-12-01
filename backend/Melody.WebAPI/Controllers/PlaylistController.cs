@@ -96,6 +96,13 @@ public class PlaylistController : ControllerBase
         return NoContent();
     }
 
+    [HttpDelete("{id}/song/{songId}")]
+    public async Task<IActionResult> DeleteSongFromPlaylist(long id, long songId)
+    {
+        await _playlistRepository.DeleteSong(id, songId);
+        return NoContent();
+    }
+
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeletePlaylist(long id)
     {
