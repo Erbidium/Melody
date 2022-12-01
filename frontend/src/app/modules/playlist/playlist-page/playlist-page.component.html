@@ -1,7 +1,13 @@
 <app-header></app-header>
-<app-back-button></app-back-button>
 <div *ngIf="playlist">
-    <h1>{{playlist.name}}</h1>
+    <div class="wrapper">
+        <app-back-button></app-back-button>
+        <h1>{{playlist.name}}</h1>
+        <div class="actions">
+            <mat-icon>add</mat-icon>
+            <mat-icon (click)="copyPlaylistLink()">share</mat-icon>
+        </div>
+    </div>
     <table mat-table [dataSource]="playlist.songs" class="mat-elevation-z8">
         <ng-container matColumnDef="position">
             <th mat-header-cell *matHeaderCellDef> # </th>

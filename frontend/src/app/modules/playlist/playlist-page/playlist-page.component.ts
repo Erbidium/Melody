@@ -1,7 +1,9 @@
+import { Clipboard } from '@angular/cdk/clipboard';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BaseComponent } from '@core/base/base.component';
 import { IPlaylist } from '@core/models/IPlaylist';
+import { NotificationService } from '@core/services/notification.service';
 import { PlaylistService } from '@core/services/playlist.service';
 import { SpinnerService } from '@core/services/spinner.service';
 
@@ -19,10 +21,14 @@ export class PlaylistPageComponent extends BaseComponent {
 
     currentSongIdForMusicPlayer?: number;
 
+    private currentUrl?: string;
+
     constructor(
         private activateRoute: ActivatedRoute,
         private playlistService: PlaylistService,
         private spinnerService: SpinnerService,
+        private notificationService: NotificationService,
+        private clipboard: Clipboard,
     ) {
         super();
         this.activateRoute.params.subscribe((params) => {
@@ -42,5 +48,14 @@ export class PlaylistPageComponent extends BaseComponent {
 
     selectSong(songId: number) {
         this.currentSongIdForMusicPlayer = songId;
+    }
+
+    copyPlaylistLink() {
+        if (this.playlist?.id) {
+            this.clipboard.copy(window.location.href);
+            this.notificationService.showSuccessMessage('Playlist link is successfully copied to clipboard!');
+        } else {
+            this.notificationService.showErrorMessage('Cannot generate link for the playlist');
+        }
     }
 }
