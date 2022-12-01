@@ -87,16 +87,4 @@ public class UserController : ControllerBase
         var currentUser = _tokenService.GetCurrentUser(identity);
         return Ok($"Hi {currentUser.UserId}, you are an {currentUser.Roles.FirstOrDefault()}");
     }
-
-    [HttpGet("Public")]
-    public IActionResult Public()
-    {
-        return Ok("Hi, you're on public property");
-    }
-
-    [HttpGet("CreateUser")]
-    public IActionResult CreateUser()
-    {
-        return Ok("Hi, you're on public property");
-    }
 }

@@ -7,7 +7,6 @@ export interface ISong {
     path: string;
     authorName: string;
     year: number;
-    sizeBytes: number;
     uploadedAt: Date;
     genreId: number;
     duration: string;

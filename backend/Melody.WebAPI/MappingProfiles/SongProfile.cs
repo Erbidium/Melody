@@ -10,5 +10,6 @@ public class SongProfile : Profile
     {
         CreateMap<NewSongDto, Song>();
         CreateMap<UpdateSongDto, Song>();
+        CreateMap<Song, SongDto>();
     }
 }

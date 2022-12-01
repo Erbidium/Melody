@@ -35,12 +35,12 @@ public class PlaylistController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Playlist>>> GetPlaylists()
     {
-        return Ok(await _playlistRepository.GetAll());
+        return Ok(_mapper.Map<PlaylistDto>(await _playlistRepository.GetAll()));
     }
 
     [Authorize]
     [HttpGet("created")]
-    public async Task<ActionResult<IEnumerable<Playlist>>> GetPlaylistsCreatedByUser()
+    public async Task<ActionResult<IEnumerable<PlaylistWithPerformersDto>>> GetPlaylistsCreatedByUser()
     {
         var identity = HttpContext.User.Identity as ClaimsIdentity;
         var currentUserFromToken = _tokenService.GetCurrentUser(identity);
@@ -52,7 +52,7 @@ public class PlaylistController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Playlist>> GetPlaylist(long id)
+    public async Task<ActionResult<PlaylistDto>> GetPlaylist(long id)
     {
         var playlist = await _playlistRepository.GetById(id);
         if (playlist is null)
@@ -60,7 +60,7 @@ public class PlaylistController : ControllerBase
             throw new KeyNotFoundException("Playlist is not found");
         }
 
-        return Ok(playlist);
+        return Ok(_mapper.Map<PlaylistDto>(playlist));
     }
 
     [Authorize]

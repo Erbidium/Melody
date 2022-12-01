@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Melody.Core.Interfaces;
 using Melody.Infrastructure.Data.DbEntites;
+using Melody.WebAPI.DTO.Genre;
 using NAudio.Wave;
 
 namespace Melody.WebAPI.Controllers;
@@ -47,11 +48,11 @@ public class SongController : ControllerBase
 
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Song>>> GetSongsUploadedByUser()
+    public async Task<ActionResult<IEnumerable<SongDto>>> GetSongsUploadedByUser()
     {
         var identity = HttpContext.User.Identity as ClaimsIdentity;
         var currentUserFromToken = _tokenService.GetCurrentUser(identity);
-        return Ok(await _songRepository.GetSongsUploadedByUserId(currentUserFromToken.UserId));
+        return Ok(_mapper.Map<List<SongDto>>(await _songRepository.GetSongsUploadedByUserId(currentUserFromToken.UserId)));
     }
 
     [HttpGet("file/{id}")]
@@ -74,14 +75,14 @@ public class SongController : ControllerBase
 
     [Authorize]
     [HttpGet("genres")]
-    public async Task<ActionResult<IEnumerable<Genre>>> GetGenres()
+    public async Task<ActionResult<IEnumerable<GenreDto>>> GetGenres()
     {
-        return Ok(await _genreRepository.GetAll());
+        return Ok(_mapper.Map<List<GenreDto>>(await _genreRepository.GetAll()));
     }
 
     [Authorize]
     [HttpPost]
-    public async Task<ActionResult<Song>> CreateSong([FromForm] NewSongDto newSong, IFormFile uploadedSoundFile)
+    public async Task<ActionResult<SongDto>> CreateSong([FromForm] NewSongDto newSong, IFormFile uploadedSoundFile)
     {
         var identity = HttpContext.User.Identity as ClaimsIdentity;
         var currentUserFromToken = _tokenService.GetCurrentUser(identity);
@@ -113,7 +114,7 @@ public class SongController : ControllerBase
         var song = new Song(currentUserFromToken.UserId, newSong.Name, path, newSong.AuthorName, newSong.Year,
             newSong.GenreId,
             uploadedSoundFile.Length, DateTime.Now, duration);
-        return Ok(await _songRepository.Create(song));
+        return Ok(_mapper.Map<SongDto>(await _songRepository.Create(song)));
     }
 
     [HttpPut]
@@ -145,8 +146,6 @@ public class SongController : ControllerBase
         {
             Directory.CreateDirectory(pathToSave);
         }
-
-        //string fileName = Path.GetFileName(uploadedSoundFile.FileName);
         var guidFileName = Guid.NewGuid() + soundExtension;
         var guidSubFolders = string.Empty;
         for (int i = 0; i < 6; i += 2)
