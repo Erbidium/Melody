@@ -16,6 +16,7 @@ import { VerticalPlaylistsScrollComponent } from './components/vertical-playlist
 import { DateAgoPipe } from './pipes/date-ago.pipe';
 import { TextListPipe } from './pipes/text-list.pipe';
 import { TimePipe } from './pipes/time.pipe';
+import { HorizontalScrollDirective } from './directives/horizontal-scroll.directive';
 
 @NgModule({
     declarations: [
@@ -27,6 +28,7 @@ import { TimePipe } from './pipes/time.pipe';
         PlayerComponent,
         TextListPipe,
         VerticalPlaylistsScrollComponent,
+        HorizontalScrollDirective,
     ],
     exports: [
         LoadingSpinnerComponent,

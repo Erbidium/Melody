@@ -1,4 +1,4 @@
-<div class="playlists-container">
+<div class="playlists-container" appHorizontalScroll>
     <mat-card class="playlist" *ngFor="let playlist of userPlaylists" (click)="navigateToPlaylist(playlist.id)">
         <mat-card-header>
             <mat-card-title>{{playlist.name}}</mat-card-title>
