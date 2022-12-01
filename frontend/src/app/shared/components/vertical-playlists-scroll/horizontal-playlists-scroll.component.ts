@@ -4,11 +4,11 @@ import { BaseComponent } from '@core/base/base.component';
 import { IPlaylistWithPerformers } from '@core/models/IPlaylistWithPerformers';
 
 @Component({
-    selector: 'app-vertical-playlists-scroll',
-    templateUrl: './vertical-playlists-scroll.component.html',
-    styleUrls: ['./vertical-playlists-scroll.component.sass'],
+    selector: 'app-horizontal-playlists-scroll',
+    templateUrl: './horizontal-playlists-scroll.component.html',
+    styleUrls: ['./horizontal-playlists-scroll.component.sass'],
 })
-export class VerticalPlaylistsScrollComponent extends BaseComponent {
+export class HorizontalPlaylistsScrollComponent extends BaseComponent {
     @Input() userPlaylists: IPlaylistWithPerformers[] = [];
 
     constructor(private router: Router) {
