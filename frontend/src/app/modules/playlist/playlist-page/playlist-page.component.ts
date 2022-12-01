@@ -15,7 +15,7 @@ export class PlaylistPageComponent extends BaseComponent {
 
     private id: number | undefined;
 
-    columnsToDisplay = ['position', 'name', 'author', 'genre', 'date', 'duration'];
+    columnsToDisplay = ['position', 'name', 'author', 'genre', 'heart', 'date', 'duration'];
 
     currentSongIdForMusicPlayer?: number;
 
