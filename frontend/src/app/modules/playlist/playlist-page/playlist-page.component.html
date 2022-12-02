@@ -53,6 +53,16 @@
             <tr mat-row *matRowDef="let row; columns: columnsToDisplay" (click)="selectSong(row.id)"></tr>
         </table>
     </ng-template>
+    <form [formGroup]="addSongsPlaylistForm">
+        <mat-form-field appearance="fill">
+            <mat-label>Пісні</mat-label>
+            <mat-select formControlName="songs" multiple>
+                <mat-option *ngFor="let song of newSongsToAdd" [value]="song.id">{{song.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <button mat-raised-button type="button" [disabled]="!addSongsPlaylistForm.valid || addSongsPlaylistForm.value?.songs?.length === 0">Додати пісні</button>
+    </form>
     <app-player [currentSongIdSetter]="currentSongIdForMusicPlayer" [files]="playlist.songs"></app-player>
 </div>
 

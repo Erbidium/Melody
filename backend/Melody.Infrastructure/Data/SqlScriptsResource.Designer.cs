@@ -393,6 +393,35 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на SELECT Id,
+        ///       UserId,
+        ///       UploadedAt,
+        ///       SizeBytes,
+        ///       Name,
+        ///       Path,
+        ///       AuthorName,
+        ///       Year,
+        ///       GenreId,
+        ///       Duration,
+        ///       IsDeleted
+        ///FROM Songs
+        ///WHERE IsDeleted = 0
+        ///  ANd Id NOT IN
+        ///  (
+        ///    SELECT s.Id
+        ///    FROM Songs s
+        ///    INNER JOIN PlaylistSongs ps ON ps.SongId = s.Id
+        ///    INNER JOIN Playlists p ON ps.PlaylistId = p.Id
+        ///    WHERE s.IsDeleted = 0 AND p.IsDeleted = 0 AND p.Id = @PlaylistId
+        ///  ).
+        /// </summary>
+        internal static string GetSongsToAddToPlaylist {
+            get {
+                return ResourceManager.GetString("GetSongsToAddToPlaylist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на SELECT Songs.Id,
         ///       UserId,
         ///       UploadedAt,

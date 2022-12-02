@@ -1,5 +1,5 @@
 import { Clipboard } from '@angular/cdk/clipboard';
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Route, Router} from '@angular/router';
 import { BaseComponent } from '@core/base/base.component';
 import { IPlaylist } from '@core/models/IPlaylist';
@@ -7,14 +7,19 @@ import { NotificationService } from '@core/services/notification.service';
 import { PlaylistService } from '@core/services/playlist.service';
 import { SpinnerService } from '@core/services/spinner.service';
 import {switchMap} from "rxjs/operators";
+import {ISong} from "@core/models/ISong";
+import {SongService} from "@core/services/song.service";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
     selector: 'app-playlist-page',
     templateUrl: './playlist-page.component.html',
     styleUrls: ['./playlist-page.component.sass'],
 })
-export class PlaylistPageComponent extends BaseComponent {
+export class PlaylistPageComponent extends BaseComponent implements OnInit {
     public playlist?: IPlaylist;
+
+    newSongsToAdd: ISong[] = [];
 
     private id: number | undefined;
 
@@ -22,9 +27,17 @@ export class PlaylistPageComponent extends BaseComponent {
 
     currentSongIdForMusicPlayer?: number;
 
+    public addSongsPlaylistForm = new FormGroup({
+        songs: new FormControl([] as number[], {
+            validators: [Validators.required],
+            updateOn: 'blur',
+        }),
+    });
+
     constructor(
         private activateRoute: ActivatedRoute,
         private playlistService: PlaylistService,
+        private songService: SongService,
         private spinnerService: SpinnerService,
         private notificationService: NotificationService,
         private clipboard: Clipboard,
@@ -37,6 +50,10 @@ export class PlaylistPageComponent extends BaseComponent {
         });
     }
 
+    ngOnInit(): void {
+        this.loadSongsForPlaylist();
+    }
+
     loadPlaylist() {
         this.spinnerService.show();
         if (this.id) {
@@ -46,6 +63,17 @@ export class PlaylistPageComponent extends BaseComponent {
                 .subscribe((playlistResponse) => {
                     this.playlist = playlistResponse;
                     this.spinnerService.hide();
+                });
+        }
+    }
+
+    loadSongsForPlaylist() {
+        if (this.id) {
+            this.playlistService
+                .getSongsToAddToPlaylist(this.id)
+                .pipe(this.untilThis)
+                .subscribe((resp) => {
+                    this.newSongsToAdd = resp;
                 });
         }
     }
@@ -69,6 +97,7 @@ export class PlaylistPageComponent extends BaseComponent {
             this.playlistService
                 .removeSongFromPlaylist(id, this.playlist.id)
                 .pipe(switchMap(async () => this.loadPlaylist()))
+                .pipe(switchMap(async () => this.loadSongsForPlaylist()))
                 .subscribe(() => {
                     this.currentSongIdForMusicPlayer = undefined;
                 });

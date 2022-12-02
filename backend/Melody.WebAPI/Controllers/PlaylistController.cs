@@ -5,6 +5,7 @@ using FluentValidation.AspNetCore;
 using Melody.Core.Entities;
 using Melody.Core.Interfaces;
 using Melody.WebAPI.DTO.Playlist;
+using Melody.WebAPI.DTO.Song;
 using Melody.WebAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,16 +18,18 @@ namespace Melody.WebAPI.Controllers;
 public class PlaylistController : ControllerBase
 {
     private readonly IPlaylistRepository _playlistRepository;
+    private readonly ISongRepository _songRepository;
     private readonly IMapper _mapper;
     private readonly IValidator<NewPlaylistDto> _newPlaylistDtoValidator;
     private readonly IValidator<UpdatePlaylistDto> _updatePlaylistDtoValidator;
     private readonly ITokenService _tokenService;
 
-    public PlaylistController(IPlaylistRepository playlistRepository, IMapper mapper,
+    public PlaylistController(IPlaylistRepository playlistRepository, ISongRepository songRepository, IMapper mapper,
         IValidator<NewPlaylistDto> newPlaylistDtoValidator, IValidator<UpdatePlaylistDto> updatePlaylistDtoValidator,
         ITokenService tokenService)
     {
         _playlistRepository = playlistRepository;
+        _songRepository = songRepository;
         _mapper = mapper;
         _newPlaylistDtoValidator = newPlaylistDtoValidator;
         _updatePlaylistDtoValidator = updatePlaylistDtoValidator;
@@ -38,6 +41,14 @@ public class PlaylistController : ControllerBase
     {
         return Ok(_mapper.Map<PlaylistDto>(await _playlistRepository.GetAll()));
     }
+
+    [HttpGet("{id}/new-songs-to-add")]
+    public async Task<ActionResult<IEnumerable<SongDto>>> GetSongsToAddToPlaylist(long id)
+    {
+        var songs = await _songRepository.GetSongsForPlaylistToAdd(id);
+        return Ok(_mapper.Map<List<SongDto>>(songs));
+    }
+
 
     [HttpGet("created")]
     public async Task<ActionResult<IEnumerable<PlaylistWithPerformersDto>>> GetPlaylistsCreatedByUser()

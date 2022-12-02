@@ -46,11 +46,6 @@ export class CreatePlaylistPageComponent extends BaseComponent implements OnInit
             });
     }
 
-    initialFormValue = {
-        name: '',
-        songs: [] as number[],
-    };
-
     create() {
         this.playlistService
             .createPlaylist(

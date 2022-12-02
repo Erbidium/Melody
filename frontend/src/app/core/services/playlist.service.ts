@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { IPlaylist } from '@core/models/IPlaylist';
 import { IPlaylistWithPerformers } from '@core/models/IPlaylistWithPerformers';
 import { HttpInternalService } from '@core/services/http-internal-service';
+import {ISong} from "@core/models/ISong";
 
 @Injectable({ providedIn: 'root' })
 export class PlaylistService {
@@ -26,5 +27,9 @@ export class PlaylistService {
 
     public deletePlaylist(id: number) {
         return this.httpService.deleteRequest(`/api/playlist/${id}`);
+    }
+
+    public getSongsToAddToPlaylist(id: number) {
+        return this.httpService.getRequest<ISong[]>(`/api/playlist/${id}/new-songs-to-add`);
     }
 }

@@ -109,4 +109,13 @@ public class SongRepository : ISongRepository
             new { UserId = userId });
         return songs.ToList().AsReadOnly();
     }
+
+    public async Task<IReadOnlyCollection<Song>> GetSongsForPlaylistToAdd(long playlistId)
+    {
+        using var connection = _context.CreateConnection();
+
+        var songs = await connection.QueryAsync<SongDb>(SqlScriptsResource.GetSongsToAddToPlaylist, new { playlistId });
+        return songs.Select(songDb => new Song(songDb.UserId, songDb.Name, songDb.Path, songDb.AuthorName, songDb.Year,
+            songDb.GenreId, songDb.SizeBytes, songDb.UploadedAt, songDb.Duration) { Id = songDb.Id }).ToList().AsReadOnly();
+    }
 }
