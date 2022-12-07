@@ -5,10 +5,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BaseComponent } from '@core/base/base.component';
 import { IPlaylist } from '@core/models/IPlaylist';
 import { ISong } from '@core/models/ISong';
+import { IUser } from '@core/models/IUser';
 import { NotificationService } from '@core/services/notification.service';
 import { PlaylistService } from '@core/services/playlist.service';
 import { SongService } from '@core/services/song.service';
 import { SpinnerService } from '@core/services/spinner.service';
+import { UserService } from '@core/services/user.service';
 import { forkJoin } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
@@ -19,6 +21,8 @@ import { switchMap } from 'rxjs/operators';
 })
 export class PlaylistPageComponent extends BaseComponent implements OnInit {
     public playlist?: IPlaylist;
+
+    currentUser?: IUser;
 
     newSongsToAdd: ISong[] = [];
 
@@ -39,6 +43,7 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
         private activateRoute: ActivatedRoute,
         private playlistService: PlaylistService,
         private songService: SongService,
+        private userService: UserService,
         private spinnerService: SpinnerService,
         private notificationService: NotificationService,
         private clipboard: Clipboard,
@@ -54,11 +59,12 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
                 this.spinnerService.show();
                 const playlist = this.playlistService.getPlaylistById(this.id);
                 const songs = this.playlistService.getSongsToAddToPlaylist(this.id);
+                const user = this.userService.getCurrentUser();
 
-                forkJoin([playlist, songs])
+                forkJoin([playlist, songs, user])
                     .pipe(this.untilThis)
                     .subscribe((results) => {
-                        [this.playlist, this.newSongsToAdd] = results;
+                        [this.playlist, this.newSongsToAdd, this.currentUser] = results;
                         this.spinnerService.hide();
                     });
             }

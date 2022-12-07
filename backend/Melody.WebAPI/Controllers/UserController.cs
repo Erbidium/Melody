@@ -53,7 +53,9 @@ public class UserController : ControllerBase
     {
         var identity = HttpContext.User.Identity as ClaimsIdentity;
         var userId = _tokenService.GetCurrentUser(identity).UserId;
-        return Ok(new UserDto(await _userManager.FindByIdAsync(userId.ToString())));
+        var userIdentity = await _userManager.FindByIdAsync(userId.ToString());
+        var roles = await _userManager.GetRolesAsync(userIdentity);
+        return Ok(new UserDto(userIdentity){Roles = roles });
     }
 
     [AllowAnonymous]
