@@ -131,9 +131,14 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
                     }),
                 )
                 .pipe(this.untilThis)
-                .subscribe((newSongs) => {
-                    this.newSongsToAdd = newSongs;
-                    this.spinnerService.hide();
+                .subscribe({
+                    next: (newSongs) => {
+                        this.spinnerService.hide();
+                        this.newSongsToAdd = newSongs;
+                        this.addSongsPlaylistForm.reset();
+                        this.notificationService.showSuccessMessage('Нові пісні успішно додано!');
+                    },
+                    error: () => this.notificationService.showErrorMessage('Сталася помилка під час спроби додати нові пісні'),
                 });
         }
     }
