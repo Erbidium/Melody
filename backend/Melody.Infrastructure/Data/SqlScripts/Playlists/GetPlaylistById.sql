@@ -4,16 +4,13 @@
     p.AuthorId,
     p.IsDeleted,
     ps.Id,
-    ps.UserId,
     ps.UploadedAt,
-    ps.SizeBytes,
     ps.Name,
-    ps.Path,
     ps.AuthorName,
-    ps.Year,
     ps.GenreId,
     ps.Duration,
     ps.IsDeleted,
+    ps.IsFavourite,
     ps.GenreId as Id,
     ps.GenreName as Name
 FROM Playlists p
@@ -21,22 +18,25 @@ LEFT JOIN
     (
         SELECT
             s.Id,
-            s.UserId,
             s.UploadedAt,
-            s.SizeBytes,
             s.Name,
-            s.Path,
             s.AuthorName,
-            s.Year,
             s.GenreId,
             s.Duration,
             s.IsDeleted,
             g.Name as GenreName,
-            ps.PlaylistId
+            ps.PlaylistId,
+            CONVERT(BIT, IIF(fs.SongId IS NULL, 0, 1)) as IsFavourite
         FROM
         Songs s
         INNER JOIN PlaylistSongs ps ON ps.SongId = s.Id
         INNER JOIN Genres g ON s.GenreId = g.Id
+        Left JOIN 
+            (
+                SELECT SongId
+                FROM FavouriteSongs fs
+                WHERE fs.UserId = @UserId
+            ) fs ON fs.SongId = s.Id
         WHERE s.IsDeleted = 0
     ) ps ON ps.PlaylistId = p.Id
 WHERE p.Id = @Id AND p.IsDeleted = 0

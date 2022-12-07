@@ -6,7 +6,7 @@ public interface IPlaylistRepository
 {
     Task<bool> Create(CreatePlaylist song);
     Task<IReadOnlyCollection<Playlist>> GetPlaylistsCreatedByUser(long userId);
-    Task<Playlist?> GetById(long id);
+    Task<Playlist?> GetById(long id, long userId);
     Task<IReadOnlyCollection<Playlist>> GetAll();
     Task<bool> AddSongs(long id, long[] songIds);
     Task Delete(long id);

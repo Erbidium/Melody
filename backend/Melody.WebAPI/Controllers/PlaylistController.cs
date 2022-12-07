@@ -63,7 +63,9 @@ public class PlaylistController : ControllerBase
     [HttpGet("{id:long}")]
     public async Task<ActionResult<PlaylistDto>> GetPlaylist(long id)
     {
-        var playlist = await _playlistRepository.GetById(id);
+        var identity = HttpContext.User.Identity as ClaimsIdentity;
+        var currentUserFromToken = _tokenService.GetCurrentUser(identity);
+        var playlist = await _playlistRepository.GetById(id, currentUserFromToken.UserId);
         if (playlist is null)
         {
             throw new KeyNotFoundException("Playlist is not found");
@@ -108,7 +110,7 @@ public class PlaylistController : ControllerBase
     {
         var identity = HttpContext.User.Identity as ClaimsIdentity;
         var currentUserFromToken = _tokenService.GetCurrentUser(identity);
-        var playlist = await _playlistRepository.GetById(id);
+        var playlist = await _playlistRepository.GetById(id, currentUserFromToken.UserId);
         if (playlist == null || playlist.AuthorId != currentUserFromToken.UserId)
         {
             return BadRequest();

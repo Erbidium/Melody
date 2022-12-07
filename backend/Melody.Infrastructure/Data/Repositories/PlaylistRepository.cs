@@ -54,7 +54,7 @@ public class PlaylistRepository : IPlaylistRepository
     {
         using var connection = _context.CreateConnection();
 
-        var playlists = await connection.QueryAsync<PlaylistDb, SongDb, PlaylistDb>(
+        var playlists = await connection.QueryAsync<PlaylistDb, FavouriteSongFromPlaylistDb, PlaylistDb>(
             SqlScriptsResource.GetPlaylistsCreatedByUserId,
             (playlist, song) =>
             {
@@ -71,8 +71,7 @@ public class PlaylistRepository : IPlaylistRepository
         });
         return playlistsGrouped.Select(p =>
         {
-            var songs = p.Songs.Select(s => new Song(s.UserId, s.Name, s.Path, s.AuthorName, s.Year,
-                s.GenreId, s.SizeBytes, s.UploadedAt, s.Duration)
+            var songs = p.Songs.Select(s => new FavouriteSong(s.Name, s.AuthorName, s.GenreId, s.UploadedAt, s.Duration, s.IsFavourite)
             {
                 Id = s.Id,
             }).ToList();
@@ -82,12 +81,12 @@ public class PlaylistRepository : IPlaylistRepository
         }).ToList().AsReadOnly();
     }
 
-    public async Task<Playlist?> GetById(long id)
+    public async Task<Playlist?> GetById(long id, long userId)
     {
         using var connection = _context.CreateConnection();
 
         var records =
-            await connection.QueryAsync<PlaylistDb, SongDb, GenreDb, PlaylistDb>(SqlScriptsResource.GetPlaylistById, (playlist, song, genre) =>
+            await connection.QueryAsync<PlaylistDb, FavouriteSongFromPlaylistDb, GenreDb, PlaylistDb>(SqlScriptsResource.GetPlaylistById, (playlist, song, genre) =>
             {
                 if (song != null)
                 {
@@ -95,7 +94,7 @@ public class PlaylistRepository : IPlaylistRepository
                     playlist.Songs.Add(song);
                 }
                 return playlist;
-            }, new { id });
+            }, new { id, userId });
        
         var playlistWithSongs = records.GroupBy(p => p.Id).Select(g =>
         {
@@ -109,8 +108,7 @@ public class PlaylistRepository : IPlaylistRepository
             return null;
         }
 
-        var songs = playlistWithSongs.Songs.Select(s => new Song(s.UserId, s.Name, s.Path, s.AuthorName, s.Year,
-                s.GenreId, s.SizeBytes, s.UploadedAt, s.Duration)
+        var songs = playlistWithSongs.Songs.Select(s => new FavouriteSong(s.Name, s.AuthorName, s.GenreId, s.UploadedAt, s.Duration, s.IsFavourite)
             {
                 Id = s.Id,
                 Genre = new Genre(s.Genre.Name) {Id = s.Genre.Id }

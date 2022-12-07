@@ -10,7 +10,7 @@ public class Playlist : EntityBase<long>
         AuthorId = authorId;
     }
 
-    public List<Song> Songs { get; set; } = new();
+    public List<FavouriteSong> Songs { get; set; } = new();
 
     public string Name { get; }
     public long AuthorId { get; }

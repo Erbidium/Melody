@@ -260,16 +260,13 @@ namespace Melody.Infrastructure.Data {
         ///    p.AuthorId,
         ///    p.IsDeleted,
         ///    ps.Id,
-        ///    ps.UserId,
         ///    ps.UploadedAt,
-        ///    ps.SizeBytes,
         ///    ps.Name,
-        ///    ps.Path,
         ///    ps.AuthorName,
-        ///    ps.Year,
         ///    ps.GenreId,
         ///    ps.Duration,
         ///    ps.IsDeleted,
+        ///    ps.IsFavourite,
         ///    ps.GenreId as Id,
         ///    ps.GenreName as Name
         ///FROM Playlists p
@@ -277,12 +274,14 @@ namespace Melody.Infrastructure.Data {
         ///    (
         ///        SELECT
         ///            s.Id,
-        ///            s.UserId,
         ///            s.UploadedAt,
-        ///            s.SizeBytes,
         ///            s.Name,
-        ///            s.Path,
-        ///            s.AuthorName [остаток строки не уместился]&quot;;.
+        ///            s.AuthorName,
+        ///            s.GenreId,
+        ///            s.Duration,
+        ///            s.IsDeleted,
+        ///            g.Name as GenreName,
+        /// [остаток строки не уместился]&quot;;.
         /// </summary>
         internal static string GetPlaylistById {
             get {
@@ -296,28 +295,26 @@ namespace Melody.Infrastructure.Data {
         ///       p.AuthorId,
         ///       p.IsDeleted,
         ///       ps.Id,
-        ///       ps.UserId,
         ///       ps.UploadedAt,
-        ///       ps.SizeBytes,
         ///       ps.Name,
-        ///       ps.Path,
         ///       ps.AuthorName,
-        ///       ps.Year,
         ///       ps.GenreId,
         ///       ps.Duration,
-        ///       ps.IsDeleted
+        ///       ps.IsDeleted,
+        ///       ps.IsFavourite
         ///FROM Playlists p
         ///LEFT JOIN
         ///    (
         ///        SELECT
         ///            s.Id,
-        ///            s.UserId,
         ///            s.UploadedAt,
-        ///            s.SizeBytes,
         ///            s.Name,
-        ///            s.Path,
         ///            s.AuthorName,
-        ///           [остаток строки не уместился]&quot;;.
+        ///            s.GenreId,
+        ///            s.Duration,
+        ///            s.IsDeleted,
+        ///            ps.PlaylistId,
+        ///            CONVERT(BIT, IIF [остаток строки не уместился]&quot;;.
         /// </summary>
         internal static string GetPlaylistsCreatedByUserId {
             get {
