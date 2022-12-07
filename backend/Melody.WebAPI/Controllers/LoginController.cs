@@ -113,12 +113,9 @@ namespace Melody.WebAPI.Controllers
         {
             var currentUser = await _userManager.FindByEmailAsync(userLogin.Email);
 
-            if (currentUser != null && await _userManager.CheckPasswordAsync(currentUser, userLogin.Password))
-            {
-                return currentUser;
-            }
-
-            return null;
+            return currentUser != null && await _userManager.CheckPasswordAsync(currentUser, userLogin.Password)
+                ? currentUser
+                : null;
         }
     }
 }

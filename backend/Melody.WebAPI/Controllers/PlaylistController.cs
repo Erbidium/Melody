@@ -42,7 +42,7 @@ public class PlaylistController : ControllerBase
         return Ok(_mapper.Map<PlaylistDto>(await _playlistRepository.GetAll()));
     }
 
-    [HttpGet("{id}/new-songs-to-add")]
+    [HttpGet("{id:long}/new-songs-to-add")]
     public async Task<ActionResult<IEnumerable<SongDto>>> GetSongsToAddToPlaylist(long id)
     {
         var songs = await _songRepository.GetSongsForPlaylistToAdd(id);
@@ -62,7 +62,7 @@ public class PlaylistController : ControllerBase
         }));
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:long}")]
     public async Task<ActionResult<PlaylistDto>> GetPlaylist(long id)
     {
         var playlist = await _playlistRepository.GetById(id);
@@ -91,7 +91,7 @@ public class PlaylistController : ControllerBase
         return Ok();
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("{id:long}")]
     public async Task<IActionResult> UpdatePlaylist([FromBody] UpdatePlaylistDto playlist, long id)
     {
         var result = await _updatePlaylistDtoValidator.ValidateAsync(playlist);
@@ -106,14 +106,14 @@ public class PlaylistController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id}/song/{songId}")]
+    [HttpDelete("{id:long}/song/{songId:long}")]
     public async Task<IActionResult> DeleteSongFromPlaylist(long id, long songId)
     {
         await _playlistRepository.DeleteSong(id, songId);
         return NoContent();
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:long}")]
     public async Task<IActionResult> DeletePlaylist(long id)
     {
         var identity = HttpContext.User.Identity as ClaimsIdentity;

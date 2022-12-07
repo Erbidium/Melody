@@ -55,7 +55,7 @@ public class SongController : ControllerBase
         return Ok(_mapper.Map<List<SongDto>>(await _songRepository.GetSongsUploadedByUserId(currentUserFromToken.UserId)));
     }
 
-    [HttpGet("file/{id}")]
+    [HttpGet("file/{id:long}")]
     public async Task<FileStreamResult> GetSong(long id)
     {
         var song = await _songRepository.GetById(id);
@@ -64,13 +64,12 @@ public class SongController : ControllerBase
             throw new KeyNotFoundException("Song is not found");
         }
 
-        FileStream fs = System.IO.File.OpenRead(song.Path);
-        FileStreamResult result = File(
-            fileStream: fs,
+        var fileStream = System.IO.File.OpenRead(song.Path);
+        return File(
+            fileStream: fileStream,
             contentType: "audio/mpeg",
             enableRangeProcessing: true
         );
-        return result;
     }
 
     [Authorize]
@@ -104,7 +103,7 @@ public class SongController : ControllerBase
         var duration = reader.TotalTime;
 
         // validate path
-        ValidationResult result = await _newSongDtoValidator.ValidateAsync(newSong);
+        var result = await _newSongDtoValidator.ValidateAsync(newSong);
         if (!result.IsValid)
         {
             result.AddToModelState(ModelState);
@@ -120,7 +119,7 @@ public class SongController : ControllerBase
     [HttpPut]
     public async Task<IActionResult> UpdateSong(UpdateSongDto song)
     {
-        ValidationResult result = await _updateSongDtoValidator.ValidateAsync(song);
+        var result = await _updateSongDtoValidator.ValidateAsync(song);
         if (!result.IsValid)
         {
             result.AddToModelState(ModelState);
@@ -138,7 +137,7 @@ public class SongController : ControllerBase
         return NoContent();
     }
 
-    private async Task<string> WriteFile(IFormFile uploadedSoundFile)
+    private static async Task<string> WriteFile(IFormFile uploadedSoundFile)
     {
         var currentDirectory = Directory.GetCurrentDirectory();
         var pathToSave = Path.Combine(currentDirectory, folderName);
@@ -148,7 +147,7 @@ public class SongController : ControllerBase
         }
         var guidFileName = Guid.NewGuid() + soundExtension;
         var guidSubFolders = string.Empty;
-        for (int i = 0; i < 6; i += 2)
+        for (var i = 0; i < 6; i += 2)
         {
             var guidSubstr = guidFileName.Substring(i, 2);
             guidSubFolders = Path.Combine(guidSubFolders, guidSubstr);
