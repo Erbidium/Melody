@@ -572,20 +572,6 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на UPDATE Playlists
-        ///SET Name     = @Name,
-        ///    Link     = @Link,
-        ///    AuthorId = @AuthorId
-        ///WHERE Id = @Id
-        ///  AND IsDeleted = 0.
-        /// </summary>
-        internal static string UpdatePlaylist {
-            get {
-                return ResourceManager.GetString("UpdatePlaylist", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Ищет локализованную строку, похожую на UPDATE UserRefreshTokens
         ///SET RefreshToken = @Token
         ///WHERE UserId = @Id;.

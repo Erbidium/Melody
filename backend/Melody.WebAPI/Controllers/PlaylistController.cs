@@ -21,18 +21,16 @@ public class PlaylistController : ControllerBase
     private readonly ISongRepository _songRepository;
     private readonly IMapper _mapper;
     private readonly IValidator<NewPlaylistDto> _newPlaylistDtoValidator;
-    private readonly IValidator<UpdatePlaylistDto> _updatePlaylistDtoValidator;
     private readonly ITokenService _tokenService;
 
     public PlaylistController(IPlaylistRepository playlistRepository, ISongRepository songRepository, IMapper mapper,
-        IValidator<NewPlaylistDto> newPlaylistDtoValidator, IValidator<UpdatePlaylistDto> updatePlaylistDtoValidator,
+        IValidator<NewPlaylistDto> newPlaylistDtoValidator,
         ITokenService tokenService)
     {
         _playlistRepository = playlistRepository;
         _songRepository = songRepository;
         _mapper = mapper;
         _newPlaylistDtoValidator = newPlaylistDtoValidator;
-        _updatePlaylistDtoValidator = updatePlaylistDtoValidator;
         _tokenService = tokenService;
     }
 
@@ -94,15 +92,7 @@ public class PlaylistController : ControllerBase
     [HttpPut("{id:long}")]
     public async Task<IActionResult> UpdatePlaylist([FromBody] UpdatePlaylistDto playlist, long id)
     {
-        var result = await _updatePlaylistDtoValidator.ValidateAsync(playlist);
-        if (!result.IsValid)
-        {
-            result.AddToModelState(ModelState);
-            return BadRequest(ModelState);
-        }
-
-        await _playlistRepository.Update(new UpdatePlaylist
-            { Id = id, Name = playlist.Name, SongIds = playlist.SongIds });
+        await _playlistRepository.AddSongs(id, playlist.NewSongIds);
         return NoContent();
     }
 

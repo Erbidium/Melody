@@ -25,6 +25,31 @@ public class PlaylistRepository : IPlaylistRepository
             .AsReadOnly();
     }
 
+    public async Task<bool> AddSongs(long id, long[] songIds)
+    {
+        using var connection = _context.CreateConnection();
+        connection.Open();
+        using var transaction = connection.BeginTransaction();
+        
+        foreach (var songId in songIds)
+        {
+            await connection.ExecuteAsync(SqlScriptsResource.InsertPlaylistSong,
+                new { PlaylistId = id, SongId = songId }, transaction);
+        }
+
+        try
+        {
+            transaction.Commit();
+        }
+        catch
+        {
+            transaction.Rollback();
+            return false;
+        }
+
+        return true;
+    }
+
     public async Task<IReadOnlyCollection<Playlist>> GetPlaylistsCreatedByUser(long userId)
     {
         using var connection = _context.CreateConnection();
@@ -124,16 +149,6 @@ public class PlaylistRepository : IPlaylistRepository
         }
 
         return true;
-    }
-
-    public async Task Update(UpdatePlaylist playlist)
-    {
-        var parameters = new DynamicParameters();
-        parameters.Add("Name", playlist.Name, DbType.String);
-
-        using var connection = _context.CreateConnection();
-
-        await connection.ExecuteAsync(SqlScriptsResource.UpdatePlaylist, parameters);
     }
 
     public async Task Delete(long id)

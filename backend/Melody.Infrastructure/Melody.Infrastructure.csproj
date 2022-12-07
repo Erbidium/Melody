@@ -28,7 +28,6 @@
         <EmbeddedResource Include="Data\SqlScripts\Playlists\DeletePlaylist.sql" />
         <EmbeddedResource Include="Data\SqlScripts\Playlists\GetAllPlaylists.sql" />
         <EmbeddedResource Include="Data\SqlScripts\Playlists\GetPlaylistById.sql" />
-        <EmbeddedResource Include="Data\SqlScripts\Playlists\UpdatePlaylist.sql" />
         <EmbeddedResource Include="Data\SqlScripts\Songs\CreateSong.sql" />
         <EmbeddedResource Include="Data\SqlScripts\Songs\DeleteSong.sql" />
         <EmbeddedResource Include="Data\SqlScripts\Songs\GetSongById.sql" />
