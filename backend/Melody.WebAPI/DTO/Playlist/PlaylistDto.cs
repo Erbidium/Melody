@@ -7,5 +7,5 @@ public class PlaylistDto
     public long Id { get; set; }
     public string Name { get; }
     public long AuthorId { get; }
-    public List<SongDto> Songs { get; set; } = new();
+    public List<SongInPlaylistDto> Songs { get; set; } = new();
 }
