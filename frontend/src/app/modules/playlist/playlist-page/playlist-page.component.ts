@@ -90,7 +90,7 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
 
                         return forkJoin([
                             this.playlistService.getPlaylistById(this.playlist!.id),
-                            this.playlistService.getSongsToAddToPlaylist(this.playlist!.id)
+                            this.playlistService.getSongsToAddToPlaylist(this.playlist!.id),
                         ]);
                     }),
                 )
@@ -120,7 +120,7 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
                 .addSongs(this.playlist.id, this.addSongsPlaylistForm.value.songs as unknown as number[])
                 .pipe(switchMap(() => forkJoin([
                     this.playlistService.getPlaylistById(this.playlist!.id),
-                    this.playlistService.getSongsToAddToPlaylist(this.playlist!.id)
+                    this.playlistService.getSongsToAddToPlaylist(this.playlist!.id),
                 ])))
                 .pipe(this.untilThis)
                 .subscribe({

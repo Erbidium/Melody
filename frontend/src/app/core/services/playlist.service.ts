@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { IPlaylist } from '@core/models/IPlaylist';
 import { IPlaylistWithPerformers } from '@core/models/IPlaylistWithPerformers';
+import { ISong } from '@core/models/ISong';
 import { HttpInternalService } from '@core/services/http-internal-service';
-import {ISong} from "@core/models/ISong";
 
 @Injectable({ providedIn: 'root' })
 export class PlaylistService {
