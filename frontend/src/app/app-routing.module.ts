@@ -20,7 +20,8 @@ const routes: Routes = [
     },
     {
         path: 'recommendations',
-        loadChildren: () => import('./modules/recommendations/recommendations.module').then((m) => m.RecommendationsModule),
+        loadChildren: () =>
+            import('./modules/recommendations/recommendations.module').then((m) => m.RecommendationsModule),
     },
     {
         path: 'statistics',

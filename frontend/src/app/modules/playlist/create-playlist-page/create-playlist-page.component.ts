@@ -58,7 +58,8 @@ export class CreatePlaylistPageComponent extends BaseComponent implements OnInit
                     this.notificationService.showSuccessMessage('Плейлист успішно створено!');
                     this.createPlaylistForm.reset();
                 },
-                error: () => this.notificationService.showErrorMessage('Сталася помилка під час спроби створити плейлист'),
+                error: () =>
+                    this.notificationService.showErrorMessage('Сталася помилка під час спроби створити плейлист'),
             });
     }
 }
