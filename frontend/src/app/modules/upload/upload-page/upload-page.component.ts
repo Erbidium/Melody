@@ -18,11 +18,15 @@ export class UploadPageComponent extends BaseComponent implements OnInit {
 
     fileToUpload?: File;
 
-    constructor(private songService: SongService, private notificationService: NotificationService, private router: Router) {
+    constructor(
+        private songService: SongService,
+        private notificationService: NotificationService,
+        private router: Router,
+    ) {
         super();
     }
 
-    ngOnInit(): void {
+    ngOnInit() {
         this.songService
             .getAllGenres()
             .pipe(this.untilThis)
@@ -68,6 +72,7 @@ export class UploadPageComponent extends BaseComponent implements OnInit {
             formData.append('GenreId', this.selectedGenre.id.toString());
             formData.append('uploadedSoundFile', this.fileToUpload);
             this.songService.createSong(formData)
+                .pipe(this.untilThis)
                 .subscribe({
                     next: () => {
                         this.notificationService.showSuccessMessage('Song was successfully uploaded');

@@ -8,6 +8,7 @@ import { NotificationService } from '@core/services/notification.service';
 import { PlaylistService } from '@core/services/playlist.service';
 import { SpinnerService } from '@core/services/spinner.service';
 import { UserService } from '@core/services/user.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
     selector: 'app-profile-page',
@@ -32,18 +33,14 @@ export class ProfilePageComponent extends BaseComponent implements OnInit {
 
     ngOnInit(): void {
         this.spinnerService.show();
-        this.userService
-            .getCurrentUser()
+        const user = this.userService.getCurrentUser();
+        const playlists = this.playlistService.getPlaylistsCreatedByUser();
+
+        forkJoin([user, playlists])
             .pipe(this.untilThis)
-            .subscribe((user) => {
-                this.currentUser = user;
+            .subscribe((results) => {
+                [this.currentUser, this.userPlaylists] = results;
                 this.spinnerService.hide();
-            });
-        this.playlistService
-            .getPlaylistsCreatedByUser()
-            .pipe(this.untilThis)
-            .subscribe((playlists) => {
-                this.userPlaylists = playlists;
             });
     }
 

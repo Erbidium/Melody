@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { BaseComponent } from '@core/base/base.component';
 import { ISong } from '@core/models/ISong';
 import { SongService } from '@core/services/song.service';
+import { SpinnerService } from '@core/services/spinner.service';
 import { switchMap } from 'rxjs/operators';
 
 @Component({
@@ -16,7 +17,10 @@ export class UserUploadsPageComponent extends BaseComponent implements OnInit {
 
     currentSongIdForMusicPlayer?: number;
 
-    constructor(private songService: SongService) {
+    constructor(
+        private songService: SongService,
+        private spinnerService: SpinnerService,
+    ) {
         super();
     }
 
@@ -25,10 +29,12 @@ export class UserUploadsPageComponent extends BaseComponent implements OnInit {
     }
 
     loadSongsUploadedByUser() {
+        this.spinnerService.show();
         this.songService
             .getSongsUploadedByUser()
             .pipe(this.untilThis)
             .subscribe((resp) => {
+                this.spinnerService.hide();
                 this.uploadedSongs = resp;
             });
     }
