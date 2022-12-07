@@ -32,4 +32,8 @@ export class PlaylistService {
     public getSongsToAddToPlaylist(id: number) {
         return this.httpService.getRequest<ISong[]>(`/api/playlist/${id}/new-songs-to-add`);
     }
+
+    public addSongs(id: number, newSongIds: number[]) {
+        return this.httpService.putRequest(`/api/playlist/${id}`, { NewSongIds: newSongIds });
+    }
 }

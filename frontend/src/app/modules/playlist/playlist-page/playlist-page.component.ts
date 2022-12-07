@@ -1,15 +1,16 @@
 import { Clipboard } from '@angular/cdk/clipboard';
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Route, Router} from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BaseComponent } from '@core/base/base.component';
 import { IPlaylist } from '@core/models/IPlaylist';
+import { ISong } from '@core/models/ISong';
 import { NotificationService } from '@core/services/notification.service';
 import { PlaylistService } from '@core/services/playlist.service';
+import { SongService } from '@core/services/song.service';
 import { SpinnerService } from '@core/services/spinner.service';
-import {switchMap} from "rxjs/operators";
-import {ISong} from "@core/models/ISong";
-import {SongService} from "@core/services/song.service";
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+import { forkJoin } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
     selector: 'app-playlist-page',
@@ -44,38 +45,24 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
         private router: Router,
     ) {
         super();
-        this.activateRoute.params.subscribe((params) => {
+    }
+
+    ngOnInit() {
+        this.activateRoute.params.pipe(this.untilThis).subscribe((params) => {
             this.id = params['id'];
-            this.loadPlaylist();
+            if (this.id) {
+                this.spinnerService.show();
+                const playlist = this.playlistService.getPlaylistById(this.id);
+                const songs = this.playlistService.getSongsToAddToPlaylist(this.id);
+
+                forkJoin([playlist, songs])
+                    .pipe(this.untilThis)
+                    .subscribe((results) => {
+                        [this.playlist, this.newSongsToAdd] = results;
+                        this.spinnerService.hide();
+                    });
+            }
         });
-    }
-
-    ngOnInit(): void {
-        this.loadSongsForPlaylist();
-    }
-
-    loadPlaylist() {
-        this.spinnerService.show();
-        if (this.id) {
-            this.playlistService
-                .getPlaylistById(this.id)
-                .pipe(this.untilThis)
-                .subscribe((playlistResponse) => {
-                    this.playlist = playlistResponse;
-                    this.spinnerService.hide();
-                });
-        }
-    }
-
-    loadSongsForPlaylist() {
-        if (this.id) {
-            this.playlistService
-                .getSongsToAddToPlaylist(this.id)
-                .pipe(this.untilThis)
-                .subscribe((resp) => {
-                    this.newSongsToAdd = resp;
-                });
-        }
     }
 
     selectSong(songId: number) {
@@ -83,7 +70,7 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
     }
 
     copyPlaylistLink() {
-        if (this.playlist?.id) {
+        if (this.id) {
             this.clipboard.copy(window.location.href);
             this.notificationService.showSuccessMessage('Playlist link is successfully copied to clipboard!');
         } else {
@@ -94,12 +81,27 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
     deleteSongFromPlaylist(id: number, event: MouseEvent) {
         if (this.playlist) {
             event.stopPropagation();
+            this.spinnerService.show();
             this.playlistService
                 .removeSongFromPlaylist(id, this.playlist.id)
-                .pipe(switchMap(async () => this.loadPlaylist()))
-                .pipe(switchMap(async () => this.loadSongsForPlaylist()))
-                .subscribe(() => {
-                    this.currentSongIdForMusicPlayer = undefined;
+                .pipe(
+                    switchMap(() => {
+                        this.currentSongIdForMusicPlayer = undefined;
+
+                        return this.playlistService.getPlaylistById(this.playlist!.id);
+                    }),
+                )
+                .pipe(
+                    switchMap((playlist) => {
+                        this.playlist = playlist;
+
+                        return this.playlistService.getSongsToAddToPlaylist(this.playlist!.id);
+                    }),
+                )
+                .pipe(this.untilThis)
+                .subscribe((newSongs) => {
+                    this.newSongsToAdd = newSongs;
+                    this.spinnerService.hide();
                 });
         }
     }
@@ -108,8 +110,30 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
         if (this.playlist) {
             this.playlistService
                 .deletePlaylist(this.playlist.id)
+                .pipe(this.untilThis)
                 .subscribe(() => {
                     this.router.navigateByUrl('melody');
+                });
+        }
+    }
+
+    addSongs() {
+        if (this.playlist) {
+            this.spinnerService.show();
+            this.playlistService
+                .addSongs(this.playlist.id, this.addSongsPlaylistForm.value.songs as unknown as number[])
+                .pipe(switchMap(() => this.playlistService.getPlaylistById(this.playlist!.id)))
+                .pipe(
+                    switchMap((playlist) => {
+                        this.playlist = playlist;
+
+                        return this.playlistService.getSongsToAddToPlaylist(this.playlist!.id);
+                    }),
+                )
+                .pipe(this.untilThis)
+                .subscribe((newSongs) => {
+                    this.newSongsToAdd = newSongs;
+                    this.spinnerService.hide();
                 });
         }
     }
