@@ -1,8 +1,8 @@
-import { ISong } from '@core/models/ISong';
+import { ISongFromPlaylist } from '@core/models/ISongFromPlaylist';
 
 export interface IPlaylist {
     id: number;
     name: string;
     authorId: string;
-    songs: ISong[];
+    songs: ISongFromPlaylist[];
 }

@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { MatSliderChange } from '@angular/material/slider';
 import { BaseComponent } from '@core/base/base.component';
 import { StreamState } from '@core/interfaces/stream-state';
-import { ISong } from '@core/models/ISong';
+import { IBaseSong } from '@core/models/IBaseSong';
 import { AudioService } from '@core/services/audio.service';
 
 @Component({
@@ -11,7 +11,7 @@ import { AudioService } from '@core/services/audio.service';
     styleUrls: ['./player.component.sass'],
 })
 export class PlayerComponent extends BaseComponent {
-    @Input() files: Array<ISong> = [];
+    @Input() files: Array<IBaseSong> = [];
 
     state?: StreamState;
 
