@@ -88,19 +88,15 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
                     switchMap(() => {
                         this.currentSongIdForMusicPlayer = undefined;
 
-                        return this.playlistService.getPlaylistById(this.playlist!.id);
-                    }),
-                )
-                .pipe(
-                    switchMap((playlist) => {
-                        this.playlist = playlist;
-
-                        return this.playlistService.getSongsToAddToPlaylist(this.playlist!.id);
+                        return forkJoin([
+                            this.playlistService.getPlaylistById(this.playlist!.id),
+                            this.playlistService.getSongsToAddToPlaylist(this.playlist!.id)
+                        ]);
                     }),
                 )
                 .pipe(this.untilThis)
-                .subscribe((newSongs) => {
-                    this.newSongsToAdd = newSongs;
+                .subscribe((results) => {
+                    [this.playlist, this.newSongsToAdd] = results;
                     this.spinnerService.hide();
                 });
         }
@@ -122,19 +118,15 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
             this.spinnerService.show();
             this.playlistService
                 .addSongs(this.playlist.id, this.addSongsPlaylistForm.value.songs as unknown as number[])
-                .pipe(switchMap(() => this.playlistService.getPlaylistById(this.playlist!.id)))
-                .pipe(
-                    switchMap((playlist) => {
-                        this.playlist = playlist;
-
-                        return this.playlistService.getSongsToAddToPlaylist(this.playlist!.id);
-                    }),
-                )
+                .pipe(switchMap(() => forkJoin([
+                    this.playlistService.getPlaylistById(this.playlist!.id),
+                    this.playlistService.getSongsToAddToPlaylist(this.playlist!.id)
+                ])))
                 .pipe(this.untilThis)
                 .subscribe({
-                    next: (newSongs) => {
+                    next: (results) => {
+                        [this.playlist, this.newSongsToAdd] = results;
                         this.spinnerService.hide();
-                        this.newSongsToAdd = newSongs;
                         this.addSongsPlaylistForm.reset();
                         this.notificationService.showSuccessMessage('Нові пісні успішно додано!');
                     },
