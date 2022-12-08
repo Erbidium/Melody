@@ -65,7 +65,7 @@ public class SongController : ControllerBase
     }
 
     [Authorize]
-    [HttpGet]
+    [HttpGet("favourite-and-uploaded")]
     public async Task<ActionResult<IEnumerable<SongDto>>> GetFavoriteAndUploadedSongs()
     {
         var identity = HttpContext.User.Identity as ClaimsIdentity;
