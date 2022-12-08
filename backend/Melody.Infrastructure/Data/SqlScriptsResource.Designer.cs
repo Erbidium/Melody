@@ -357,6 +357,7 @@ namespace Melody.Infrastructure.Data {
         ///    p.Id,
         ///    p.Name,
         ///    p.AuthorId,
+        ///    CONVERT(BIT, IIF(up.PlaylistId IS NULL, 0, 1)) as IsFavourite,
         ///    p.IsDeleted,
         ///    ps.Id,
         ///    ps.UploadedAt,
@@ -377,10 +378,7 @@ namespace Melody.Infrastructure.Data {
         ///            s.Name,
         ///            s.AuthorName,
         ///            s.GenreId,
-        ///            s.Duration,
-        ///            s.IsDeleted,
-        ///            g.Name as GenreName,
-        /// [остаток строки не уместился]&quot;;.
+        ///            s.Dur [остаток строки не уместился]&quot;;.
         /// </summary>
         internal static string GetPlaylistById {
             get {
@@ -392,6 +390,7 @@ namespace Melody.Infrastructure.Data {
         ///   Ищет локализованную строку, похожую на SELECT p.Id,
         ///       p.Name,
         ///       p.AuthorId,
+        ///       CONVERT(BIT, IIF(up.PlaylistId IS NULL, 0, 1)) as IsFavourite,
         ///       p.IsDeleted,
         ///       ps.Id,
         ///       ps.UploadedAt,
@@ -411,9 +410,7 @@ namespace Melody.Infrastructure.Data {
         ///            s.AuthorName,
         ///            s.GenreId,
         ///            s.Duration,
-        ///            s.IsDeleted,
-        ///            ps.PlaylistId,
-        ///            CONVERT(BIT, IIF [остаток строки не уместился]&quot;;.
+        ///            [остаток строки не уместился]&quot;;.
         /// </summary>
         internal static string GetPlaylistsCreatedByUserId {
             get {

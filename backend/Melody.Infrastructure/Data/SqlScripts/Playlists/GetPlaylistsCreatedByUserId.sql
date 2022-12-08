@@ -1,6 +1,7 @@
 ﻿SELECT p.Id,
        p.Name,
        p.AuthorId,
+       CONVERT(BIT, IIF(up.PlaylistId IS NULL, 0, 1)) as IsFavourite,
        p.IsDeleted,
        ps.Id,
        ps.UploadedAt,
@@ -25,7 +26,7 @@ LEFT JOIN
             CONVERT(BIT, IIF(fs.SongId IS NULL, 0, 1)) as IsFavourite
         FROM Songs s
         INNER JOIN PlaylistSongs ps ON ps.SongId = s.Id
-        Left JOIN
+        LEFT JOIN
              (
                  SELECT SongId
                  FROM FavouriteSongs fs
@@ -33,4 +34,10 @@ LEFT JOIN
              ) fs ON fs.SongId = s.Id
         WHERE s.IsDeleted = 0
     ) ps ON ps.PlaylistId = p.Id
+LEFT JOIN 
+            (
+                SELECT PlaylistId
+                FROM UserPlaylists up
+                WHERE up.UserId = @UserId
+            ) up ON up.PlaylistId = p.Id
 WHERE p.IsDeleted = 0 AND p.AuthorId = @UserId
