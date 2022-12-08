@@ -139,7 +139,16 @@ public class SongController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("favourite/{id:long}")]
+    public async Task<IActionResult> DeleteFavouriteSong(long id)
+    {
+        var identity = HttpContext.User.Identity as ClaimsIdentity;
+        var currentUserFromToken = _tokenService.GetCurrentUser(identity);
+        await _songRepository.DeleteFavouriteSong(id, currentUserFromToken.UserId);
+        return NoContent();
+    }
+
+    [HttpDelete("{id:long}")]
     public async Task<IActionResult> DeleteSong(long id)
     {
         await _songRepository.Delete(id);

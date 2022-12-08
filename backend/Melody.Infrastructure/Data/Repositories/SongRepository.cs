@@ -137,4 +137,11 @@ public class SongRepository : ISongRepository
             new { UserId = userId });
         return songs.ToList().AsReadOnly();
     }
+
+    public async Task DeleteFavouriteSong(long id, long userId)
+    {
+        using var connection = _context.CreateConnection();
+        
+        await connection.ExecuteAsync(SqlScriptsResource.DeleteFavouriteSong, new { id, userId });
+    }
 }

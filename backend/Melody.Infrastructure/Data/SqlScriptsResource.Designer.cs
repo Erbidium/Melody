@@ -115,6 +115,16 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на DELETE From FavouriteSongs
+        ///WHERE UserId = @UserId AND SongId = @Id.
+        /// </summary>
+        internal static string DeleteFavouriteSong {
+            get {
+                return ResourceManager.GetString("DeleteFavouriteSong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на UPDATE Playlists
         ///SET IsDeleted = 1
         ///WHERE Id = @Id
