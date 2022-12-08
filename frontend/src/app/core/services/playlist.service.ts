@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { IPlaylist } from '@core/models/IPlaylist';
-import { IPlaylistWithPerformers } from '@core/models/IPlaylistWithPerformers';
+import { IFavouritePlaylist } from '@core/models/IFavouritePlaylist';
+import { IFavouritePlaylistWithPerformers } from '@core/models/IFavouritePlaylistWithPerformers';
 import { ISong } from '@core/models/ISong';
 import { HttpInternalService } from '@core/services/http-internal-service';
 
@@ -14,11 +14,11 @@ export class PlaylistService {
     }
 
     public getPlaylistsCreatedByUser() {
-        return this.httpService.getRequest<IPlaylistWithPerformers[]>('/api/playlist/created');
+        return this.httpService.getRequest<IFavouritePlaylistWithPerformers[]>('/api/playlist/created');
     }
 
     public getPlaylistById(id: number) {
-        return this.httpService.getRequest<IPlaylist>(`/api/playlist/${id}`);
+        return this.httpService.getRequest<IFavouritePlaylist>(`/api/playlist/${id}`);
     }
 
     public removeSongFromPlaylist(songId: number, playlistId: number) {

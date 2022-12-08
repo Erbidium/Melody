@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BaseComponent } from '@core/base/base.component';
-import { IPlaylistWithPerformers } from '@core/models/IPlaylistWithPerformers';
+import { IFavouritePlaylistWithPerformers } from '@core/models/IFavouritePlaylistWithPerformers';
 import { IUser } from '@core/models/IUser';
 import { AuthService } from '@core/services/auth.service';
 import { NotificationService } from '@core/services/notification.service';
@@ -18,7 +18,7 @@ import { forkJoin } from 'rxjs';
 export class ProfilePageComponent extends BaseComponent implements OnInit {
     currentUser?: IUser;
 
-    userPlaylists: IPlaylistWithPerformers[] = [];
+    userPlaylists: IFavouritePlaylistWithPerformers[] = [];
 
     constructor(
         private authService: AuthService,

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BaseComponent } from '@core/base/base.component';
-import { IPlaylistWithPerformers } from '@core/models/IPlaylistWithPerformers';
+import { IFavouritePlaylistWithPerformers } from '@core/models/IFavouritePlaylistWithPerformers';
 import { PlaylistService } from '@core/services/playlist.service';
 
 @Component({
@@ -10,7 +10,7 @@ import { PlaylistService } from '@core/services/playlist.service';
     styleUrls: ['./melody-page.component.sass'],
 })
 export class MelodyPageComponent extends BaseComponent implements OnInit {
-    userPlaylists: IPlaylistWithPerformers[] = [];
+    userPlaylists: IFavouritePlaylistWithPerformers[] = [];
 
     constructor(
         private playlistService: PlaylistService,

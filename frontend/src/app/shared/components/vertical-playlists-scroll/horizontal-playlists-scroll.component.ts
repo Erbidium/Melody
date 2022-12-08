@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { BaseComponent } from '@core/base/base.component';
-import { IPlaylistWithPerformers } from '@core/models/IPlaylistWithPerformers';
+import { IFavouritePlaylistWithPerformers } from '@core/models/IFavouritePlaylistWithPerformers';
 
 @Component({
     selector: 'app-horizontal-playlists-scroll',
@@ -9,7 +9,7 @@ import { IPlaylistWithPerformers } from '@core/models/IPlaylistWithPerformers';
     styleUrls: ['./horizontal-playlists-scroll.component.sass'],
 })
 export class HorizontalPlaylistsScrollComponent extends BaseComponent {
-    @Input() userPlaylists: IPlaylistWithPerformers[] = [];
+    @Input() userPlaylists: IFavouritePlaylistWithPerformers[] = [];
 
     constructor(private router: Router) {
         super();
