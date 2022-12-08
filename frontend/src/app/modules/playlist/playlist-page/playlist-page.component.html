@@ -21,7 +21,7 @@
             [heartButtonForLikes]="currentUser.id !== playlist.authorId"
         ></app-songs-table>
     </ng-template>
-    <form [formGroup]="addSongsPlaylistForm">
+    <form [formGroup]="addSongsPlaylistForm" *ngIf="playlist.authorId == currentUser.id">
         <mat-form-field appearance="fill">
             <mat-label>Пісні</mat-label>
             <mat-select formControlName="songs" multiple>
