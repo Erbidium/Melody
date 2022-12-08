@@ -31,4 +31,8 @@ export class SongService {
     public removeSongFromUserFavourites(id: number) {
         return this.httpService.deleteRequest(`/api/song/favourite/${id}`);
     }
+
+    public setSongStatus(id: number, isLiked: boolean) {
+        return this.httpService.patchRequest(`/api/song/${id}/like`, { isLiked });
+    }
 }

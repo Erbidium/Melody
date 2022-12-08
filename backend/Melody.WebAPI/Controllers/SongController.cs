@@ -139,7 +139,7 @@ public class SongController : ControllerBase
         return NoContent();
     }
 
-    [HttpPut("{id:long}/like")]
+    [HttpPatch("{id:long}/like")]
     public async Task<IActionResult> UpdateSongStatus(SongStatusDto songStatusDto, long id)
     {
         var identity = HttpContext.User.Identity as ClaimsIdentity;
