@@ -49,7 +49,6 @@ public class PlaylistController : ControllerBase
         return Ok(_mapper.Map<List<SongDto>>(songs));
     }
 
-
     [HttpGet("created")]
     public async Task<ActionResult<IEnumerable<PlaylistWithPerformersDto>>> GetPlaylistsCreatedByUser()
     {
@@ -94,10 +93,17 @@ public class PlaylistController : ControllerBase
     }
 
     [HttpPut("{id:long}")]
-    public async Task<IActionResult> UpdatePlaylist([FromBody] UpdatePlaylistDto playlist, long id)
+    public async Task<IActionResult> UpdatePlaylist([FromBody] UpdatePlaylistDto updatePlaylistDto, long id)
     {
-        await _playlistRepository.AddSongs(id, playlist.NewSongIds);
-        return NoContent();
+        var identity = HttpContext.User.Identity as ClaimsIdentity;
+        var currentUserFromToken = _tokenService.GetCurrentUser(identity);
+        var playlist = await _playlistRepository.GetById(id, currentUserFromToken.UserId);
+        if (playlist == null || playlist.AuthorId != currentUserFromToken.UserId)
+        {
+            return BadRequest();
+        }
+        await _playlistRepository.AddSongs(id, updatePlaylistDto.NewSongIds);
+        return Ok();
     }
 
     [HttpDelete("{id:long}/song/{songId:long}")]
