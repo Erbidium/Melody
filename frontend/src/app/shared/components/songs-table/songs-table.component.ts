@@ -1,6 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ISong } from '@core/models/ISong';
-import { ISongFromPlaylist } from '@core/models/ISongFromPlaylist';
+import { Component, Input } from '@angular/core';
+import { ISongTable } from '@core/models/ISongTable';
 
 @Component({
     selector: 'app-songs-table',
@@ -8,9 +7,11 @@ import { ISongFromPlaylist } from '@core/models/ISongFromPlaylist';
     styleUrls: ['./songs-table.component.sass'],
 })
 export class SongsTableComponent {
-    @Input() dataSource: ISongFromPlaylist[] = [];
+    @Input() dataSource: ISongTable[] = [];
 
     @Input() clickHeartButtonHandler: ((id: number, event: MouseEvent) => void) | undefined;
+
+    @Input() clickRemoveButtonHandler: ((id: number, event: MouseEvent) => void) | undefined;
 
     @Input() rowClickHandler: ((songId: number) => void) | undefined;
 
