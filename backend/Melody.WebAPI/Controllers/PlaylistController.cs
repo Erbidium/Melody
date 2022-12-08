@@ -35,7 +35,7 @@ public class PlaylistController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Playlist>>> GetPlaylists()
+    public async Task<ActionResult<IEnumerable<PlaylistDto>>> GetPlaylists()
     {
         return Ok(_mapper.Map<PlaylistDto>(await _playlistRepository.GetAll()));
     }
@@ -50,19 +50,16 @@ public class PlaylistController : ControllerBase
     }
 
     [HttpGet("created")]
-    public async Task<ActionResult<IEnumerable<PlaylistWithPerformersDto>>> GetPlaylistsCreatedByUser()
+    public async Task<ActionResult<IEnumerable<FavouritePlaylistWithPerformersDto>>> GetPlaylistsCreatedByUser()
     {
         var identity = HttpContext.User.Identity as ClaimsIdentity;
         var currentUserFromToken = _tokenService.GetCurrentUser(identity);
         var playlists = await _playlistRepository.GetPlaylistsCreatedByUser(currentUserFromToken.UserId);
-        return Ok(playlists.Select(p => new PlaylistWithPerformersDto
-        {
-            Id = p.Id, Name = p.Name, AuthorId = p.AuthorId, PerformersNames = p.Songs.Select(s => s.AuthorName).ToList()
-        }));
+        return Ok(_mapper.Map<List<FavouritePlaylistWithPerformersDto>>(playlists));
     }
 
     [HttpGet("{id:long}")]
-    public async Task<ActionResult<PlaylistDto>> GetPlaylist(long id)
+    public async Task<ActionResult<FavouritePlaylistDto>> GetPlaylist(long id)
     {
         var identity = HttpContext.User.Identity as ClaimsIdentity;
         var currentUserFromToken = _tokenService.GetCurrentUser(identity);

@@ -1,4 +1,4 @@
-using Dapper;
+﻿using Dapper;
 using Melody.Core.Entities;
 using Melody.Core.Interfaces;
 using Melody.Infrastructure.Data.Context;
@@ -50,11 +50,11 @@ public class PlaylistRepository : IPlaylistRepository
         return true;
     }
 
-    public async Task<IReadOnlyCollection<Playlist>> GetPlaylistsCreatedByUser(long userId)
+    public async Task<IReadOnlyCollection<FavouritePlaylist>> GetPlaylistsCreatedByUser(long userId)
     {
         using var connection = _context.CreateConnection();
 
-        var playlists = await connection.QueryAsync<PlaylistDb, FavouriteSongFromPlaylistDb, PlaylistDb>(
+        var playlists = await connection.QueryAsync<FavouritePlaylistDb, FavouriteSongFromPlaylistDb, FavouritePlaylistDb>(
             SqlScriptsResource.GetPlaylistsCreatedByUserId,
             (playlist, song) =>
             {
@@ -75,18 +75,18 @@ public class PlaylistRepository : IPlaylistRepository
             {
                 Id = s.Id,
             }).ToList();
-            var playlist = new Playlist(p.Name, p.AuthorId) { Id = p.Id };
+            var playlist = new FavouritePlaylist(p.Name, p.AuthorId, p.IsFavourite) { Id = p.Id };
             playlist.Songs = songs;
             return playlist;
         }).ToList().AsReadOnly();
     }
 
-    public async Task<Playlist?> GetById(long id, long userId)
+    public async Task<FavouritePlaylist?> GetById(long id, long userId)
     {
         using var connection = _context.CreateConnection();
 
         var records =
-            await connection.QueryAsync<PlaylistDb, FavouriteSongFromPlaylistDb, GenreDb, PlaylistDb>(SqlScriptsResource.GetPlaylistById, (playlist, song, genre) =>
+            await connection.QueryAsync<FavouritePlaylistDb, FavouriteSongFromPlaylistDb, GenreDb, FavouritePlaylistDb>(SqlScriptsResource.GetPlaylistById, (playlist, song, genre) =>
             {
                 if (song != null)
                 {
@@ -113,7 +113,7 @@ public class PlaylistRepository : IPlaylistRepository
                 Id = s.Id,
                 Genre = new Genre(s.Genre.Name) {Id = s.Genre.Id }
             }).ToList();
-        var playlist = new Playlist(playlistWithSongs.Name, playlistWithSongs.AuthorId) { Id = playlistWithSongs.Id, Songs = songs };
+        var playlist = new FavouritePlaylist(playlistWithSongs.Name, playlistWithSongs.AuthorId, playlistWithSongs.IsFavourite) { Id = playlistWithSongs.Id, Songs = songs };
 
        return playlist;
     }
