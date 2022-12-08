@@ -164,4 +164,14 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
                 });
         }
     }
+
+    heartButtonClickHandler($event: { id: number; event: MouseEvent }) {
+        if (this.currentUser && this.playlist) {
+            if (this.currentUser.id === this.playlist.authorId) {
+                this.deleteSongFromPlaylist($event.id, $event.event);
+            } else {
+                this.changeSongStatus($event.id, $event.event);
+            }
+        }
+    }
 }

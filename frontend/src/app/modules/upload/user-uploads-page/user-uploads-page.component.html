@@ -7,8 +7,8 @@
 <ng-template #songs>
     <app-songs-table
         [dataSource]="uploadedSongs"
-        [clickRemoveButtonHandler]="deleteSong"
-        [rowClickHandler]="selectSong"
+        (removeButtonClickEvent)="deleteSong($event.id, $event.event)"
+        (rowClickEvent)="selectSong($event)"
         [columnsToDisplay]="columnsToDisplay"
     >
     </app-songs-table>

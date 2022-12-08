@@ -15,8 +15,8 @@
     <ng-template #songs>
         <app-songs-table *ngIf="currentUser"
             [dataSource]="playlist.songs"
-            [clickHeartButtonHandler]="currentUser.id === playlist.authorId ? deleteSongFromPlaylist : changeSongStatus"
-            [rowClickHandler]="selectSong"
+            (heartButtonClickEvent)="heartButtonClickHandler($event)"
+            (rowClickEvent)="selectSong($event)"
             [columnsToDisplay]="columnsToDisplay"
             [heartButtonForLikes]="currentUser.id !== playlist.authorId"
         ></app-songs-table>

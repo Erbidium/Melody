@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ISongTable } from '@core/models/ISongTable';
 
 @Component({
@@ -9,15 +9,15 @@ import { ISongTable } from '@core/models/ISongTable';
 export class SongsTableComponent {
     @Input() dataSource: ISongTable[] = [];
 
-    @Input() clickHeartButtonHandler: ((id: number, event: MouseEvent) => void) | undefined;
-
-    @Input() clickRemoveButtonHandler: ((id: number, event: MouseEvent) => void) | undefined;
-
-    @Input() rowClickHandler: ((songId: number) => void) | undefined;
-
     @Input() columnsToDisplay: string[] = [];
 
     @Input() heartButtonForLikes: boolean = false;
+
+    @Output() heartButtonClickEvent = new EventEmitter<{ id: number, event: MouseEvent }>();
+
+    @Output() removeButtonClickEvent = new EventEmitter<{ id: number, event: MouseEvent }>();
+
+    @Output() rowClickEvent = new EventEmitter<number>();
 
     getMatIconText(song: ISongTable) {
         if (!this.heartButtonForLikes) {
