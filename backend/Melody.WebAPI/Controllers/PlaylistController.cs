@@ -69,7 +69,7 @@ public class PlaylistController : ControllerBase
             throw new KeyNotFoundException("Playlist is not found");
         }
 
-        return Ok(_mapper.Map<PlaylistDto>(playlist));
+        return Ok(_mapper.Map<FavouritePlaylistDto>(playlist));
     }
 
     [HttpPost]
