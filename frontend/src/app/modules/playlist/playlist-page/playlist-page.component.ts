@@ -108,6 +108,30 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
         }
     };
 
+    changeSongStatus = (id: number, event: MouseEvent) => {
+        if (this.playlist && this.currentUser) {
+            event.stopPropagation();
+            this.spinnerService.show();
+            const song = this.playlist.songs.find(s => s.id === id);
+
+            if (song) {
+                this.songService
+                    .setSongStatus(id, !song.isFavourite)
+                    .pipe(
+                        switchMap(() => forkJoin([
+                            this.playlistService.getPlaylistById(this.playlist!.id),
+                            this.playlistService.getSongsToAddToPlaylist(this.playlist!.id),
+                        ])),
+                    )
+                    .pipe(this.untilThis)
+                    .subscribe((results) => {
+                        [this.playlist, this.newSongsToAdd] = results;
+                        this.spinnerService.hide();
+                    });
+            }
+        }
+    };
+
     deletePlaylist() {
         if (this.playlist) {
             this.playlistService

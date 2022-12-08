@@ -1,2 +1,2 @@
-﻿INSERT INTO FavouritetSongs (UserId, SongId)
+﻿INSERT INTO FavouriteSongs (UserId, SongId)
 VALUES (@UserId, @Id)

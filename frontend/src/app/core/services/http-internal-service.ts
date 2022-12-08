@@ -29,7 +29,7 @@ export class HttpInternalService {
     }
 
     public patchRequest<T>(url: string, payload: object, httpParams?: any): Observable<T> {
-        return this.http.put<T>(this.buildUrl(url), payload, { headers: this.getHeaders(), params: httpParams });
+        return this.http.patch<T>(this.buildUrl(url), payload, { headers: this.getHeaders(), params: httpParams });
     }
 
     public deleteRequest<T>(url: string, httpParams?: any): Observable<T> {

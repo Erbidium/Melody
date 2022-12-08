@@ -16,4 +16,14 @@ export class SongsTableComponent {
     @Input() rowClickHandler: ((songId: number) => void) | undefined;
 
     @Input() columnsToDisplay: string[] = [];
+
+    getMatIconText(song: ISongTable) {
+        const favouriteSong = song as unknown as { isFavourite: boolean };
+
+        if (favouriteSong.isFavourite === undefined) {
+            return 'favorite';
+        }
+
+        return favouriteSong.isFavourite ? 'favorite' : 'favorite_border';
+    }
 }

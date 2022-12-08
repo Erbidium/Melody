@@ -61,7 +61,7 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на INSERT INTO FavouritetSongs (UserId, SongId)
+        ///   Ищет локализованную строку, похожую на INSERT INTO FavouriteSongs (UserId, SongId)
         ///VALUES (@UserId, @Id).
         /// </summary>
         internal static string CreateFavouriteSong {
