@@ -23,4 +23,12 @@ export class SongService {
     public deleteSong(id: number) {
         return this.httpService.deleteRequest(`/api/song/${id}`);
     }
+
+    public getFavouriteUserSongs() {
+        return this.httpService.getRequest<ISong[]>('/api/song/favourite');
+    }
+
+    public removeSongFromUserFavourites(id: number) {
+        return this.httpService.deleteRequest(`/api/song/favourite/${id}`);
+    }
 }

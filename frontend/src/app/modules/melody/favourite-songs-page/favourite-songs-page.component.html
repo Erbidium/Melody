@@ -1,3 +1,16 @@
 <app-header></app-header>
 <app-back-button></app-back-button>
 <h1>Тут ти можеш побачити список всіх твоїх улюблених пісень</h1>
+<div *ngIf="favouriteSongs.length === 0; else songs">
+    Ти ще не додав жодної улюбленої пісні. Спробуй додати улюблену пісню, щоб побачити її на цій сторінці
+</div>
+<ng-template #songs>
+    <app-songs-table
+        [dataSource]="favouriteSongs"
+        [clickRemoveButtonHandler]="removeSongFromFavourites"
+        [rowClickHandler]="selectSong"
+        [columnsToDisplay]="columnsToDisplay"
+    >
+    </app-songs-table>
+</ng-template>
+<app-player [currentSongIdSetter]="currentSongIdForMusicPlayer" [files]="favouriteSongs"></app-player>

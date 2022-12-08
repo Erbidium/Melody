@@ -45,6 +45,15 @@ public class SongController : ControllerBase
         _tokenService = tokenService;
         _userManager = userManager;
     }
+    
+    [Authorize]
+    [HttpGet("favourite")]
+    public async Task<ActionResult<IEnumerable<SongDto>>> GetFavouriteUserSongs()
+    {
+        var identity = HttpContext.User.Identity as ClaimsIdentity;
+        var currentUserFromToken = _tokenService.GetCurrentUser(identity);
+        return Ok(_mapper.Map<List<SongDto>>(await _songRepository.GetFavouriteUserSongs(currentUserFromToken.UserId)));
+    }
 
     [Authorize]
     [HttpGet]

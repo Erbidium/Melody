@@ -243,6 +243,31 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на SELECT s.Id,
+        ///       s.UserId,
+        ///       UploadedAt,
+        ///       SizeBytes,
+        ///       s.Name,
+        ///       Path,
+        ///       AuthorName,
+        ///       Year,
+        ///       GenreId,
+        ///       Duration,
+        ///       IsDeleted,
+        ///       g.Id,
+        ///       g.Name
+        ///FROM Songs s
+        ///INNER JOIN Genres g ON s.GenreId = g.Id
+        ///INNER JOIN FavouriteSongs fs ON fs.SongId = s.Id
+        ///WHERE s.IsDeleted = 0 AND fs.UserId = @UserId.
+        /// </summary>
+        internal static string GetFavouriteSongs {
+            get {
+                return ResourceManager.GetString("GetFavouriteSongs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на SELECT Id, Name
         ///FROM Genres
         ///WHERE Id = @Id.

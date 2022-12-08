@@ -118,4 +118,23 @@ public class SongRepository : ISongRepository
         return songs.Select(songDb => new Song(songDb.UserId, songDb.Name, songDb.Path, songDb.AuthorName, songDb.Year,
             songDb.GenreId, songDb.SizeBytes, songDb.UploadedAt, songDb.Duration) { Id = songDb.Id }).ToList().AsReadOnly();
     }
+
+    public async Task<IReadOnlyCollection<Song>> GetFavouriteUserSongs(long userId)
+    {
+        using var connection = _context.CreateConnection();
+
+        var songs = await connection.QueryAsync<SongDb, GenreDb, Song>(SqlScriptsResource.GetFavouriteSongs,
+            (songDb, genreDb) =>
+            {
+                var song = new Song(songDb.UserId, songDb.Name, songDb.Path, songDb.AuthorName, songDb.Year,
+                    songDb.GenreId, songDb.SizeBytes, songDb.UploadedAt, songDb.Duration)
+                {
+                    Id = songDb.Id,
+                    Genre = new Genre(genreDb.Name) { Id = genreDb.Id }
+                };
+                return song;
+            },
+            new { UserId = userId });
+        return songs.ToList().AsReadOnly();
+    }
 }

@@ -24,7 +24,7 @@ export class UserUploadsPageComponent extends BaseComponent implements OnInit {
         super();
     }
 
-    ngOnInit(): void {
+    ngOnInit() {
         this.loadSongsUploadedByUser();
     }
 
