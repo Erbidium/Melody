@@ -99,6 +99,9 @@ export class AudioService {
                 this.resetState();
                 this.state.error = true;
                 break;
+            default:
+                this.state.playing = false;
+                break;
         }
         this.stateChange.next(this.state);
     }

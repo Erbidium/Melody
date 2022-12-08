@@ -12,6 +12,10 @@ export class SongService {
         return this.httpService.getRequest<ISong[]>('/api/song/');
     }
 
+    public getFavouriteAndUploadedUserSongs() {
+        return this.httpService.getRequest<ISong[]>('/api/song/favourite-and-uploaded');
+    }
+
     public getAllGenres() {
         return this.httpService.getRequest<IGenre[]>('/api/song/genres');
     }

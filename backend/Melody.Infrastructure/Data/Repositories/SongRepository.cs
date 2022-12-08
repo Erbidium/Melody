@@ -151,4 +151,23 @@ public class SongRepository : ISongRepository
         
         await connection.ExecuteAsync(SqlScriptsResource.DeleteFavouriteSong, new { id, userId });
     }
+
+    public async Task<IReadOnlyCollection<Song>> GetFavouriteAndUploadedUserSongs(long userId)
+    {
+        using var connection = _context.CreateConnection();
+
+        var songs = await connection.QueryAsync<SongDb, GenreDb, Song>(SqlScriptsResource.GetFavouriteAndUploadedUserSongs,
+            (songDb, genreDb) =>
+            {
+                var song = new Song(songDb.UserId, songDb.Name, songDb.Path, songDb.AuthorName, songDb.Year,
+                    songDb.GenreId, songDb.SizeBytes, songDb.UploadedAt, songDb.Duration)
+                {
+                    Id = songDb.Id,
+                    Genre = new Genre(genreDb.Name) { Id = genreDb.Id }
+                };
+                return song;
+            },
+            new { UserId = userId });
+        return songs.ToList().AsReadOnly();
+    }
 }

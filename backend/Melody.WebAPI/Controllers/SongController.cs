@@ -64,6 +64,15 @@ public class SongController : ControllerBase
         return Ok(_mapper.Map<List<SongDto>>(await _songRepository.GetSongsUploadedByUserId(currentUserFromToken.UserId)));
     }
 
+    [Authorize]
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<SongDto>>> GetFavoriteAndUploadedSongs()
+    {
+        var identity = HttpContext.User.Identity as ClaimsIdentity;
+        var currentUserFromToken = _tokenService.GetCurrentUser(identity);
+        return Ok(_mapper.Map<List<SongDto>>(await _songRepository.GetFavouriteAndUploadedUserSongs(currentUserFromToken.UserId)));
+    }
+
     [HttpGet("file/{id:long}")]
     public async Task<FileStreamResult> GetSong(long id)
     {
@@ -125,6 +134,7 @@ public class SongController : ControllerBase
         return Ok(_mapper.Map<SongDto>(await _songRepository.Create(song)));
     }
 
+    [Authorize]
     [HttpPut]
     public async Task<IActionResult> UpdateSong(UpdateSongDto song)
     {
@@ -139,6 +149,7 @@ public class SongController : ControllerBase
         return NoContent();
     }
 
+    [Authorize]
     [HttpPatch("{id:long}/like")]
     public async Task<IActionResult> UpdateSongStatus(SongStatusDto songStatusDto, long id)
     {
@@ -155,6 +166,7 @@ public class SongController : ControllerBase
         return Ok();
     }
 
+    [Authorize]
     [HttpDelete("favourite/{id:long}")]
     public async Task<IActionResult> DeleteFavouriteSong(long id)
     {
@@ -164,6 +176,7 @@ public class SongController : ControllerBase
         return Ok();
     }
 
+    [Authorize]
     [HttpDelete("{id:long}")]
     public async Task<IActionResult> DeleteSong(long id)
     {

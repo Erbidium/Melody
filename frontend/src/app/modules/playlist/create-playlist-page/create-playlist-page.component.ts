@@ -34,12 +34,12 @@ export class CreatePlaylistPageComponent extends BaseComponent implements OnInit
     }
 
     ngOnInit(): void {
-        this.loadSongsUploadedByUser();
+        this.loadFavouriteAndUploadedSongs();
     }
 
-    loadSongsUploadedByUser() {
+    loadFavouriteAndUploadedSongs() {
         this.songService
-            .getSongsUploadedByUser()
+            .getFavouriteAndUploadedUserSongs()
             .pipe(this.untilThis)
             .subscribe((resp) => {
                 this.uploadedSongs = resp;

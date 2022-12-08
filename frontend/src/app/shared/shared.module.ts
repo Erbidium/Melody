@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterLinkActive, RouterLinkWithHref } from '@angular/router';
@@ -12,13 +13,12 @@ import { BackButtonComponent } from './components/back-button/back-button.compon
 import { HeaderComponent } from './components/header/header.component';
 import { LoadingSpinnerComponent } from './components/loading-spinner/loading-spinner.component';
 import { PlayerComponent } from './components/player/player.component';
+import { SongsTableComponent } from './components/songs-table/songs-table.component';
 import { HorizontalPlaylistsScrollComponent } from './components/vertical-playlists-scroll/horizontal-playlists-scroll.component';
 import { HorizontalScrollDirective } from './directives/horizontal-scroll.directive';
 import { DateAgoPipe } from './pipes/date-ago.pipe';
 import { TextListPipe } from './pipes/text-list.pipe';
 import { TimePipe } from './pipes/time.pipe';
-import { SongsTableComponent } from './components/songs-table/songs-table.component';
-import {MatTableModule} from "@angular/material/table";
 
 @NgModule({
     declarations: [
