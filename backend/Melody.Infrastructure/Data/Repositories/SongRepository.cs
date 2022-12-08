@@ -138,6 +138,13 @@ public class SongRepository : ISongRepository
         return songs.ToList().AsReadOnly();
     }
 
+    public async Task CreateFavouriteSong(long id, long userId)
+    {
+        using var connection = _context.CreateConnection();
+        
+        await connection.ExecuteAsync(SqlScriptsResource.CreateFavouriteSong, new { id, userId });
+    }
+
     public async Task DeleteFavouriteSong(long id, long userId)
     {
         using var connection = _context.CreateConnection();

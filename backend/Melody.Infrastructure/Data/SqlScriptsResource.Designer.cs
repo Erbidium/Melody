@@ -61,6 +61,16 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на INSERT INTO FavouritetSongs (UserId, SongId)
+        ///VALUES (@UserId, @Id).
+        /// </summary>
+        internal static string CreateFavouriteSong {
+            get {
+                return ResourceManager.GetString("CreateFavouriteSong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на INSERT INTO Playlists (Name, AuthorId)
         ///    OUTPUT Inserted.Id
         ///VALUES (@Name, @AuthorId).

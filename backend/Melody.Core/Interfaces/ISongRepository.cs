@@ -9,5 +9,6 @@ public interface ISongRepository : IRepository<Song, long>
     public Task<IReadOnlyCollection<Song>> GetSongsUploadedByUserId(long userId);
     public Task<IReadOnlyCollection<Song>> GetSongsForPlaylistToAdd(long playlistId);
     public Task<IReadOnlyCollection<Song>> GetFavouriteUserSongs(long userId);
+    public Task CreateFavouriteSong(long id, long userId);
     public Task DeleteFavouriteSong(long id, long userId);
 }
