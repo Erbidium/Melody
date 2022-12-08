@@ -17,12 +17,13 @@ export class SongsTableComponent {
 
     @Input() columnsToDisplay: string[] = [];
 
-    getMatIconText(song: ISongTable) {
-        const favouriteSong = song as unknown as { isFavourite: boolean };
+    @Input() heartButtonForLikes: boolean = false;
 
-        if (favouriteSong.isFavourite === undefined) {
+    getMatIconText(song: ISongTable) {
+        if (!this.heartButtonForLikes) {
             return 'favorite';
         }
+        const favouriteSong = song as unknown as { isFavourite: boolean };
 
         return favouriteSong.isFavourite ? 'favorite' : 'favorite_border';
     }

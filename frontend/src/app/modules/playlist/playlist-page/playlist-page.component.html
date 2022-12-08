@@ -18,6 +18,7 @@
             [clickHeartButtonHandler]="currentUser.id === playlist.authorId ? deleteSongFromPlaylist : changeSongStatus"
             [rowClickHandler]="selectSong"
             [columnsToDisplay]="columnsToDisplay"
+            [heartButtonForLikes]="currentUser.id !== playlist.authorId"
         ></app-songs-table>
     </ng-template>
     <form [formGroup]="addSongsPlaylistForm">

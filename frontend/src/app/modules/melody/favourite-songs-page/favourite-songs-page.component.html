@@ -7,7 +7,7 @@
 <ng-template #songs>
     <app-songs-table
         [dataSource]="favouriteSongs"
-        [clickRemoveButtonHandler]="removeSongFromFavourites"
+        [clickHeartButtonHandler]="removeSongFromFavourites"
         [rowClickHandler]="selectSong"
         [columnsToDisplay]="columnsToDisplay"
     >
