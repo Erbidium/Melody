@@ -43,7 +43,9 @@ public class PlaylistController : ControllerBase
     [HttpGet("{id:long}/new-songs-to-add")]
     public async Task<ActionResult<IEnumerable<SongDto>>> GetSongsToAddToPlaylist(long id)
     {
-        var songs = await _songRepository.GetSongsForPlaylistToAdd(id);
+        var identity = HttpContext.User.Identity as ClaimsIdentity;
+        var currentUserFromToken = _tokenService.GetCurrentUser(identity);
+        var songs = await _songRepository.GetSongsForPlaylistToAdd(id, currentUserFromToken.UserId);
         return Ok(_mapper.Map<List<SongDto>>(songs));
     }
 

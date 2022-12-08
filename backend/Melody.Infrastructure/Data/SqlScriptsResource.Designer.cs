@@ -435,7 +435,15 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на SELECT Id,
+        ///   Ищет локализованную строку, похожую на WITH PlaylistSongsIds AS
+        ///(
+        ///    SELECT s.Id
+        ///    FROM Songs s
+        ///    INNER JOIN PlaylistSongs ps ON ps.SongId = s.Id
+        ///    INNER JOIN Playlists p ON ps.PlaylistId = p.Id
+        ///    WHERE s.IsDeleted = 0 AND p.IsDeleted = 0 AND p.Id = @PlaylistId
+        ///)
+        ///SELECT Id,
         ///       UserId,
         ///       UploadedAt,
         ///       SizeBytes,
@@ -447,15 +455,7 @@ namespace Melody.Infrastructure.Data {
         ///       Duration,
         ///       IsDeleted
         ///FROM Songs
-        ///WHERE IsDeleted = 0
-        ///  ANd Id NOT IN
-        ///  (
-        ///    SELECT s.Id
-        ///    FROM Songs s
-        ///    INNER JOIN PlaylistSongs ps ON ps.SongId = s.Id
-        ///    INNER JOIN Playlists p ON ps.PlaylistId = p.Id
-        ///    WHERE s.IsDeleted = 0 AND p.IsDeleted = 0 AND p.Id = @PlaylistId
-        ///  ).
+        ///WHERE IsDeleted = 0 AND UserId = @UserId AND Id NOT IN (Select Id FROM Playl [остаток строки не уместился]&quot;;.
         /// </summary>
         internal static string GetSongsToAddToPlaylist {
             get {
