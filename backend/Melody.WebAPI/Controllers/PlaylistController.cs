@@ -92,6 +92,23 @@ public class PlaylistController : ControllerBase
         return Ok();
     }
 
+    [Authorize]
+    [HttpPatch("{id:long}/like")]
+    public async Task<IActionResult> UpdatePlaylistStatus(PlaylistStatusDto playlistStatusDto, long id)
+    {
+        var identity = HttpContext.User.Identity as ClaimsIdentity;
+        var currentUserFromToken = _tokenService.GetCurrentUser(identity);
+        if (playlistStatusDto.IsLiked)
+        {
+            await _playlistRepository.CreateFavouritePlaylist(id, currentUserFromToken.UserId);
+        }
+        else
+        {
+            await _playlistRepository.DeleteFavouritePlaylist(id, currentUserFromToken.UserId);
+        }
+        return Ok();
+    }
+
     [HttpPut("{id:long}")]
     public async Task<IActionResult> UpdatePlaylist([FromBody] UpdatePlaylistDto updatePlaylistDto, long id)
     {
@@ -111,6 +128,16 @@ public class PlaylistController : ControllerBase
     {
         await _playlistRepository.DeleteSong(id, songId);
         return NoContent();
+    }
+
+    [Authorize]
+    [HttpDelete("favourite/{id:long}")]
+    public async Task<IActionResult> DeleteFavouritePlaylist(long id)
+    {
+        var identity = HttpContext.User.Identity as ClaimsIdentity;
+        var currentUserFromToken = _tokenService.GetCurrentUser(identity);
+        await _playlistRepository.DeleteFavouritePlaylist(id, currentUserFromToken.UserId);
+        return Ok();
     }
 
     [HttpDelete("{id:long}")]

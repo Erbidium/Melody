@@ -1,4 +1,4 @@
-﻿using Dapper;
+using Dapper;
 using Melody.Core.Entities;
 using Melody.Core.Interfaces;
 using Melody.Infrastructure.Data.Context;
@@ -162,5 +162,19 @@ public class PlaylistRepository : IPlaylistRepository
         
         await connection.ExecuteAsync(SqlScriptsResource.DeletePlaylistSong, new { id, songId });
 
+    }
+
+    public async Task CreateFavouritePlaylist(long id, long userId)
+    {
+        using var connection = _context.CreateConnection();
+        
+        await connection.ExecuteAsync(SqlScriptsResource.CreateFavouritePlaylist, new { id, userId });
+    }
+
+    public async Task DeleteFavouritePlaylist(long id, long userId)
+    {
+        using var connection = _context.CreateConnection();
+        
+        await connection.ExecuteAsync(SqlScriptsResource.DeleteFavouritePlaylist, new { id, userId });
     }
 }

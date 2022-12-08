@@ -61,6 +61,16 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на INSERT INTO UserPlaylists (UserId, PlaylistId)
+        ///VALUES (@UserId, @Id).
+        /// </summary>
+        internal static string CreateFavouritePlaylist {
+            get {
+                return ResourceManager.GetString("CreateFavouritePlaylist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на INSERT INTO FavouriteSongs (UserId, SongId)
         ///VALUES (@UserId, @Id).
         /// </summary>
@@ -121,6 +131,16 @@ namespace Melody.Infrastructure.Data {
         internal static string CreateUser {
             get {
                 return ResourceManager.GetString("CreateUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на DELETE From UserPlaylists
+        ///WHERE UserId = @UserId AND PlaylistId = @Id.
+        /// </summary>
+        internal static string DeleteFavouritePlaylist {
+            get {
+                return ResourceManager.GetString("DeleteFavouritePlaylist", resourceCulture);
             }
         }
         

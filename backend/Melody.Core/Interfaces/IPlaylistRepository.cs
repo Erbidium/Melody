@@ -1,4 +1,4 @@
-﻿using Melody.Core.Entities;
+using Melody.Core.Entities;
 
 namespace Melody.Core.Interfaces;
 
@@ -11,4 +11,6 @@ public interface IPlaylistRepository
     Task<bool> AddSongs(long id, long[] songIds);
     Task Delete(long id);
     Task DeleteSong(long id, long songId);
+    Task CreateFavouritePlaylist(long id, long userId);
+    Task DeleteFavouritePlaylist(long id, long userId);
 }
