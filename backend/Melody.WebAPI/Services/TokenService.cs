@@ -4,16 +4,23 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Melody.Infrastructure.Data.DbEntites;
+using Melody.Infrastructure.Data.Interfaces;
+using Microsoft.AspNetCore.Identity;
 
 namespace Melody.WebAPI.Services;
 
 public class TokenService : ITokenService
 {
     private readonly IConfiguration _configuration;
+    private readonly UserManager<UserIdentity> _userManager;
+    private readonly IRefreshTokenRepository _refreshTokenRepository;
 
-    public TokenService(IConfiguration configuration)
+    public TokenService(IConfiguration configuration, UserManager<UserIdentity> userManager,
+        IRefreshTokenRepository refreshTokenRepository)
     {
         _configuration = configuration;
+        _userManager = userManager;
+        _refreshTokenRepository = refreshTokenRepository;
     }
 
     public string GenerateRefreshToken(UserIdentity user, bool isExpired = false)
@@ -36,8 +43,9 @@ public class TokenService : ITokenService
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    public string GenerateAccessToken(UserIdentity user, IList<string> roles)
+    public async Task<string> GenerateAccessToken(UserIdentity user)
     {
+        var roles = await _userManager.GetRolesAsync(user);
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
@@ -75,7 +83,17 @@ public class TokenService : ITokenService
         return principal.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
 
     }
-    
+
+    public async Task<(string accessToken, string refreshToken)> GetAccessTokenAndUpdatedRefreshToken(string refreshTokenString)
+    {
+        var email = GetEmailFromRefreshToken(refreshTokenString);
+        var user = await _userManager.FindByEmailAsync(email);
+        var refreshToken = GenerateRefreshToken(user);
+        await _refreshTokenRepository.CreateOrUpdateAsync(refreshToken, user.Id);
+        var accessToken = await GenerateAccessToken(user);
+        return (accessToken, refreshToken);
+    }
+
     private TokenValidationParameters GetValidationParameters()
     {
         return new TokenValidationParameters

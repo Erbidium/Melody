@@ -4,8 +4,6 @@ using Melody.WebAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Melody.Infrastructure.Data.DbEntites;
 
@@ -35,8 +33,7 @@ namespace Melody.WebAPI.Controllers
 
             if (user != null)
             {
-                var roles = await _userManager.GetRolesAsync(user);
-                var accessToken = _tokenService.GenerateAccessToken(user, roles);
+                var accessToken = await _tokenService.GenerateAccessToken(user);
                 var refreshToken = _tokenService.GenerateRefreshToken(user);
                 await _refreshTokenRepository.CreateOrUpdateAsync(refreshToken, user.Id);
                 Response.Cookies.Append("X-Refresh-Token", refreshToken,
@@ -63,18 +60,14 @@ namespace Melody.WebAPI.Controllers
                 var dbEntry = await _refreshTokenRepository.FindAsync(refreshTokenString);
                 if (dbEntry != null)
                 {
-                    var email = _tokenService.GetEmailFromRefreshToken(refreshTokenString);
-                    var user = await _userManager.FindByEmailAsync(email);
-                    var roles = await _userManager.GetRolesAsync(user);
-                    var refreshToken = _tokenService.GenerateRefreshToken(user);
-                    await _refreshTokenRepository.CreateOrUpdateAsync(refreshToken, user.Id);
-                    Response.Cookies.Append("X-Refresh-Token", refreshToken,
+                    var tokens = await _tokenService.GetAccessTokenAndUpdatedRefreshToken(refreshTokenString);
+                    Response.Cookies.Append("X-Refresh-Token", tokens.refreshToken,
                         new CookieOptions
                         {
                             HttpOnly = true, SameSite = SameSiteMode.None, Secure = true,
                             Expires = DateTimeOffset.Now.AddDays(60)
                         });
-                    return Ok(new { AccessToken = _tokenService.GenerateAccessToken(user, roles) });
+                    return Ok(new { AccessToken = tokens.accessToken });
                 }
 
                 return Unauthorized();

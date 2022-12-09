@@ -6,8 +6,9 @@ namespace Melody.WebAPI.Services;
 
 public interface ITokenService
 {
-    string GenerateAccessToken(UserIdentity user, IList<string> roles);
+    Task<string> GenerateAccessToken(UserIdentity user);
     string GenerateRefreshToken(UserIdentity user, bool isExpired = false);
     UserToken GetCurrentUser(ClaimsIdentity identity);
     string? GetEmailFromRefreshToken(string refreshToken);
+    Task<(string accessToken, string refreshToken)> GetAccessTokenAndUpdatedRefreshToken(string refreshToken);
 }
