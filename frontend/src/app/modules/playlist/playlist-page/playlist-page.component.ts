@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BaseComponent } from '@core/base/base.component';
+import { columnsToDisplayWithFavouriteColumn } from '@core/helpers/columns-to-display-helper';
 import { IPlaylist } from '@core/models/IPlaylist';
 import { ISong } from '@core/models/ISong';
 import { IUser } from '@core/models/IUser';
@@ -28,7 +29,7 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
 
     private id: number | undefined;
 
-    columnsToDisplay = ['position', 'name', 'author', 'genre', 'heart', 'date', 'duration'];
+    columnsToDisplay = columnsToDisplayWithFavouriteColumn;
 
     currentSongIdForMusicPlayer?: number;
 

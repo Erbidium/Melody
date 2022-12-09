@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BaseComponent } from '@core/base/base.component';
+import { columnsToDisplayWithRemoveColumn } from '@core/helpers/columns-to-display-helper';
 import { ISong } from '@core/models/ISong';
 import { SongService } from '@core/services/song.service';
 import { SpinnerService } from '@core/services/spinner.service';
@@ -13,7 +14,7 @@ import { switchMap } from 'rxjs/operators';
 export class UserUploadsPageComponent extends BaseComponent implements OnInit {
     uploadedSongs: ISong[] = [];
 
-    columnsToDisplay = ['position', 'name', 'author', 'genre', 'date', 'duration', 'remove'];
+    columnsToDisplay = columnsToDisplayWithRemoveColumn;
 
     currentSongIdForMusicPlayer?: number;
 
