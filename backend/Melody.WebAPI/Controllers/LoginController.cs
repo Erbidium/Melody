@@ -58,17 +58,12 @@ namespace Melody.WebAPI.Controllers
             if (!Request.Cookies.TryGetValue("X-Refresh-Token", out var refreshTokenString))
                 return BadRequest();
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var validationParameters = _tokenService.GetValidationParameters();
             try
             {
-                SecurityToken validatedToken;
-                var principal =
-                    tokenHandler.ValidateToken(refreshTokenString, validationParameters, out validatedToken);
                 var dbEntry = await _refreshTokenRepository.FindAsync(refreshTokenString);
                 if (dbEntry != null)
                 {
-                    var email = principal.FindFirst(c => c.Type == ClaimTypes.Email).Value;
+                    var email = _tokenService.GetEmailFromRefreshToken(refreshTokenString);
                     var user = await _userManager.FindByEmailAsync(email);
                     var roles = await _userManager.GetRolesAsync(user);
                     var refreshToken = _tokenService.GenerateRefreshToken(user);

@@ -41,9 +41,9 @@ public class TokenService : ITokenService
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-        var claims = new List<Claim>()
+        var claims = new List<Claim>
         {
-            new Claim("UserId", user.Id.ToString()),
+            new ("UserId", user.Id.ToString()),
         };
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)).ToArray());
 
@@ -56,9 +56,29 @@ public class TokenService : ITokenService
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    public TokenValidationParameters GetValidationParameters()
+    public UserToken GetCurrentUser(ClaimsIdentity identity)
     {
-        return new TokenValidationParameters()
+        var userClaims = identity.Claims;
+        return new UserToken
+        {
+            UserId = long.Parse(userClaims.FirstOrDefault(o => o.Type == "UserId")?.Value),
+            Roles = userClaims.Where(o => o.Type == ClaimTypes.Role).Select(r => r.Value),
+        };
+    }
+
+    public string? GetEmailFromRefreshToken(string refreshTokenString)
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var validationParameters = GetValidationParameters();
+        SecurityToken validatedToken;
+        var principal = tokenHandler.ValidateToken(refreshTokenString, validationParameters, out validatedToken);
+        return principal.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
+
+    }
+    
+    private TokenValidationParameters GetValidationParameters()
+    {
+        return new TokenValidationParameters
         {
             ValidateLifetime = true,
             ValidateAudience = true,
@@ -66,16 +86,6 @@ public class TokenService : ITokenService
             ValidIssuer = _configuration["Jwt:Issuer"],
             ValidAudience = _configuration["Jwt:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]))
-        };
-    }
-
-    public UserToken? GetCurrentUser(ClaimsIdentity identity)
-    {
-        var userClaims = identity.Claims;
-        return new UserToken
-        {
-            UserId = long.Parse(userClaims.FirstOrDefault(o => o.Type == "UserId")?.Value),
-            Roles = userClaims.Where(o => o.Type == ClaimTypes.Role).Select(r => r.Value),
         };
     }
 }

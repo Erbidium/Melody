@@ -1,5 +1,4 @@
 ﻿using Melody.Infrastructure.Auth.Models;
-using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Melody.Infrastructure.Data.DbEntites;
 
@@ -9,6 +8,6 @@ public interface ITokenService
 {
     string GenerateAccessToken(UserIdentity user, IList<string> roles);
     string GenerateRefreshToken(UserIdentity user, bool isExpired = false);
-    UserToken? GetCurrentUser(ClaimsIdentity identity);
-    TokenValidationParameters GetValidationParameters();
+    UserToken GetCurrentUser(ClaimsIdentity identity);
+    string? GetEmailFromRefreshToken(string refreshToken);
 }

@@ -38,16 +38,16 @@ namespace Melody.Infrastructure.Data.Repositories
             return true;
         }
 
-        public async Task<bool> DeleteAsync(string Token)
+        public async Task<bool> DeleteAsync(string token)
         {
             using var connection = _context.CreateConnection();
             var rowsDeleted =
                 await connection.ExecuteAsync(SqlScriptsResource.DeleteRefreshToken,
-                    new { Token });
+                    new { token });
             return rowsDeleted == 1;
         }
 
-        public async Task<RefreshTokenDb> FindAsync(string token)
+        public async Task<RefreshTokenDb?> FindAsync(string token)
         {
             using var connection = _context.CreateConnection();
             return await connection.QuerySingleOrDefaultAsync<RefreshTokenDb>(SqlScriptsResource.FindRefreshToken,

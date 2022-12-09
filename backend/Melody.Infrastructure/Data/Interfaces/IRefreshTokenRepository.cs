@@ -6,5 +6,5 @@ public interface IRefreshTokenRepository
 {
     Task<bool> CreateOrUpdateAsync(string token, long userId);
     Task<bool> DeleteAsync(string Token);
-    Task<RefreshTokenDb> FindAsync(string token);
+    Task<RefreshTokenDb?> FindAsync(string token);
 }
