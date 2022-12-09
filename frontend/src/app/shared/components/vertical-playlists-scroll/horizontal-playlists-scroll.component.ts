@@ -11,11 +11,21 @@ import { IFavouritePlaylistWithPerformers } from '@core/models/IFavouritePlaylis
 export class HorizontalPlaylistsScrollComponent extends BaseComponent {
     @Input() userPlaylists: IFavouritePlaylistWithPerformers[] = [];
 
+    @Input() heartButtonForLikes: boolean = false;
+
     constructor(private router: Router) {
         super();
     }
 
     navigateToPlaylist(id: number) {
         this.router.navigateByUrl(`playlist/${id}`);
+    }
+
+    getMatIconText(playlist: IFavouritePlaylistWithPerformers) {
+        if (!this.heartButtonForLikes) {
+            return 'favorite';
+        }
+
+        return playlist.isFavourite ? 'favorite' : 'favorite_border';
     }
 }
