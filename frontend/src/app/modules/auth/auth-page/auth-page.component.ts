@@ -51,14 +51,19 @@ export class AuthPageComponent extends BaseComponent {
         },
     );
 
-    constructor(private authService: AuthService, private userService: UserService, private router: Router) {
+    constructor(
+        private authService: AuthService,
+        private userService: UserService,
+        private router: Router,
+    ) {
         super();
     }
 
     private setCredentialsIncorrect(): void {
         this.signUpForm.get('email')?.setErrors({ incorrectCredentials: true });
-        this.signUpForm.get('name')?.setErrors({ incorrectCredentials: true });
+        this.signUpForm.get('username')?.setErrors({ incorrectCredentials: true });
         this.signUpForm.get('password')?.setErrors({ incorrectCredentials: true });
+        this.signUpForm.get('phone')?.setErrors({ incorrectCredentials: true });
     }
 
     public onSignUp(): void {

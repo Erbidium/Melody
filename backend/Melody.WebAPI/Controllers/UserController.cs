@@ -40,7 +40,7 @@ public class UserController : ControllerBase
 
         if (!result.Succeeded)
         {
-            return Ok(result.Errors);
+            return BadRequest(result.Errors);
         }
 
         await _userManager.AddToRoleAsync(user, "User");
