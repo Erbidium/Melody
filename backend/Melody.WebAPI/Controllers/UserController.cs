@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Melody.Core.Interfaces;
 using Melody.Infrastructure.Data.DbEntites;
 using Melody.WebAPI.DTO.User;
 

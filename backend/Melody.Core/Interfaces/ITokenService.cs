@@ -1,14 +1,13 @@
-﻿using Melody.Infrastructure.Auth.Models;
-using System.Security.Claims;
-using Melody.Infrastructure.Data.DbEntites;
+﻿using System.Security.Claims;
+using Melody.Core.ValueObjects;
 
-namespace Melody.WebAPI.Services;
+namespace Melody.Core.Interfaces;
 
 public interface ITokenService
 {
     Task<string> GenerateRefreshToken(string email, bool isExpired = false);
     Task<(string? accessToken, string? refreshToken)> CreateAccessTokenAndRefreshToken(string email, string password);
 
-    UserToken GetCurrentUser(ClaimsIdentity identity);
+    UserRoles GetCurrentUser(ClaimsIdentity identity);
     Task<(string? accessToken, string? refreshToken)> GetAccessTokenAndUpdatedRefreshToken(string refreshToken);
 }
