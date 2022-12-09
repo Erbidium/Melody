@@ -39,9 +39,9 @@ export class UserUploadsPageComponent extends BaseComponent implements OnInit {
             });
     }
 
-    selectSong (songId: number) {
+    selectSong(songId: number) {
         this.currentSongIdForMusicPlayer = songId;
-    };
+    }
 
     deleteSong(id: number, event: MouseEvent) {
         event.stopPropagation();
@@ -51,5 +51,5 @@ export class UserUploadsPageComponent extends BaseComponent implements OnInit {
             .subscribe(() => {
                 this.currentSongIdForMusicPlayer = undefined;
             });
-    };
+    }
 }
