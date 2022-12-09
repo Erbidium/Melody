@@ -29,21 +29,20 @@ namespace Melody.WebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] UserLogin userLogin)
         {
-            var userIsAuthenticated = await Authenticate(userLogin);
+            var tokens = await _tokenService.CreateAccessTokenAndRefreshToken(userLogin.Email, userLogin.Password);
 
-            if (userIsAuthenticated)
+            if (tokens.accessToken is null || tokens.refreshToken is null)
             {
-                var tokens = await _tokenService.CreateAccessTokenAndRefreshToken(userLogin.Email);
-                Response.Cookies.Append("X-Refresh-Token", tokens.refreshToken,
-                    new CookieOptions
-                    {
-                        HttpOnly = true, SameSite = SameSiteMode.None, Secure = true,
-                        Expires = DateTimeOffset.Now.AddDays(60)
-                    });
-                return Ok(new { tokens.accessToken });
+                return NotFound("User not found");
             }
-
-            return NotFound("User not found");
+   
+            Response.Cookies.Append("X-Refresh-Token", tokens.refreshToken,
+                new CookieOptions
+                {
+                    HttpOnly = true, SameSite = SameSiteMode.None, Secure = true,
+                    Expires = DateTimeOffset.Now.AddDays(60)
+                });
+            return Ok(new { tokens.accessToken });
         }
 
         [AllowAnonymous]
@@ -56,18 +55,19 @@ namespace Melody.WebAPI.Controllers
             try
             {
                 var tokens = await _tokenService.GetAccessTokenAndUpdatedRefreshToken(refreshTokenString);
-                if (tokens.accessToken is not null && tokens.refreshToken is not null)
+                if (tokens.accessToken is null || tokens.refreshToken is null)
                 {
-                    Response.Cookies.Append("X-Refresh-Token", tokens.refreshToken,
-                        new CookieOptions
-                        {
-                            HttpOnly = true, SameSite = SameSiteMode.None, Secure = true,
-                            Expires = DateTimeOffset.Now.AddDays(60)
-                        });
-                    return Ok(new { AccessToken = tokens.accessToken });
+                    return Unauthorized();
                 }
 
-                return Unauthorized();
+                Response.Cookies.Append("X-Refresh-Token", tokens.refreshToken,
+                    new CookieOptions
+                    {
+                        HttpOnly = true, SameSite = SameSiteMode.None, Secure = true,
+                        Expires = DateTimeOffset.Now.AddDays(60)
+                    });
+                return Ok(new { AccessToken = tokens.accessToken });
+
             }
             catch (Exception)
             {
@@ -91,15 +91,6 @@ namespace Melody.WebAPI.Controllers
                     Expires = DateTimeOffset.Now.AddDays(-1)
                 });
             return Ok();
-        }
-
-
-        private async Task<bool> Authenticate(UserLogin userLogin)
-        {
-            var currentUser = await _userManager.FindByEmailAsync(userLogin.Email);
-
-            return currentUser != null &&
-                   await _userManager.CheckPasswordAsync(currentUser, userLogin.Password);
         }
     }
 }

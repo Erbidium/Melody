@@ -44,8 +44,15 @@ public class TokenService : ITokenService
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    public async Task<(string accessToken, string refreshToken)> CreateAccessTokenAndRefreshToken(string email)
+    public async Task<(string? accessToken, string? refreshToken)> CreateAccessTokenAndRefreshToken(string email, string password)
     {
+        var currentUser = await _userManager.FindByEmailAsync(email);
+
+        if (currentUser == null ||
+            !await _userManager.CheckPasswordAsync(currentUser, password))
+        {
+            return (null, null);
+        };
         var refreshToken = await GenerateRefreshToken(email);
         var user = await _userManager.FindByEmailAsync(email);
         var accessToken = await GenerateAccessToken(user);
