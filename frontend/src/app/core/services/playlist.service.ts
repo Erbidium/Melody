@@ -40,4 +40,12 @@ export class PlaylistService {
     public addSongs(id: number, newSongIds: number[]) {
         return this.httpService.putRequest(`/api/playlist/${id}`, { NewSongIds: newSongIds });
     }
+
+    public removePlaylistFromUserFavourites(id: number) {
+        return this.httpService.deleteRequest(`/api/playlist/favourite/${id}`);
+    }
+
+    public setPlaylistStatus(id: number, isLiked: boolean) {
+        return this.httpService.patchRequest(`/api/playlist/${id}/like`, { isLiked });
+    }
 }

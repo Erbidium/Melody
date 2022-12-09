@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { BaseComponent } from '@core/base/base.component';
 import { IFavouritePlaylistWithPerformers } from '@core/models/IFavouritePlaylistWithPerformers';
@@ -12,6 +12,8 @@ export class HorizontalPlaylistsScrollComponent extends BaseComponent {
     @Input() userPlaylists: IFavouritePlaylistWithPerformers[] = [];
 
     @Input() heartButtonForLikes: boolean = false;
+
+    @Output() heartButtonClickEvent = new EventEmitter<{ id: number, event: MouseEvent }>();
 
     constructor(private router: Router) {
         super();

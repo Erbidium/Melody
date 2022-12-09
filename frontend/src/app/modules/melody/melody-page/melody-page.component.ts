@@ -3,7 +3,9 @@ import { Router } from '@angular/router';
 import { BaseComponent } from '@core/base/base.component';
 import { IFavouritePlaylistWithPerformers } from '@core/models/IFavouritePlaylistWithPerformers';
 import { PlaylistService } from '@core/services/playlist.service';
-import {forkJoin} from "rxjs";
+import { SpinnerService } from '@core/services/spinner.service';
+import { forkJoin } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
     selector: 'app-melody-page',
@@ -17,16 +19,17 @@ export class MelodyPageComponent extends BaseComponent implements OnInit {
 
     constructor(
         private playlistService: PlaylistService,
+        private spinnerService: SpinnerService,
         private router: Router,
     ) {
         super();
     }
 
     ngOnInit() {
-        const userPlaylists = this.playlistService.getPlaylistsCreatedByUser();
-        const favouritePlaylists = this.playlistService.getFavouritePlaylists();
-
-        forkJoin([userPlaylists, favouritePlaylists])
+        forkJoin([
+            this.playlistService.getPlaylistsCreatedByUser(),
+            this.playlistService.getFavouritePlaylists(),
+        ])
             .pipe(this.untilThis)
             .subscribe((results) => {
                 [this.userPlaylists, this.favouritePlaylists] = results;
@@ -35,5 +38,43 @@ export class MelodyPageComponent extends BaseComponent implements OnInit {
 
     createPlaylist() {
         this.router.navigateByUrl('playlist');
+    }
+
+    changePlaylistStatus(id: number, event: MouseEvent) {
+        event.stopPropagation();
+        this.spinnerService.show();
+        const playlist = this.userPlaylists.find(p => p.id === id);
+
+        if (playlist) {
+            this.playlistService.setPlaylistStatus(id, !playlist.isFavourite)
+                .pipe(
+                    switchMap(() => forkJoin([
+                        this.playlistService.getPlaylistsCreatedByUser(),
+                        this.playlistService.getFavouritePlaylists(),
+                    ])),
+                )
+                .pipe(this.untilThis)
+                .subscribe((results) => {
+                    [this.userPlaylists, this.favouritePlaylists] = results;
+                    this.spinnerService.hide();
+                });
+        }
+    }
+
+    deletePlaylistFromFavourites(id: number, event: MouseEvent) {
+        event.stopPropagation();
+        this.spinnerService.show();
+        this.playlistService.removePlaylistFromUserFavourites(id)
+            .pipe(
+                switchMap(() => forkJoin([
+                    this.playlistService.getPlaylistsCreatedByUser(),
+                    this.playlistService.getFavouritePlaylists(),
+                ])),
+            )
+            .pipe(this.untilThis)
+            .subscribe((results) => {
+                [this.userPlaylists, this.favouritePlaylists] = results;
+                this.spinnerService.hide();
+            });
     }
 }

@@ -8,6 +8,10 @@
 <h1>
     Створені плейлисти
 </h1>
-<app-horizontal-playlists-scroll [userPlaylists]="userPlaylists"></app-horizontal-playlists-scroll>
+<app-horizontal-playlists-scroll
+    [userPlaylists]="userPlaylists"
+    (heartButtonClickEvent)="changePlaylistStatus($event.id, $event.event)"
+    [heartButtonForLikes]="true"
+></app-horizontal-playlists-scroll>
 <mat-icon>favorite_border</mat-icon>
 <mat-icon>favorite</mat-icon>
