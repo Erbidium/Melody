@@ -55,10 +55,9 @@ namespace Melody.WebAPI.Controllers
 
             try
             {
-                var dbEntry = await _refreshTokenRepository.FindAsync(refreshTokenString);
-                if (dbEntry != null)
+                var tokens = await _tokenService.GetAccessTokenAndUpdatedRefreshToken(refreshTokenString);
+                if (tokens.accessToken is not null && tokens.refreshToken is not null)
                 {
-                    var tokens = await _tokenService.GetAccessTokenAndUpdatedRefreshToken(refreshTokenString);
                     Response.Cookies.Append("X-Refresh-Token", tokens.refreshToken,
                         new CookieOptions
                         {

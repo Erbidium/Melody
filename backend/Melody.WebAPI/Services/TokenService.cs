@@ -46,16 +46,15 @@ public class TokenService : ITokenService
 
     public async Task<(string accessToken, string refreshToken)> CreateAccessTokenAndRefreshToken(string email)
     {
-        var accessToken = await GenerateAccessToken(email);
         var refreshToken = await GenerateRefreshToken(email);
         var user = await _userManager.FindByEmailAsync(email);
+        var accessToken = await GenerateAccessToken(user);
         await _refreshTokenRepository.CreateOrUpdateAsync(refreshToken, user.Id);
         return (accessToken, refreshToken);
     }
 
-    public async Task<string> GenerateAccessToken(string email)
+    private async Task<string> GenerateAccessToken(UserIdentity user)
     {
-        var user = await _userManager.FindByEmailAsync(email);
         var roles = await _userManager.GetRolesAsync(user);
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -85,13 +84,18 @@ public class TokenService : ITokenService
         };
     }
 
-    public async Task<(string accessToken, string refreshToken)> GetAccessTokenAndUpdatedRefreshToken(string refreshTokenString)
+    public async Task<(string? accessToken, string? refreshToken)> GetAccessTokenAndUpdatedRefreshToken(string refreshTokenString)
     {
+        var dbEntry = await _refreshTokenRepository.FindAsync(refreshTokenString);
+        if (dbEntry == null)
+        {
+            return (null, null);
+        }
         var email = GetEmailFromRefreshToken(refreshTokenString);
         var user = await _userManager.FindByEmailAsync(email);
         var refreshToken = await GenerateRefreshToken(email);
         await _refreshTokenRepository.CreateOrUpdateAsync(refreshToken, user.Id);
-        var accessToken = await GenerateAccessToken(email);
+        var accessToken = await GenerateAccessToken(user);
         return (accessToken, refreshToken);
     }
 
