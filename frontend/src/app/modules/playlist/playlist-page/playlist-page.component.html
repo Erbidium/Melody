@@ -4,7 +4,9 @@
         <app-back-button></app-back-button>
         <h1>{{playlist.name}}</h1>
         <div class="actions">
-            <mat-icon>add</mat-icon>
+            <mat-icon (click)="changePlaylistStatus()">
+                {{playlist.isFavourite ? 'remove': 'add'}}
+            </mat-icon>
             <mat-icon (click)="copyPlaylistLink()">share</mat-icon>
             <mat-icon (click)="deletePlaylist()">delete_forever</mat-icon>
         </div>

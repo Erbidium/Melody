@@ -7,6 +7,6 @@ public class FavouritePlaylistDto
     public long Id { get; set; }
     public string Name { get; set; }
     public long AuthorId { get; set; }
-    public bool IsFavorite { get; set; }
+    public bool IsFavourite { get; set; }
     public List<SongInPlaylistDto> Songs { get; set; } = new();
 }

@@ -4,7 +4,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BaseComponent } from '@core/base/base.component';
 import { columnsToDisplayWithFavouriteColumn } from '@core/helpers/columns-to-display-helper';
-import { IPlaylist } from '@core/models/IPlaylist';
+import { IFavouritePlaylist } from '@core/models/IFavouritePlaylist';
 import { ISong } from '@core/models/ISong';
 import { IUser } from '@core/models/IUser';
 import { NotificationService } from '@core/services/notification.service';
@@ -21,7 +21,7 @@ import { switchMap } from 'rxjs/operators';
     styleUrls: ['./playlist-page.component.sass'],
 })
 export class PlaylistPageComponent extends BaseComponent implements OnInit {
-    public playlist?: IPlaylist;
+    public playlist?: IFavouritePlaylist;
 
     currentUser?: IUser;
 
@@ -173,6 +173,26 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
             } else {
                 this.changeSongStatus($event.id, $event.event);
             }
+        }
+    }
+
+    changePlaylistStatus() {
+        if (this.playlist && this.currentUser) {
+            this.spinnerService.show();
+
+            this.playlistService
+                .setPlaylistStatus(this.playlist.id, !this.playlist.isFavourite)
+                .pipe(
+                    switchMap(() => forkJoin([
+                        this.playlistService.getPlaylistById(this.playlist!.id),
+                        this.playlistService.getSongsToAddToPlaylist(this.playlist!.id),
+                    ])),
+                )
+                .pipe(this.untilThis)
+                .subscribe((results) => {
+                    [this.playlist, this.newSongsToAdd] = results;
+                    this.spinnerService.hide();
+                });
         }
     }
 }
