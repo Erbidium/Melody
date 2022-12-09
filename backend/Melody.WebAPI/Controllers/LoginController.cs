@@ -29,20 +29,18 @@ namespace Melody.WebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] UserLogin userLogin)
         {
-            var user = await Authenticate(userLogin);
+            var userIsAuthenticated = await Authenticate(userLogin);
 
-            if (user != null)
+            if (userIsAuthenticated)
             {
-                var accessToken = await _tokenService.GenerateAccessToken(user);
-                var refreshToken = _tokenService.GenerateRefreshToken(user);
-                await _refreshTokenRepository.CreateOrUpdateAsync(refreshToken, user.Id);
-                Response.Cookies.Append("X-Refresh-Token", refreshToken,
+                var tokens = await _tokenService.CreateAccessTokenAndRefreshToken(userLogin.Email);
+                Response.Cookies.Append("X-Refresh-Token", tokens.refreshToken,
                     new CookieOptions
                     {
                         HttpOnly = true, SameSite = SameSiteMode.None, Secure = true,
                         Expires = DateTimeOffset.Now.AddDays(60)
                     });
-                return Ok(new { accessToken });
+                return Ok(new { tokens.accessToken });
             }
 
             return NotFound("User not found");
@@ -86,7 +84,7 @@ namespace Melody.WebAPI.Controllers
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             var currentUser = _tokenService.GetCurrentUser(identity);
             var user = await _userManager.FindByIdAsync(currentUser.UserId.ToString());
-            var refreshToken = _tokenService.GenerateRefreshToken(user, true);
+            var refreshToken = await _tokenService.GenerateRefreshToken(user.Email, true);
             Response.Cookies.Append("X-Refresh-Token", refreshToken,
                 new CookieOptions
                 {
@@ -97,13 +95,12 @@ namespace Melody.WebAPI.Controllers
         }
 
 
-        private async Task<UserIdentity?> Authenticate(UserLogin userLogin)
+        private async Task<bool> Authenticate(UserLogin userLogin)
         {
             var currentUser = await _userManager.FindByEmailAsync(userLogin.Email);
 
-            return currentUser != null && await _userManager.CheckPasswordAsync(currentUser, userLogin.Password)
-                ? currentUser
-                : null;
+            return currentUser != null &&
+                   await _userManager.CheckPasswordAsync(currentUser, userLogin.Password);
         }
     }
 }

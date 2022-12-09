@@ -23,8 +23,9 @@ public class TokenService : ITokenService
         _refreshTokenRepository = refreshTokenRepository;
     }
 
-    public string GenerateRefreshToken(UserIdentity user, bool isExpired = false)
+    public async Task<string> GenerateRefreshToken(string email, bool isExpired = false)
     {
+        var user = await _userManager.FindByEmailAsync(email);
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
@@ -43,8 +44,18 @@ public class TokenService : ITokenService
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    public async Task<string> GenerateAccessToken(UserIdentity user)
+    public async Task<(string accessToken, string refreshToken)> CreateAccessTokenAndRefreshToken(string email)
     {
+        var accessToken = await GenerateAccessToken(email);
+        var refreshToken = await GenerateRefreshToken(email);
+        var user = await _userManager.FindByEmailAsync(email);
+        await _refreshTokenRepository.CreateOrUpdateAsync(refreshToken, user.Id);
+        return (accessToken, refreshToken);
+    }
+
+    public async Task<string> GenerateAccessToken(string email)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
         var roles = await _userManager.GetRolesAsync(user);
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -74,24 +85,23 @@ public class TokenService : ITokenService
         };
     }
 
-    public string? GetEmailFromRefreshToken(string refreshTokenString)
-    {
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var validationParameters = GetValidationParameters();
-        SecurityToken validatedToken;
-        var principal = tokenHandler.ValidateToken(refreshTokenString, validationParameters, out validatedToken);
-        return principal.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
-
-    }
-
     public async Task<(string accessToken, string refreshToken)> GetAccessTokenAndUpdatedRefreshToken(string refreshTokenString)
     {
         var email = GetEmailFromRefreshToken(refreshTokenString);
         var user = await _userManager.FindByEmailAsync(email);
-        var refreshToken = GenerateRefreshToken(user);
+        var refreshToken = await GenerateRefreshToken(email);
         await _refreshTokenRepository.CreateOrUpdateAsync(refreshToken, user.Id);
-        var accessToken = await GenerateAccessToken(user);
+        var accessToken = await GenerateAccessToken(email);
         return (accessToken, refreshToken);
+    }
+
+    private string? GetEmailFromRefreshToken(string refreshTokenString)
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var validationParameters = GetValidationParameters();
+        var principal = tokenHandler.ValidateToken(refreshTokenString, validationParameters, out _);
+        return principal.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
+
     }
 
     private TokenValidationParameters GetValidationParameters()
