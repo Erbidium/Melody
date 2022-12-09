@@ -15,9 +15,19 @@
             Створити новий
         </button>
     </div>
-    <app-horizontal-playlists-scroll [userPlaylists]="userPlaylists"></app-horizontal-playlists-scroll>
+    <div *ngIf="userPlaylists.length === 0; else userPlaylistsScroll">
+        Ти ще не створив жодного плейлисту
+    </div>
+    <ng-template #userPlaylistsScroll>
+        <app-horizontal-playlists-scroll [userPlaylists]="userPlaylists"></app-horizontal-playlists-scroll>
+    </ng-template>
     <h1>
         Твої улюблені плейлисти інших користувачів
     </h1>
-    <app-horizontal-playlists-scroll></app-horizontal-playlists-scroll>
+    <div *ngIf="favouritePlaylists.length === 0; else favouritePlaylistsScroll">
+        У тебе ще немає улюблених плейлистів
+    </div>
+    <ng-template #favouritePlaylistsScroll>
+        <app-horizontal-playlists-scroll [userPlaylists]="favouritePlaylists" [heartButtonForLikes]="true"></app-horizontal-playlists-scroll>
+    </ng-template>
 </div>
