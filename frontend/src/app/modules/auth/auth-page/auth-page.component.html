@@ -27,7 +27,7 @@
           </form>
         </mat-tab>
         <mat-tab label="Реєстрація">
-          <form [formGroup]="signUpForm" (ngSubmit)="onSignUp()">
+          <form [formGroup]="signUpForm">
             <div class="form-inputs">
               <mat-label>Юзернейм</mat-label>
               <mat-form-field appearance="outline">
@@ -54,7 +54,7 @@
               </mat-form-field>
             </div>
             <div class="form-buttons">
-              <button mat-flat-button color="primary" type="submit">Зареєструватися</button>
+              <button mat-flat-button color="primary" type="button" (click)="onSignUp()">Зареєструватися</button>
             </div>
           </form>
         </mat-tab>

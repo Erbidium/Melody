@@ -71,7 +71,6 @@ export class AuthPageComponent extends BaseComponent {
             this.authService.signUp(email, password, name, phone).subscribe({
                 next: () => {
                     this.signUpForm.reset();
-                    this.router.navigateByUrl('melody');
                 },
                 error: () => this.setCredentialsIncorrect(),
             });
