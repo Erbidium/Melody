@@ -13,7 +13,16 @@ public class PlaylistProfile : Profile
         CreateMap<FavouritePlaylist, FavouritePlaylistWithPerformersDto>()
             .ForMember(
                 destination => destination.PerformersNames, 
-                configurationExpression => configurationExpression.MapFrom(source => source.Songs.Select(s => s.AuthorName).ToList())
+                options => options.MapFrom(source => source.Songs.Select(s => s.AuthorName).ToList())
+            );
+        CreateMap<Playlist, FavouritePlaylistWithPerformersDto>()
+            .ForMember(
+                destination => destination.PerformersNames, 
+                options => options.MapFrom(source => source.Songs.Select(s => s.AuthorName).ToList())
+            )
+            .ForMember(
+                destination => destination.IsFavourite,
+                options => options.MapFrom(source => true)
             );
     }
 }

@@ -317,6 +317,39 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на SELECT p.Id,
+        ///       p.Name,
+        ///       p.AuthorId,
+        ///       p.IsDeleted,
+        ///       ps.Id,
+        ///       ps.UploadedAt,
+        ///       ps.Name,
+        ///       ps.AuthorName,
+        ///       ps.GenreId,
+        ///       ps.Duration,
+        ///       ps.IsDeleted,
+        ///       ps.IsFavourite
+        ///FROM Playlists p
+        ///LEFT JOIN
+        ///    (
+        ///        SELECT
+        ///            s.Id,
+        ///            s.UploadedAt,
+        ///            s.Name,
+        ///            s.AuthorName,
+        ///            s.GenreId,
+        ///            s.Duration,
+        ///            s.IsDeleted,
+        ///            ps.PlaylistId,
+        ///            CONVERT(BIT, IIF [остаток строки не уместился]&quot;;.
+        /// </summary>
+        internal static string GetFavouritePlaylists {
+            get {
+                return ResourceManager.GetString("GetFavouritePlaylists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на SELECT s.Id,
         ///       s.UserId,
         ///       UploadedAt,

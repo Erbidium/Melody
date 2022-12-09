@@ -75,8 +75,45 @@ public class PlaylistRepository : IPlaylistRepository
             {
                 Id = s.Id,
             }).ToList();
-            var playlist = new FavouritePlaylist(p.Name, p.AuthorId, p.IsFavourite) { Id = p.Id };
-            playlist.Songs = songs;
+            var playlist = new FavouritePlaylist(p.Name, p.AuthorId, p.IsFavourite)
+            {
+                Id = p.Id,
+                Songs = songs
+            };
+            return playlist;
+        }).ToList().AsReadOnly();
+    }
+
+    public async Task<IReadOnlyCollection<Playlist>> GetFavouritePlaylists(long userId)
+    {
+        using var connection = _context.CreateConnection();
+
+        var playlists = await connection.QueryAsync<PlaylistDb, FavouriteSongFromPlaylistDb, PlaylistDb>(
+            SqlScriptsResource.GetFavouritePlaylists,
+            (playlist, song) =>
+            {
+                if (song != null)
+                    playlist.Songs.Add(song);
+                return playlist;
+            },
+            new { UserId = userId });
+        var playlistsGrouped = playlists.GroupBy(p => p.Id).Select(g =>
+        {
+            var groupedPlaylistDb = g.First();
+            groupedPlaylistDb.Songs = g.Where(p => p.Songs.Count > 0).Select(p => p.Songs.Single()).ToList();
+            return groupedPlaylistDb;
+        });
+        return playlistsGrouped.Select(p =>
+        {
+            var songs = p.Songs.Select(s => new FavouriteSong(s.Name, s.AuthorName, s.GenreId, s.UploadedAt, s.Duration, s.IsFavourite)
+            {
+                Id = s.Id,
+            }).ToList();
+            var playlist = new Playlist(p.Name, p.AuthorId)
+            {
+                Id = p.Id,
+                Songs = songs
+            };
             return playlist;
         }).ToList().AsReadOnly();
     }

@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { BaseComponent } from '@core/base/base.component';
 import { IFavouritePlaylistWithPerformers } from '@core/models/IFavouritePlaylistWithPerformers';
 import { PlaylistService } from '@core/services/playlist.service';
+import {forkJoin} from "rxjs";
 
 @Component({
     selector: 'app-melody-page',
@@ -12,6 +13,8 @@ import { PlaylistService } from '@core/services/playlist.service';
 export class MelodyPageComponent extends BaseComponent implements OnInit {
     userPlaylists: IFavouritePlaylistWithPerformers[] = [];
 
+    favouritePlaylists: IFavouritePlaylistWithPerformers[] = [];
+
     constructor(
         private playlistService: PlaylistService,
         private router: Router,
@@ -19,12 +22,14 @@ export class MelodyPageComponent extends BaseComponent implements OnInit {
         super();
     }
 
-    ngOnInit(): void {
-        this.playlistService
-            .getPlaylistsCreatedByUser()
+    ngOnInit() {
+        const userPlaylists = this.playlistService.getPlaylistsCreatedByUser();
+        const favouritePlaylists = this.playlistService.getFavouritePlaylists();
+
+        forkJoin([userPlaylists, favouritePlaylists])
             .pipe(this.untilThis)
-            .subscribe((playlists) => {
-                this.userPlaylists = playlists;
+            .subscribe((results) => {
+                [this.userPlaylists, this.favouritePlaylists] = results;
             });
     }
 

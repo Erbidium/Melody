@@ -58,6 +58,15 @@ public class PlaylistController : ControllerBase
         return Ok(_mapper.Map<List<FavouritePlaylistWithPerformersDto>>(playlists));
     }
 
+    [HttpGet("favourite")]
+    public async Task<ActionResult<IEnumerable<FavouritePlaylistWithPerformersDto>>> GetFavouritePlaylists()
+    {
+        var identity = HttpContext.User.Identity as ClaimsIdentity;
+        var currentUserFromToken = _tokenService.GetCurrentUser(identity);
+        var playlists = await _playlistRepository.GetFavouritePlaylists(currentUserFromToken.UserId);
+        return Ok(_mapper.Map<List<FavouritePlaylistWithPerformersDto>>(playlists));
+    }
+
     [HttpGet("{id:long}")]
     public async Task<ActionResult<FavouritePlaylistDto>> GetPlaylist(long id)
     {

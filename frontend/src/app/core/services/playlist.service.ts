@@ -17,6 +17,10 @@ export class PlaylistService {
         return this.httpService.getRequest<IFavouritePlaylistWithPerformers[]>('/api/playlist/created');
     }
 
+    public getFavouritePlaylists() {
+        return this.httpService.getRequest<IFavouritePlaylistWithPerformers[]>('/api/playlist/favourite');
+    }
+
     public getPlaylistById(id: number) {
         return this.httpService.getRequest<IFavouritePlaylist>(`/api/playlist/${id}`);
     }
