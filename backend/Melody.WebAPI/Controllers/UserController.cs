@@ -31,10 +31,7 @@ public class UserController : ControllerBase
         {
             UserName = userRegister.UserName,
             Email = userRegister.Email,
-            PhoneNumber = userRegister.PhoneNumber,
-            IsBanned = false,
-            IsDeleted = false,
-            EmailConfirmed = false
+            PhoneNumber = userRegister.PhoneNumber
         };
 
         var result = await _userManager.CreateAsync(user, userRegister.Password);
