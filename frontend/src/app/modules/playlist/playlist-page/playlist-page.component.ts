@@ -71,9 +71,9 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
         });
     }
 
-    selectSong = (songId: number) => {
+    selectSong(songId: number) {
         this.currentSongIdForMusicPlayer = songId;
-    };
+    }
 
     copyPlaylistLink() {
         if (this.id) {
@@ -84,7 +84,7 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
         }
     }
 
-    deleteSongFromPlaylist = (id: number, event: MouseEvent) => {
+    deleteSongFromPlaylist(id: number, event: MouseEvent) {
         if (this.playlist) {
             event.stopPropagation();
             this.spinnerService.show();
@@ -106,9 +106,9 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
                     this.spinnerService.hide();
                 });
         }
-    };
+    }
 
-    changeSongStatus = (id: number, event: MouseEvent) => {
+    changeSongStatus(id: number, event: MouseEvent) {
         if (this.playlist && this.currentUser) {
             event.stopPropagation();
             this.spinnerService.show();
@@ -130,7 +130,7 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
                     });
             }
         }
-    };
+    }
 
     deletePlaylist() {
         if (this.playlist) {

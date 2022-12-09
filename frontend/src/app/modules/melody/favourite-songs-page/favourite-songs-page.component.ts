@@ -39,11 +39,11 @@ export class FavouriteSongsPageComponent extends BaseComponent implements OnInit
             });
     }
 
-    selectSong = (songId: number) => {
+    selectSong(songId: number) {
         this.currentSongIdForMusicPlayer = songId;
-    };
+    }
 
-    removeSongFromFavourites = (id: number, event: MouseEvent) => {
+    removeSongFromFavourites(id: number, event: MouseEvent) {
         event.stopPropagation();
         this.songService
             .removeSongFromUserFavourites(id)
