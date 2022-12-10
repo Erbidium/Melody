@@ -10,6 +10,7 @@ services:
             - grafana-storage:/var/lib/grafana
         environment:
             GF_SECURITY_ALLOW_EMBEDDING: true
+            GF_FEATURE_TOGGLES_ENABLE: publicDashboards
     sql_server:
         image: mcr.microsoft.com/mssql/server:2017-latest
         container_name: melody_sql_server
