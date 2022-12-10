@@ -1,0 +1,27 @@
+services:
+    grafana:
+        image: grafana/grafana-enterprise
+        ports:
+            - 3000:3000
+        networks:
+            - localnet
+        restart: unless-stopped
+        volumes:
+            - grafana-storage:/var/lib/grafana
+        environment:
+            GF_SECURITY_ALLOW_EMBEDDING: true
+    sql_server:
+        image: mcr.microsoft.com/mssql/server:2017-latest
+        container_name: melody_sql_server
+        ports:
+            - 1433:1433
+        networks:
+            - localnet
+        environment:
+            SA_PASSWORD: TestPassword!
+            ACCEPT_EULA: "Y"
+volumes:
+    grafana-storage:
+networks:
+    localnet:
+        driver: bridge
