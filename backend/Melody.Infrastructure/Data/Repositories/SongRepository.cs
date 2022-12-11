@@ -170,4 +170,12 @@ public class SongRepository : ISongRepository
             new { UserId = userId });
         return songs.ToList().AsReadOnly();
     }
+
+    public async Task SaveNewSongListening(long id, long userId)
+    {
+
+        using var connection = _context.CreateConnection();
+
+        await connection.ExecuteAsync(SqlScriptsResource.SaveNewSongListening, new { id, userId, Date = DateTime.Now });
+    }
 }

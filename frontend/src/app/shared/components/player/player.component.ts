@@ -4,6 +4,7 @@ import { BaseComponent } from '@core/base/base.component';
 import { StreamState } from '@core/interfaces/stream-state';
 import { IBaseSong } from '@core/models/IBaseSong';
 import { AudioService } from '@core/services/audio.service';
+import { SongService } from '@core/services/song.service';
 
 @Component({
     selector: 'app-player',
@@ -17,7 +18,10 @@ export class PlayerComponent extends BaseComponent {
 
     currentSongId?: number;
 
-    constructor(public audioService: AudioService) {
+    constructor(
+        public audioService: AudioService,
+        public songService: SongService,
+    ) {
         super();
         this.audioService
             .getState()
@@ -43,6 +47,10 @@ export class PlayerComponent extends BaseComponent {
     openFile(fileId: number) {
         this.currentSongId = fileId;
         this.audioService.stop();
+        this.songService
+            .saveNewListening(this.currentSongId)
+            .pipe(this.untilThis)
+            .subscribe();
         this.playStream(`https://localhost:7284/api/Song/file/${this.currentSongId}`);
     }
 

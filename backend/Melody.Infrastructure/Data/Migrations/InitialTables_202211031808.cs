@@ -7,6 +7,7 @@ public class InitialTables_202211031808 : Migration
 {
     public override void Down()
     {
+        Delete.Table("ListeningStatistics");
         Delete.Table("PlaylistSongs");
         Delete.Table("UserPlaylists");
         Delete.Table("Playlists");
@@ -88,5 +89,10 @@ public class InitialTables_202211031808 : Migration
             .WithColumn("SongId").AsInt64().NotNullable().ForeignKey("Songs", "Id");
 
         Create.PrimaryKey().OnTable("PlaylistSongs").Columns("PlaylistId", "SongId");
+
+        Create.Table("ListeningStatistics")
+            .WithColumn("SongId").AsInt64().NotNullable().ForeignKey("Songs", "Id")
+            .WithColumn("UserId").AsInt64().NotNullable().ForeignKey("Users", "Id")
+            .WithColumn("Date").AsDateTime().NotNullable();
     }
 }

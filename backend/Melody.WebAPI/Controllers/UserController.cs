@@ -1,5 +1,4 @@
 ﻿using Melody.Infrastructure.Auth.Models;
-using Melody.WebAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

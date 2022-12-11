@@ -698,6 +698,16 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на INSERT INTO ListeningStatistics (SongId, UserId, Date)
+        ///VALUES (@Id, @UserId, @Date).
+        /// </summary>
+        internal static string SaveNewSongListening {
+            get {
+                return ResourceManager.GetString("SaveNewSongListening", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на UPDATE UserRefreshTokens
         ///SET RefreshToken = @Token
         ///WHERE UserId = @Id;.

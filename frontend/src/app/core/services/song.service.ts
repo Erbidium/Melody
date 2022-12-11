@@ -39,4 +39,8 @@ export class SongService {
     public setSongStatus(id: number, isLiked: boolean) {
         return this.httpService.patchRequest(`/api/song/${id}/like`, { isLiked });
     }
+
+    public saveNewListening(id: number) {
+        return this.httpService.postRequest('/api/song/new-listening', { SongId: id });
+    }
 }

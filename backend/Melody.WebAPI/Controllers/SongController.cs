@@ -24,7 +24,6 @@ public class SongController : ControllerBase
     private readonly ISongRepository _songRepository;
     private readonly IGenreRepository _genreRepository;
     private readonly ITokenService _tokenService;
-    private readonly UserManager<UserIdentity> _userManager;
     private readonly IMapper _mapper;
     private readonly IValidator<NewSongDto> _newSongDtoValidator;
     private readonly IValidator<UpdateSongDto> _updateSongDtoValidator;
@@ -33,9 +32,8 @@ public class SongController : ControllerBase
     private const long userUploadsLimit = 1000000000;
 
     public SongController(ISongRepository songRepository, IGenreRepository genreRepository, IMapper mapper,
-        IValidator<NewSongDto> newSongDtoValidator,
-        IValidator<UpdateSongDto> updateSongDtoValidator, ITokenService tokenService,
-        UserManager<UserIdentity> userManager)
+        IValidator<NewSongDto> newSongDtoValidator, IValidator<UpdateSongDto> updateSongDtoValidator,
+        ITokenService tokenService)
     {
         _songRepository = songRepository;
         _genreRepository = genreRepository;
@@ -43,7 +41,6 @@ public class SongController : ControllerBase
         _newSongDtoValidator = newSongDtoValidator;
         _updateSongDtoValidator = updateSongDtoValidator;
         _tokenService = tokenService;
-        _userManager = userManager;
     }
     
     [Authorize]
@@ -88,6 +85,16 @@ public class SongController : ControllerBase
             contentType: "audio/mpeg",
             enableRangeProcessing: true
         );
+    }
+
+    [Authorize]
+    [HttpPost("new-listening")]
+    public async Task<IActionResult> SaveNewListening(NewListeningDto newListeningDto)
+    {
+        var identity = HttpContext.User.Identity as ClaimsIdentity;
+        var currentUserFromToken = _tokenService.GetCurrentUser(identity);
+        await _songRepository.SaveNewSongListening(newListeningDto.SongId, currentUserFromToken.UserId);
+        return Ok();
     }
 
     [Authorize]
