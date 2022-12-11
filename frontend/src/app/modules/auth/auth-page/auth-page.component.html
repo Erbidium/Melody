@@ -6,7 +6,7 @@
     <mat-card-content>
       <mat-tab-group>
         <mat-tab label="Логін">
-          <form [formGroup]="signInForm" (ngSubmit)="onSignIn()">
+          <form [formGroup]="signInForm">
             <div class="form-inputs">
               <mat-label>Email</mat-label>
               <mat-form-field appearance="outline">
@@ -22,7 +22,7 @@
               </mat-form-field>
             </div>
             <div class="form-buttons">
-              <button mat-flat-button color="primary" type="submit">Увійти</button>
+              <button mat-flat-button color="primary" type="button" (click)="onSignIn()">Увійти</button>
             </div>
           </form>
         </mat-tab>
