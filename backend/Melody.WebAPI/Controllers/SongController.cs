@@ -37,7 +37,7 @@ public class SongController : ControllerBase
         _tokenService = tokenService;
         _songService = songService;
     }
-    
+
     [Authorize]
     [HttpGet("favourite")]
     public async Task<ActionResult<IEnumerable<SongDto>>> GetFavouriteUserSongs()
@@ -53,7 +53,8 @@ public class SongController : ControllerBase
     {
         var identity = HttpContext.User.Identity as ClaimsIdentity;
         var currentUserFromToken = _tokenService.GetCurrentUser(identity);
-        return Ok(_mapper.Map<List<SongDto>>(await _songRepository.GetSongsUploadedByUserId(currentUserFromToken.UserId)));
+        return Ok(_mapper.Map<List<SongDto>>(
+            await _songRepository.GetSongsUploadedByUserId(currentUserFromToken.UserId)));
     }
 
     [Authorize]
@@ -62,23 +63,21 @@ public class SongController : ControllerBase
     {
         var identity = HttpContext.User.Identity as ClaimsIdentity;
         var currentUserFromToken = _tokenService.GetCurrentUser(identity);
-        return Ok(_mapper.Map<List<SongDto>>(await _songRepository.GetFavouriteAndUploadedUserSongs(currentUserFromToken.UserId)));
+        return Ok(_mapper.Map<List<SongDto>>(
+            await _songRepository.GetFavouriteAndUploadedUserSongs(currentUserFromToken.UserId)));
     }
 
     [HttpGet("file/{id:long}")]
     public async Task<FileStreamResult> GetSong(long id)
     {
         var song = await _songRepository.GetById(id);
-        if (song is null)
-        {
-            throw new KeyNotFoundException("Song is not found");
-        }
+        if (song is null) throw new KeyNotFoundException("Song is not found");
 
         var fileStream = System.IO.File.OpenRead(song.Path);
         return File(
-            fileStream: fileStream,
-            contentType: "audio/mpeg",
-            enableRangeProcessing: true
+            fileStream,
+            "audio/mpeg",
+            true
         );
     }
 
@@ -116,7 +115,8 @@ public class SongController : ControllerBase
 
         var result = await _songService.Upload(
             uploadedSoundFile.OpenReadStream(),
-            new NewSongData(currentUserFromToken.UserId, newSong.Name, newSong.AuthorName, newSong.Year, newSong.GenreId, extension));
+            new NewSongData(currentUserFromToken.UserId, newSong.Name, newSong.AuthorName, newSong.Year,
+                newSong.GenreId, extension));
         return result.Match<IActionResult>(
             song => Ok(_mapper.Map<SongDto>(song)),
             exception => BadRequest(exception.Message));
@@ -144,13 +144,9 @@ public class SongController : ControllerBase
         var identity = HttpContext.User.Identity as ClaimsIdentity;
         var currentUserFromToken = _tokenService.GetCurrentUser(identity);
         if (songStatusDto.IsLiked)
-        {
             await _songRepository.CreateFavouriteSong(id, currentUserFromToken.UserId);
-        }
         else
-        {
             await _songRepository.DeleteFavouriteSong(id, currentUserFromToken.UserId);
-        }
         return Ok();
     }
 

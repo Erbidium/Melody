@@ -73,10 +73,7 @@ public class PlaylistController : ControllerBase
         var identity = HttpContext.User.Identity as ClaimsIdentity;
         var currentUserFromToken = _tokenService.GetCurrentUser(identity);
         var playlist = await _playlistRepository.GetById(id, currentUserFromToken.UserId);
-        if (playlist is null)
-        {
-            throw new KeyNotFoundException("Playlist is not found");
-        }
+        if (playlist is null) throw new KeyNotFoundException("Playlist is not found");
 
         return Ok(_mapper.Map<FavouritePlaylistDto>(playlist));
     }
@@ -93,7 +90,8 @@ public class PlaylistController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        await _playlistRepository.Create(new CreatePlaylist(playlist.Name, currentUserFromToken.UserId, playlist.SongIds));
+        await _playlistRepository.Create(new CreatePlaylist(playlist.Name, currentUserFromToken.UserId,
+            playlist.SongIds));
         return Ok();
     }
 
@@ -104,13 +102,9 @@ public class PlaylistController : ControllerBase
         var identity = HttpContext.User.Identity as ClaimsIdentity;
         var currentUserFromToken = _tokenService.GetCurrentUser(identity);
         if (playlistStatusDto.IsLiked)
-        {
             await _playlistRepository.CreateFavouritePlaylist(id, currentUserFromToken.UserId);
-        }
         else
-        {
             await _playlistRepository.DeleteFavouritePlaylist(id, currentUserFromToken.UserId);
-        }
         return Ok();
     }
 
@@ -120,10 +114,7 @@ public class PlaylistController : ControllerBase
         var identity = HttpContext.User.Identity as ClaimsIdentity;
         var currentUserFromToken = _tokenService.GetCurrentUser(identity);
         var playlist = await _playlistRepository.GetById(id, currentUserFromToken.UserId);
-        if (playlist == null || playlist.AuthorId != currentUserFromToken.UserId)
-        {
-            return BadRequest();
-        }
+        if (playlist == null || playlist.AuthorId != currentUserFromToken.UserId) return BadRequest();
         await _playlistRepository.AddSongs(id, updatePlaylistDto.NewSongIds);
         return Ok();
     }
@@ -151,10 +142,7 @@ public class PlaylistController : ControllerBase
         var identity = HttpContext.User.Identity as ClaimsIdentity;
         var currentUserFromToken = _tokenService.GetCurrentUser(identity);
         var playlist = await _playlistRepository.GetById(id, currentUserFromToken.UserId);
-        if (playlist == null || playlist.AuthorId != currentUserFromToken.UserId)
-        {
-            return BadRequest();
-        }
+        if (playlist == null || playlist.AuthorId != currentUserFromToken.UserId) return BadRequest();
         await _playlistRepository.Delete(id);
         return NoContent();
     }

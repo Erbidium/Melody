@@ -14,6 +14,7 @@ public class FavouriteSong : EntityBase<long>
         Duration = duration;
         IsFavourite = isFavourite;
     }
+
     public string Name { get; }
     public string AuthorName { get; }
     public TimeSpan Duration { get; }

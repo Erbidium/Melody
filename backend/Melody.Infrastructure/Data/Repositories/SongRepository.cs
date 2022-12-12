@@ -114,9 +114,11 @@ public class SongRepository : ISongRepository
     {
         using var connection = _context.CreateConnection();
 
-        var songs = await connection.QueryAsync<SongDb>(SqlScriptsResource.GetSongsToAddToPlaylist, new { playlistId, userId });
+        var songs = await connection.QueryAsync<SongDb>(SqlScriptsResource.GetSongsToAddToPlaylist,
+            new { playlistId, userId });
         return songs.Select(songDb => new Song(songDb.UserId, songDb.Name, songDb.Path, songDb.AuthorName, songDb.Year,
-            songDb.GenreId, songDb.SizeBytes, songDb.UploadedAt, songDb.Duration) { Id = songDb.Id }).ToList().AsReadOnly();
+                songDb.GenreId, songDb.SizeBytes, songDb.UploadedAt, songDb.Duration) { Id = songDb.Id }).ToList()
+            .AsReadOnly();
     }
 
     public async Task<IReadOnlyCollection<Song>> GetFavouriteUserSongs(long userId)
@@ -141,14 +143,14 @@ public class SongRepository : ISongRepository
     public async Task CreateFavouriteSong(long id, long userId)
     {
         using var connection = _context.CreateConnection();
-        
+
         await connection.ExecuteAsync(SqlScriptsResource.CreateFavouriteSong, new { id, userId });
     }
 
     public async Task DeleteFavouriteSong(long id, long userId)
     {
         using var connection = _context.CreateConnection();
-        
+
         await connection.ExecuteAsync(SqlScriptsResource.DeleteFavouriteSong, new { id, userId });
     }
 
@@ -156,7 +158,8 @@ public class SongRepository : ISongRepository
     {
         using var connection = _context.CreateConnection();
 
-        var songs = await connection.QueryAsync<SongDb, GenreDb, Song>(SqlScriptsResource.GetFavouriteAndUploadedUserSongs,
+        var songs = await connection.QueryAsync<SongDb, GenreDb, Song>(
+            SqlScriptsResource.GetFavouriteAndUploadedUserSongs,
             (songDb, genreDb) =>
             {
                 var song = new Song(songDb.UserId, songDb.Name, songDb.Path, songDb.AuthorName, songDb.Year,
@@ -173,7 +176,6 @@ public class SongRepository : ISongRepository
 
     public async Task SaveNewSongListening(long id, long userId)
     {
-
         using var connection = _context.CreateConnection();
 
         await connection.ExecuteAsync(SqlScriptsResource.SaveNewSongListening, new { id, userId, Date = DateTime.Now });

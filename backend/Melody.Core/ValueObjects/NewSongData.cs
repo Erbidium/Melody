@@ -13,10 +13,7 @@ public class NewSongData : ValueObject
         AuthorName = authorName;
         Year = year;
         GenreId = genreId;
-        if (extension != SongConstants.SoundExtension)
-        {
-            throw new WrongExtensionException();
-        }
+        if (extension != SongConstants.SoundExtension) throw new WrongExtensionException();
         Extension = extension;
     }
 
@@ -26,6 +23,7 @@ public class NewSongData : ValueObject
     public int Year { get; }
     public long GenreId { get; }
     public string Extension { get; }
+
     protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return UserId;

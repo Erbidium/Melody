@@ -12,12 +12,12 @@ public class PlaylistProfile : Profile
         CreateMap<Playlist, PlaylistDto>();
         CreateMap<FavouritePlaylist, FavouritePlaylistWithPerformersDto>()
             .ForMember(
-                destination => destination.PerformersNames, 
+                destination => destination.PerformersNames,
                 options => options.MapFrom(source => source.Songs.Select(s => s.AuthorName).ToList())
             );
         CreateMap<Playlist, FavouritePlaylistWithPerformersDto>()
             .ForMember(
-                destination => destination.PerformersNames, 
+                destination => destination.PerformersNames,
                 options => options.MapFrom(source => source.Songs.Select(s => s.AuthorName).ToList())
             )
             .ForMember(

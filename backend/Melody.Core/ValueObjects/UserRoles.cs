@@ -9,14 +9,13 @@ public class UserRoles : ValueObject
         UserId = userId;
         Roles = roles.ToList().AsReadOnly();
     }
+
     public long UserId { get; }
     public IReadOnlyCollection<string> Roles { get; }
+
     protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return UserId;
-        foreach (var role in Roles.OrderBy(role => role))
-        {
-            yield return role;
-        }
+        foreach (var role in Roles.OrderBy(role => role)) yield return role;
     }
 }

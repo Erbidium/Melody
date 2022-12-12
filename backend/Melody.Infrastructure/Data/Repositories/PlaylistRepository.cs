@@ -31,12 +31,10 @@ public class PlaylistRepository : IPlaylistRepository
         using var connection = _context.CreateConnection();
         connection.Open();
         using var transaction = connection.BeginTransaction();
-        
+
         foreach (var songId in songIds)
-        {
             await connection.ExecuteAsync(SqlScriptsResource.InsertPlaylistSong,
                 new { PlaylistId = id, SongId = songId }, transaction);
-        }
 
         try
         {
@@ -55,15 +53,16 @@ public class PlaylistRepository : IPlaylistRepository
     {
         using var connection = _context.CreateConnection();
 
-        var playlists = await connection.QueryAsync<FavouritePlaylistDb, FavouriteSongFromPlaylistDb, FavouritePlaylistDb>(
-            SqlScriptsResource.GetPlaylistsCreatedByUserId,
-            (playlist, song) =>
-            {
-                if (song != null)
-                    playlist.Songs.Add(song);
-                return playlist;
-            },
-            new { UserId = userId });
+        var playlists =
+            await connection.QueryAsync<FavouritePlaylistDb, FavouriteSongFromPlaylistDb, FavouritePlaylistDb>(
+                SqlScriptsResource.GetPlaylistsCreatedByUserId,
+                (playlist, song) =>
+                {
+                    if (song != null)
+                        playlist.Songs.Add(song);
+                    return playlist;
+                },
+                new { UserId = userId });
         var playlistsGrouped = playlists.GroupBy(p => p.Id).Select(g =>
         {
             var groupedPlaylistDb = g.First();
@@ -72,10 +71,11 @@ public class PlaylistRepository : IPlaylistRepository
         });
         return playlistsGrouped.Select(p =>
         {
-            var songs = p.Songs.Select(s => new FavouriteSong(s.Name, s.AuthorName, s.GenreId, s.UploadedAt, s.Duration, s.IsFavourite)
-            {
-                Id = s.Id,
-            }).ToList();
+            var songs = p.Songs.Select(s =>
+                new FavouriteSong(s.Name, s.AuthorName, s.GenreId, s.UploadedAt, s.Duration, s.IsFavourite)
+                {
+                    Id = s.Id
+                }).ToList();
             var playlist = new FavouritePlaylist(p.Name, p.AuthorId, p.IsFavourite)
             {
                 Id = p.Id,
@@ -106,10 +106,11 @@ public class PlaylistRepository : IPlaylistRepository
         });
         return playlistsGrouped.Select(p =>
         {
-            var songs = p.Songs.Select(s => new FavouriteSong(s.Name, s.AuthorName, s.GenreId, s.UploadedAt, s.Duration, s.IsFavourite)
-            {
-                Id = s.Id,
-            }).ToList();
+            var songs = p.Songs.Select(s =>
+                new FavouriteSong(s.Name, s.AuthorName, s.GenreId, s.UploadedAt, s.Duration, s.IsFavourite)
+                {
+                    Id = s.Id
+                }).ToList();
             var playlist = new Playlist(p.Name, p.AuthorId)
             {
                 Id = p.Id,
@@ -124,16 +125,18 @@ public class PlaylistRepository : IPlaylistRepository
         using var connection = _context.CreateConnection();
 
         var records =
-            await connection.QueryAsync<FavouritePlaylistDb, FavouriteSongFromPlaylistDb, GenreDb, FavouritePlaylistDb>(SqlScriptsResource.GetPlaylistById, (playlist, song, genre) =>
-            {
-                if (song != null)
+            await connection.QueryAsync<FavouritePlaylistDb, FavouriteSongFromPlaylistDb, GenreDb, FavouritePlaylistDb>(
+                SqlScriptsResource.GetPlaylistById, (playlist, song, genre) =>
                 {
-                    song.Genre = genre;
-                    playlist.Songs.Add(song);
-                }
-                return playlist;
-            }, new { id, userId });
-       
+                    if (song != null)
+                    {
+                        song.Genre = genre;
+                        playlist.Songs.Add(song);
+                    }
+
+                    return playlist;
+                }, new { id, userId });
+
         var playlistWithSongs = records.GroupBy(p => p.Id).Select(g =>
         {
             var playlistWithSong = g.First();
@@ -141,19 +144,19 @@ public class PlaylistRepository : IPlaylistRepository
             return playlistWithSong;
         }).FirstOrDefault();
 
-        if(playlistWithSongs == null)
-        {
-            return null;
-        }
+        if (playlistWithSongs == null) return null;
 
-        var songs = playlistWithSongs.Songs.Select(s => new FavouriteSong(s.Name, s.AuthorName, s.GenreId, s.UploadedAt, s.Duration, s.IsFavourite)
+        var songs = playlistWithSongs.Songs.Select(s =>
+            new FavouriteSong(s.Name, s.AuthorName, s.GenreId, s.UploadedAt, s.Duration, s.IsFavourite)
             {
                 Id = s.Id,
-                Genre = new Genre(s.Genre.Name) {Id = s.Genre.Id }
+                Genre = new Genre(s.Genre.Name) { Id = s.Genre.Id }
             }).ToList();
-        var playlist = new FavouritePlaylist(playlistWithSongs.Name, playlistWithSongs.AuthorId, playlistWithSongs.IsFavourite) { Id = playlistWithSongs.Id, Songs = songs };
+        var playlist =
+            new FavouritePlaylist(playlistWithSongs.Name, playlistWithSongs.AuthorId, playlistWithSongs.IsFavourite)
+                { Id = playlistWithSongs.Id, Songs = songs };
 
-       return playlist;
+        return playlist;
     }
 
     public async Task<bool> Create(CreatePlaylist playlist)
@@ -169,10 +172,8 @@ public class PlaylistRepository : IPlaylistRepository
         var id = await connection.ExecuteScalarAsync<long>(SqlScriptsResource.CreatePlaylist, parameters, transaction);
 
         foreach (var songId in playlist.SongIds)
-        {
             await connection.ExecuteAsync(SqlScriptsResource.InsertPlaylistSong,
                 new { PlaylistId = id, SongId = songId }, transaction);
-        }
 
         try
         {
@@ -197,22 +198,21 @@ public class PlaylistRepository : IPlaylistRepository
     public async Task DeleteSong(long id, long songId)
     {
         using var connection = _context.CreateConnection();
-        
-        await connection.ExecuteAsync(SqlScriptsResource.DeletePlaylistSong, new { id, songId });
 
+        await connection.ExecuteAsync(SqlScriptsResource.DeletePlaylistSong, new { id, songId });
     }
 
     public async Task CreateFavouritePlaylist(long id, long userId)
     {
         using var connection = _context.CreateConnection();
-        
+
         await connection.ExecuteAsync(SqlScriptsResource.CreateFavouritePlaylist, new { id, userId });
     }
 
     public async Task DeleteFavouritePlaylist(long id, long userId)
     {
         using var connection = _context.CreateConnection();
-        
+
         await connection.ExecuteAsync(SqlScriptsResource.DeleteFavouritePlaylist, new { id, userId });
     }
 }

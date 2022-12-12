@@ -7,5 +7,6 @@ public class FavouritePlaylist : Playlist
     {
         IsFavourite = isFavourite;
     }
+
     public bool IsFavourite { get; }
 }

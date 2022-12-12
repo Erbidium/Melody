@@ -35,10 +35,7 @@ public class UserController : ControllerBase
 
         var result = await _userManager.CreateAsync(user, userRegister.Password);
 
-        if (!result.Succeeded)
-        {
-            return BadRequest(result.Errors);
-        }
+        if (!result.Succeeded) return BadRequest(result.Errors);
 
         await _userManager.AddToRoleAsync(user, "User");
         return StatusCode(201);
@@ -52,7 +49,7 @@ public class UserController : ControllerBase
         var userId = _tokenService.GetCurrentUser(identity).UserId;
         var userIdentity = await _userManager.FindByIdAsync(userId.ToString());
         var roles = await _userManager.GetRolesAsync(userIdentity);
-        return Ok(new UserDto(userIdentity){Roles = roles });
+        return Ok(new UserDto(userIdentity) { Roles = roles });
     }
 
     [AllowAnonymous]

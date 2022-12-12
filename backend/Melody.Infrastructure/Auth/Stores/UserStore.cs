@@ -20,7 +20,9 @@ public class UserStore : IUserStore<UserIdentity>, IUserRoleStore<UserIdentity>,
     }
 
     private long ConvertIdFromString(string userId)
-        => long.Parse(userId);
+    {
+        return long.Parse(userId);
+    }
 
     public async Task<IdentityResult> CreateAsync(UserIdentity user, CancellationToken cancellationToken = default)
     {
@@ -94,7 +96,7 @@ public class UserStore : IUserStore<UserIdentity>, IUserRoleStore<UserIdentity>,
         if (normalizedName == null) throw new ArgumentNullException(nameof(normalizedName));
 
         user.NormalizedUserName = normalizedName;
-        return Task.FromResult<object>(result: null);
+        return Task.FromResult<object>(null);
     }
 
     public Task SetUserNameAsync(UserIdentity user, string userName, CancellationToken cancellationToken)
@@ -104,7 +106,7 @@ public class UserStore : IUserStore<UserIdentity>, IUserRoleStore<UserIdentity>,
         if (userName == null) throw new ArgumentNullException(nameof(userName));
 
         user.UserName = userName;
-        return Task.FromResult<object>(result: null);
+        return Task.FromResult<object>(null);
     }
 
     public async Task<IdentityResult> UpdateAsync(UserIdentity user, CancellationToken cancellationToken)
@@ -138,7 +140,7 @@ public class UserStore : IUserStore<UserIdentity>, IUserRoleStore<UserIdentity>,
 
     public void Dispose()
     {
-        Dispose(disposing: true);
+        Dispose(true);
         GC.SuppressFinalize(this);
     }
 
@@ -147,15 +149,10 @@ public class UserStore : IUserStore<UserIdentity>, IUserRoleStore<UserIdentity>,
         cancellationToken.ThrowIfCancellationRequested();
         user.ThrowIfNull(nameof(user));
         if (string.IsNullOrEmpty(roleName))
-        {
             throw new ArgumentException($"Parameter {nameof(roleName)} cannot be null or empty.");
-        }
 
         var roleEntity = await FindRoleAsync(roleName, cancellationToken);
-        if (roleEntity == null)
-        {
-            throw new InvalidOperationException($"Role '{roleName}' was not found.");
-        }
+        if (roleEntity == null) throw new InvalidOperationException($"Role '{roleName}' was not found.");
 
         var userRoles = (await _userRepository.GetRolesAsync(user.Id))?.Select(x => new UserRole
         {
@@ -170,10 +167,7 @@ public class UserStore : IUserStore<UserIdentity>, IUserRoleStore<UserIdentity>,
     {
         cancellationToken.ThrowIfCancellationRequested();
         user.ThrowIfNull(nameof(user));
-        if (string.IsNullOrEmpty(roleName))
-        {
-            throw new ArgumentException(nameof(roleName));
-        }
+        if (string.IsNullOrEmpty(roleName)) throw new ArgumentException(nameof(roleName));
 
         var roleEntity = await FindRoleAsync(roleName, cancellationToken);
         if (roleEntity != null)
@@ -185,10 +179,7 @@ public class UserStore : IUserStore<UserIdentity>, IUserRoleStore<UserIdentity>,
             }).ToList() ?? new List<UserRole>();
             UserRoles = userRoles;
             var userRole = await FindUserRoleAsync(user.Id, roleEntity.Id, cancellationToken);
-            if (userRole != null)
-            {
-                UserRoles.Remove(userRole);
-            }
+            if (userRole != null) UserRoles.Remove(userRole);
         }
     }
 
@@ -204,10 +195,7 @@ public class UserStore : IUserStore<UserIdentity>, IUserRoleStore<UserIdentity>,
     {
         cancellationToken.ThrowIfCancellationRequested();
         user.ThrowIfNull(nameof(user));
-        if (string.IsNullOrEmpty(roleName))
-        {
-            throw new ArgumentException(null, nameof(roleName));
-        }
+        if (string.IsNullOrEmpty(roleName)) throw new ArgumentException(null, nameof(roleName));
 
         var role = await FindRoleAsync(roleName, cancellationToken);
         if (role != null)
@@ -222,17 +210,11 @@ public class UserStore : IUserStore<UserIdentity>, IUserRoleStore<UserIdentity>,
     public async Task<IList<UserIdentity>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        if (string.IsNullOrEmpty(roleName))
-        {
-            throw new ArgumentNullException(nameof(roleName));
-        }
+        if (string.IsNullOrEmpty(roleName)) throw new ArgumentNullException(nameof(roleName));
 
         var role = await FindRoleAsync(roleName, cancellationToken);
         var users = new List<UserIdentity>();
-        if (role != null)
-        {
-            users = (await _userRepository.GetUsersInRoleAsync(roleName)).ToList();
-        }
+        if (role != null) users = (await _userRepository.GetUsersInRoleAsync(roleName)).ToList();
 
         return users;
     }

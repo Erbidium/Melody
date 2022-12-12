@@ -1,2 +1,4 @@
-﻿DELETE From FavouriteSongs
-WHERE UserId = @UserId AND SongId = @Id
+﻿DELETE
+From FavouriteSongs
+WHERE UserId = @UserId
+  AND SongId = @Id

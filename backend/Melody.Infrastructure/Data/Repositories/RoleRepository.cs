@@ -20,7 +20,7 @@ public class RoleRepository : IRoleRepository
         var rowsInserted = await connection.ExecuteAsync(SqlScriptsResource.CreateRole, new
         {
             role.Name,
-            role.NormalizedName,
+            role.NormalizedName
         });
         return rowsInserted == 1;
     }

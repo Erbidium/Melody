@@ -12,6 +12,7 @@
        Genres.Id,
        Genres.Name
 FROM Songs
-    INNER JOIN Genres
-ON Songs.GenreId = Genres.Id
-WHERE IsDeleted = 0 AND UserId = @UserId
+         INNER JOIN Genres
+                    ON Songs.GenreId = Genres.Id
+WHERE IsDeleted = 0
+  AND UserId = @UserId

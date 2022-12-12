@@ -46,15 +46,15 @@ public class TokenService : ITokenService
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    public async Task<(string? accessToken, string? refreshToken)> CreateAccessTokenAndRefreshToken(string email, string password)
+    public async Task<(string? accessToken, string? refreshToken)> CreateAccessTokenAndRefreshToken(string email,
+        string password)
     {
         var currentUser = await _userManager.FindByEmailAsync(email);
 
         if (currentUser == null ||
             !await _userManager.CheckPasswordAsync(currentUser, password))
-        {
             return (null, null);
-        };
+        ;
         var refreshToken = await GenerateRefreshToken(email);
         var user = await _userManager.FindByEmailAsync(email);
         var accessToken = await GenerateAccessToken(user);
@@ -70,7 +70,7 @@ public class TokenService : ITokenService
 
         var claims = new List<Claim>
         {
-            new ("UserId", user.Id.ToString()),
+            new("UserId", user.Id.ToString())
         };
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)).ToArray());
 
@@ -91,13 +91,11 @@ public class TokenService : ITokenService
             userClaims.Where(o => o.Type == ClaimTypes.Role).Select(r => r.Value));
     }
 
-    public async Task<(string? accessToken, string? refreshToken)> GetAccessTokenAndUpdatedRefreshToken(string refreshTokenString)
+    public async Task<(string? accessToken, string? refreshToken)> GetAccessTokenAndUpdatedRefreshToken(
+        string refreshTokenString)
     {
         var dbEntry = await _refreshTokenRepository.FindAsync(refreshTokenString);
-        if (dbEntry == null)
-        {
-            return (null, null);
-        }
+        if (dbEntry == null) return (null, null);
         var email = GetEmailFromRefreshToken(refreshTokenString);
         var user = await _userManager.FindByEmailAsync(email);
         var refreshToken = await GenerateRefreshToken(email);
@@ -112,7 +110,6 @@ public class TokenService : ITokenService
         var validationParameters = GetValidationParameters();
         var principal = tokenHandler.ValidateToken(refreshTokenString, validationParameters, out _);
         return principal.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
-
     }
 
     private TokenValidationParameters GetValidationParameters()
