@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { BaseComponent } from '@core/base/base.component';
 import { IFavouritePlaylistWithPerformers } from '@core/models/IFavouritePlaylistWithPerformers';
 import { PlaylistService } from '@core/services/playlist.service';
-import { SpinnerService } from '@core/services/spinner.service';
+import { SpinnerOverlayService } from '@core/services/spinner-overlay.service';
 import { forkJoin } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
@@ -19,7 +19,7 @@ export class MelodyPageComponent extends BaseComponent implements OnInit {
 
     constructor(
         private playlistService: PlaylistService,
-        private spinnerService: SpinnerService,
+        private spinnerOverlayService: SpinnerOverlayService,
         private router: Router,
     ) {
         super();
@@ -42,7 +42,7 @@ export class MelodyPageComponent extends BaseComponent implements OnInit {
 
     changePlaylistStatus(id: number, event: MouseEvent) {
         event.stopPropagation();
-        this.spinnerService.show();
+        this.spinnerOverlayService.show();
         const playlist = this.userPlaylists.find(p => p.id === id);
 
         if (playlist) {
@@ -56,14 +56,14 @@ export class MelodyPageComponent extends BaseComponent implements OnInit {
                 .pipe(this.untilThis)
                 .subscribe((results) => {
                     [this.userPlaylists, this.favouritePlaylists] = results;
-                    this.spinnerService.hide();
+                    this.spinnerOverlayService.hide();
                 });
         }
     }
 
     deletePlaylistFromFavourites(id: number, event: MouseEvent) {
         event.stopPropagation();
-        this.spinnerService.show();
+        this.spinnerOverlayService.show();
         this.playlistService.removePlaylistFromUserFavourites(id)
             .pipe(
                 switchMap(() => forkJoin([
@@ -74,7 +74,7 @@ export class MelodyPageComponent extends BaseComponent implements OnInit {
             .pipe(this.untilThis)
             .subscribe((results) => {
                 [this.userPlaylists, this.favouritePlaylists] = results;
-                this.spinnerService.hide();
+                this.spinnerOverlayService.hide();
             });
     }
 }

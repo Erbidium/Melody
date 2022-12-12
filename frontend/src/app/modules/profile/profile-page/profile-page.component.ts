@@ -6,7 +6,7 @@ import { IUser } from '@core/models/IUser';
 import { AuthService } from '@core/services/auth.service';
 import { NotificationService } from '@core/services/notification.service';
 import { PlaylistService } from '@core/services/playlist.service';
-import { SpinnerService } from '@core/services/spinner.service';
+import { SpinnerOverlayService } from '@core/services/spinner-overlay.service';
 import { UserService } from '@core/services/user.service';
 import { forkJoin } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -24,7 +24,7 @@ export class ProfilePageComponent extends BaseComponent implements OnInit {
     constructor(
         private authService: AuthService,
         private userService: UserService,
-        private spinnerService: SpinnerService,
+        private spinnerOverlayService: SpinnerOverlayService,
         private playlistService: PlaylistService,
         private notificationService: NotificationService,
         private router: Router,
@@ -33,7 +33,7 @@ export class ProfilePageComponent extends BaseComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.spinnerService.show();
+        this.spinnerOverlayService.show();
         const user = this.userService.getCurrentUser();
         const playlists = this.playlistService.getPlaylistsCreatedByUser();
 
@@ -41,7 +41,7 @@ export class ProfilePageComponent extends BaseComponent implements OnInit {
             .pipe(this.untilThis)
             .subscribe((results) => {
                 [this.currentUser, this.userPlaylists] = results;
-                this.spinnerService.hide();
+                this.spinnerOverlayService.hide();
             });
     }
 
@@ -58,7 +58,7 @@ export class ProfilePageComponent extends BaseComponent implements OnInit {
 
     changePlaylistStatus(id: number, event: MouseEvent) {
         event.stopPropagation();
-        this.spinnerService.show();
+        this.spinnerOverlayService.show();
         const playlist = this.userPlaylists.find((p) => p.id === id);
 
         if (playlist) {
@@ -68,7 +68,7 @@ export class ProfilePageComponent extends BaseComponent implements OnInit {
                 .pipe(this.untilThis)
                 .subscribe((userPlaylists) => {
                     this.userPlaylists = userPlaylists;
-                    this.spinnerService.hide();
+                    this.spinnerOverlayService.hide();
                 });
         }
     }

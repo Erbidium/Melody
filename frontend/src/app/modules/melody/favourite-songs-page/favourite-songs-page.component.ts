@@ -3,7 +3,7 @@ import { BaseComponent } from '@core/base/base.component';
 import { columnsToDisplayWithFavouriteColumn } from '@core/helpers/columns-to-display-helper';
 import { ISong } from '@core/models/ISong';
 import { SongService } from '@core/services/song.service';
-import { SpinnerService } from '@core/services/spinner.service';
+import { SpinnerOverlayService } from '@core/services/spinner-overlay.service';
 import { switchMap } from 'rxjs/operators';
 
 @Component({
@@ -20,7 +20,7 @@ export class FavouriteSongsPageComponent extends BaseComponent implements OnInit
 
     constructor(
         private songService: SongService,
-        private spinnerService: SpinnerService,
+        private spinnerOverlayService: SpinnerOverlayService,
     ) {
         super();
     }
@@ -30,12 +30,12 @@ export class FavouriteSongsPageComponent extends BaseComponent implements OnInit
     }
 
     loadFavouriteUserSongs() {
-        this.spinnerService.show();
+        this.spinnerOverlayService.show();
         this.songService
             .getFavouriteUserSongs()
             .pipe(this.untilThis)
             .subscribe((resp) => {
-                this.spinnerService.hide();
+                this.spinnerOverlayService.hide();
                 this.favouriteSongs = resp;
             });
     }

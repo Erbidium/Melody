@@ -10,7 +10,7 @@ import { IUser } from '@core/models/IUser';
 import { NotificationService } from '@core/services/notification.service';
 import { PlaylistService } from '@core/services/playlist.service';
 import { SongService } from '@core/services/song.service';
-import { SpinnerService } from '@core/services/spinner.service';
+import { SpinnerOverlayService } from '@core/services/spinner-overlay.service';
 import { UserService } from '@core/services/user.service';
 import { forkJoin } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -45,7 +45,7 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
         private playlistService: PlaylistService,
         private songService: SongService,
         private userService: UserService,
-        private spinnerService: SpinnerService,
+        private spinnerService: SpinnerOverlayService,
         private notificationService: NotificationService,
         private clipboard: Clipboard,
         private router: Router,

@@ -11,7 +11,6 @@ import { MaterialModule } from '@shared/material/material.module';
 
 import { BackButtonComponent } from './components/back-button/back-button.component';
 import { HeaderComponent } from './components/header/header.component';
-import { LoadingSpinnerComponent } from './components/loading-spinner/loading-spinner.component';
 import { PlayerComponent } from './components/player/player.component';
 import { SongsTableComponent } from './components/songs-table/songs-table.component';
 import { HorizontalPlaylistsScrollComponent } from './components/vertical-playlists-scroll/horizontal-playlists-scroll.component';
@@ -24,7 +23,6 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
 
 @NgModule({
     declarations: [
-        LoadingSpinnerComponent,
         HeaderComponent,
         BackButtonComponent,
         DateAgoPipe,
@@ -38,7 +36,6 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
         SpinnerComponent,
     ],
     exports: [
-        LoadingSpinnerComponent,
         HeaderComponent,
         BackButtonComponent,
         DateAgoPipe,
