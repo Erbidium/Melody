@@ -19,6 +19,8 @@ import { HorizontalScrollDirective } from './directives/horizontal-scroll.direct
 import { DateAgoPipe } from './pipes/date-ago.pipe';
 import { TextListPipe } from './pipes/text-list.pipe';
 import { TimePipe } from './pipes/time.pipe';
+import { SpinnerOverlayComponent } from './components/spinner-overlay/spinner-overlay.component';
+import { SpinnerComponent } from './components/spinner/spinner.component';
 
 @NgModule({
     declarations: [
@@ -32,6 +34,8 @@ import { TimePipe } from './pipes/time.pipe';
         HorizontalPlaylistsScrollComponent,
         HorizontalScrollDirective,
         SongsTableComponent,
+        SpinnerOverlayComponent,
+        SpinnerComponent,
     ],
     exports: [
         LoadingSpinnerComponent,
@@ -56,5 +60,6 @@ import { TimePipe } from './pipes/time.pipe';
         MatSliderModule,
         MatTableModule,
     ],
+    entryComponents: [SpinnerOverlayComponent],
 })
 export class SharedModule { }
