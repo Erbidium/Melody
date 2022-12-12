@@ -1,15 +1,14 @@
+using System.Security.Claims;
 using AutoMapper;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Melody.Core.Entities;
-using Melody.WebAPI.DTO.Song;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using Melody.Core.Interfaces;
 using Melody.Core.ValueObjects;
 using Melody.WebAPI.DTO.Genre;
-using NAudio.Wave;
+using Melody.WebAPI.DTO.Song;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Melody.WebAPI.Controllers;
 
@@ -17,12 +16,12 @@ namespace Melody.WebAPI.Controllers;
 [Route("api/[controller]")]
 public class SongController : ControllerBase
 {
-    private readonly ISongRepository _songRepository;
     private readonly IGenreRepository _genreRepository;
-    private readonly ITokenService _tokenService;
-    private readonly ISongService _songService;
     private readonly IMapper _mapper;
     private readonly IValidator<NewSongDto> _newSongDtoValidator;
+    private readonly ISongRepository _songRepository;
+    private readonly ISongService _songService;
+    private readonly ITokenService _tokenService;
     private readonly IValidator<UpdateSongDto> _updateSongDtoValidator;
 
     public SongController(ISongRepository songRepository, IGenreRepository genreRepository, IMapper mapper,

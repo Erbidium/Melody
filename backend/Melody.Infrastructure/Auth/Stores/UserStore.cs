@@ -7,9 +7,8 @@ namespace Melody.Infrastructure.Auth.Stores;
 public class UserStore : IUserStore<UserIdentity>, IUserRoleStore<UserIdentity>, IUserEmailStore<UserIdentity>,
     IUserPasswordStore<UserIdentity>
 {
-    private readonly IUserRepository _userRepository;
     private readonly IRoleRepository _roleRepository;
-    private IList<UserRole> UserRoles { get; set; } = new List<UserRole>();
+    private readonly IUserRepository _userRepository;
 
     private bool disposedValue;
 
@@ -19,9 +18,154 @@ public class UserStore : IUserStore<UserIdentity>, IUserRoleStore<UserIdentity>,
         _roleRepository = roleRepository;
     }
 
-    private long ConvertIdFromString(string userId)
+    private IList<UserRole> UserRoles { get; set; } = new List<UserRole>();
+
+    public Task SetEmailAsync(UserIdentity user, string email, CancellationToken cancellationToken)
     {
-        return long.Parse(userId);
+        cancellationToken.ThrowIfCancellationRequested();
+        user.ThrowIfNull(nameof(user));
+        user.Email = email;
+        return Task.CompletedTask;
+    }
+
+    public Task<string> GetEmailAsync(UserIdentity user, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        user.ThrowIfNull(nameof(user));
+        return Task.FromResult(user.Email);
+    }
+
+    public Task<bool> GetEmailConfirmedAsync(UserIdentity user, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        user.ThrowIfNull(nameof(user));
+        return Task.FromResult(user.EmailConfirmed);
+    }
+
+    public Task SetEmailConfirmedAsync(UserIdentity user, bool confirmed, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        user.ThrowIfNull(nameof(user));
+        user.EmailConfirmed = confirmed;
+        return Task.CompletedTask;
+    }
+
+    public Task<UserIdentity> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        return _userRepository.FindByEmailAsync(normalizedEmail);
+    }
+
+    public Task<string> GetNormalizedEmailAsync(UserIdentity user, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        user.ThrowIfNull(nameof(user));
+        return Task.FromResult(user.NormalizedEmail);
+    }
+
+    public Task SetNormalizedEmailAsync(UserIdentity user, string normalizedEmail, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        user.ThrowIfNull(nameof(user));
+        user.NormalizedEmail = normalizedEmail;
+        return Task.CompletedTask;
+    }
+
+    public Task SetPasswordHashAsync(UserIdentity user, string passwordHash, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        user.ThrowIfNull(nameof(user));
+        user.PasswordHash = passwordHash;
+        return Task.CompletedTask;
+    }
+
+    public Task<string> GetPasswordHashAsync(UserIdentity user, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        user.ThrowIfNull(nameof(user));
+        return Task.FromResult(user.PasswordHash);
+    }
+
+    public Task<bool> HasPasswordAsync(UserIdentity user, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        user.ThrowIfNull(nameof(user));
+        return Task.FromResult(!string.IsNullOrWhiteSpace(user.PasswordHash));
+    }
+
+    public async Task AddToRoleAsync(UserIdentity user, string roleName, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        user.ThrowIfNull(nameof(user));
+        if (string.IsNullOrEmpty(roleName))
+            throw new ArgumentException($"Parameter {nameof(roleName)} cannot be null or empty.");
+
+        var roleEntity = await FindRoleAsync(roleName, cancellationToken);
+        if (roleEntity == null) throw new InvalidOperationException($"Role '{roleName}' was not found.");
+
+        var userRoles = (await _userRepository.GetRolesAsync(user.Id))?.Select(x => new UserRole
+        {
+            UserId = user.Id,
+            RoleId = x.Id
+        }).ToList() ?? new List<UserRole>();
+        UserRoles = userRoles;
+        UserRoles.Add(new UserRole { UserId = user.Id, RoleId = roleEntity.Id });
+    }
+
+    public async Task RemoveFromRoleAsync(UserIdentity user, string roleName, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        user.ThrowIfNull(nameof(user));
+        if (string.IsNullOrEmpty(roleName)) throw new ArgumentException(nameof(roleName));
+
+        var roleEntity = await FindRoleAsync(roleName, cancellationToken);
+        if (roleEntity != null)
+        {
+            var userRoles = (await _userRepository.GetRolesAsync(user.Id))?.Select(x => new UserRole
+            {
+                UserId = user.Id,
+                RoleId = x.Id
+            }).ToList() ?? new List<UserRole>();
+            UserRoles = userRoles;
+            var userRole = await FindUserRoleAsync(user.Id, roleEntity.Id, cancellationToken);
+            if (userRole != null) UserRoles.Remove(userRole);
+        }
+    }
+
+    public async Task<IList<string>> GetRolesAsync(UserIdentity user, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        user.ThrowIfNull(nameof(user));
+        var userRoles = await _userRepository.GetRolesAsync(user.Id);
+        return userRoles.Select(x => x.Name).ToList();
+    }
+
+    public async Task<bool> IsInRoleAsync(UserIdentity user, string roleName, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        user.ThrowIfNull(nameof(user));
+        if (string.IsNullOrEmpty(roleName)) throw new ArgumentException(null, nameof(roleName));
+
+        var role = await FindRoleAsync(roleName, cancellationToken);
+        if (role != null)
+        {
+            var userRole = await FindUserRoleAsync(user.Id, role.Id, cancellationToken);
+            return userRole != null;
+        }
+
+        return false;
+    }
+
+    public async Task<IList<UserIdentity>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        if (string.IsNullOrEmpty(roleName)) throw new ArgumentNullException(nameof(roleName));
+
+        var role = await FindRoleAsync(roleName, cancellationToken);
+        var users = new List<UserIdentity>();
+        if (role != null) users = (await _userRepository.GetUsersInRoleAsync(roleName)).ToList();
+
+        return users;
     }
 
     public async Task<IdentityResult> CreateAsync(UserIdentity user, CancellationToken cancellationToken = default)
@@ -123,6 +267,17 @@ public class UserStore : IUserStore<UserIdentity>, IUserRoleStore<UserIdentity>,
             });
     }
 
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    private long ConvertIdFromString(string userId)
+    {
+        return long.Parse(userId);
+    }
+
     protected virtual void Dispose(bool disposing)
     {
         if (!disposedValue)
@@ -138,87 +293,6 @@ public class UserStore : IUserStore<UserIdentity>, IUserRoleStore<UserIdentity>,
         }
     }
 
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    public async Task AddToRoleAsync(UserIdentity user, string roleName, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-        user.ThrowIfNull(nameof(user));
-        if (string.IsNullOrEmpty(roleName))
-            throw new ArgumentException($"Parameter {nameof(roleName)} cannot be null or empty.");
-
-        var roleEntity = await FindRoleAsync(roleName, cancellationToken);
-        if (roleEntity == null) throw new InvalidOperationException($"Role '{roleName}' was not found.");
-
-        var userRoles = (await _userRepository.GetRolesAsync(user.Id))?.Select(x => new UserRole
-        {
-            UserId = user.Id,
-            RoleId = x.Id
-        }).ToList() ?? new List<UserRole>();
-        UserRoles = userRoles;
-        UserRoles.Add(new UserRole { UserId = user.Id, RoleId = roleEntity.Id });
-    }
-
-    public async Task RemoveFromRoleAsync(UserIdentity user, string roleName, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-        user.ThrowIfNull(nameof(user));
-        if (string.IsNullOrEmpty(roleName)) throw new ArgumentException(nameof(roleName));
-
-        var roleEntity = await FindRoleAsync(roleName, cancellationToken);
-        if (roleEntity != null)
-        {
-            var userRoles = (await _userRepository.GetRolesAsync(user.Id))?.Select(x => new UserRole
-            {
-                UserId = user.Id,
-                RoleId = x.Id
-            }).ToList() ?? new List<UserRole>();
-            UserRoles = userRoles;
-            var userRole = await FindUserRoleAsync(user.Id, roleEntity.Id, cancellationToken);
-            if (userRole != null) UserRoles.Remove(userRole);
-        }
-    }
-
-    public async Task<IList<string>> GetRolesAsync(UserIdentity user, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-        user.ThrowIfNull(nameof(user));
-        var userRoles = await _userRepository.GetRolesAsync(user.Id);
-        return userRoles.Select(x => x.Name).ToList();
-    }
-
-    public async Task<bool> IsInRoleAsync(UserIdentity user, string roleName, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-        user.ThrowIfNull(nameof(user));
-        if (string.IsNullOrEmpty(roleName)) throw new ArgumentException(null, nameof(roleName));
-
-        var role = await FindRoleAsync(roleName, cancellationToken);
-        if (role != null)
-        {
-            var userRole = await FindUserRoleAsync(user.Id, role.Id, cancellationToken);
-            return userRole != null;
-        }
-
-        return false;
-    }
-
-    public async Task<IList<UserIdentity>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-        if (string.IsNullOrEmpty(roleName)) throw new ArgumentNullException(nameof(roleName));
-
-        var role = await FindRoleAsync(roleName, cancellationToken);
-        var users = new List<UserIdentity>();
-        if (role != null) users = (await _userRepository.GetUsersInRoleAsync(roleName)).ToList();
-
-        return users;
-    }
-
     protected Task<RoleIdentity> FindRoleAsync(string roleName, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
@@ -231,78 +305,5 @@ public class UserStore : IUserStore<UserIdentity>, IUserRoleStore<UserIdentity>,
         cancellationToken.ThrowIfCancellationRequested();
         var userRole = await _userRepository.FindUserRoleAsync(userId, roleId);
         return userRole;
-    }
-
-    public Task SetEmailAsync(UserIdentity user, string email, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-        user.ThrowIfNull(nameof(user));
-        user.Email = email;
-        return Task.CompletedTask;
-    }
-
-    public Task<string> GetEmailAsync(UserIdentity user, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-        user.ThrowIfNull(nameof(user));
-        return Task.FromResult(user.Email);
-    }
-
-    public Task<bool> GetEmailConfirmedAsync(UserIdentity user, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-        user.ThrowIfNull(nameof(user));
-        return Task.FromResult(user.EmailConfirmed);
-    }
-
-    public Task SetEmailConfirmedAsync(UserIdentity user, bool confirmed, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-        user.ThrowIfNull(nameof(user));
-        user.EmailConfirmed = confirmed;
-        return Task.CompletedTask;
-    }
-
-    public Task<UserIdentity> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-        return _userRepository.FindByEmailAsync(normalizedEmail);
-    }
-
-    public Task<string> GetNormalizedEmailAsync(UserIdentity user, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-        user.ThrowIfNull(nameof(user));
-        return Task.FromResult(user.NormalizedEmail);
-    }
-
-    public Task SetNormalizedEmailAsync(UserIdentity user, string normalizedEmail, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-        user.ThrowIfNull(nameof(user));
-        user.NormalizedEmail = normalizedEmail;
-        return Task.CompletedTask;
-    }
-
-    public Task SetPasswordHashAsync(UserIdentity user, string passwordHash, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-        user.ThrowIfNull(nameof(user));
-        user.PasswordHash = passwordHash;
-        return Task.CompletedTask;
-    }
-
-    public Task<string> GetPasswordHashAsync(UserIdentity user, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-        user.ThrowIfNull(nameof(user));
-        return Task.FromResult(user.PasswordHash);
-    }
-
-    public Task<bool> HasPasswordAsync(UserIdentity user, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-        user.ThrowIfNull(nameof(user));
-        return Task.FromResult(!string.IsNullOrWhiteSpace(user.PasswordHash));
     }
 }

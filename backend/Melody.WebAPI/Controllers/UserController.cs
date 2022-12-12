@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using Melody.Core.Interfaces;
 using Melody.Infrastructure.Data.DbEntites;
 using Melody.WebAPI.DTO.Auth.Models;
 using Melody.WebAPI.DTO.User;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Melody.WebAPI.Controllers;
 
@@ -13,8 +13,8 @@ namespace Melody.WebAPI.Controllers;
 [ApiController]
 public class UserController : ControllerBase
 {
-    private readonly UserManager<UserIdentity> _userManager;
     private readonly ITokenService _tokenService;
+    private readonly UserManager<UserIdentity> _userManager;
 
     public UserController(UserManager<UserIdentity> userManager, ITokenService tokenService)
     {

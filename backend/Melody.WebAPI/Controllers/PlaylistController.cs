@@ -2,7 +2,6 @@ using System.Security.Claims;
 using AutoMapper;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using Melody.Core.Entities;
 using Melody.Core.Interfaces;
 using Melody.Core.ValueObjects;
 using Melody.WebAPI.DTO.Playlist;
@@ -17,10 +16,10 @@ namespace Melody.WebAPI.Controllers;
 [Route("api/[controller]")]
 public class PlaylistController : ControllerBase
 {
-    private readonly IPlaylistRepository _playlistRepository;
-    private readonly ISongRepository _songRepository;
     private readonly IMapper _mapper;
     private readonly IValidator<NewPlaylistDto> _newPlaylistDtoValidator;
+    private readonly IPlaylistRepository _playlistRepository;
+    private readonly ISongRepository _songRepository;
     private readonly ITokenService _tokenService;
 
     public PlaylistController(IPlaylistRepository playlistRepository, ISongRepository songRepository, IMapper mapper,

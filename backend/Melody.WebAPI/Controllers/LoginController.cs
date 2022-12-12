@@ -1,11 +1,11 @@
-﻿using Melody.Infrastructure.Data.Interfaces;
+﻿using System.Security.Claims;
+using Melody.Core.Interfaces;
+using Melody.Infrastructure.Data.DbEntites;
+using Melody.Infrastructure.Data.Interfaces;
+using Melody.WebAPI.DTO.Auth.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using Melody.Core.Interfaces;
-using Melody.Infrastructure.Data.DbEntites;
-using Melody.WebAPI.DTO.Auth.Models;
 
 namespace Melody.WebAPI.Controllers;
 
@@ -13,9 +13,9 @@ namespace Melody.WebAPI.Controllers;
 [ApiController]
 public class LoginController : ControllerBase
 {
-    private readonly UserManager<UserIdentity> _userManager;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly ITokenService _tokenService;
+    private readonly UserManager<UserIdentity> _userManager;
 
     public LoginController(UserManager<UserIdentity> userManager,
         IRefreshTokenRepository refreshTokenRepository, ITokenService tokenService)

@@ -9,8 +9,8 @@ namespace Melody.Core.Services;
 
 public class SongService : ISongService
 {
-    private readonly ISongRepository _songRepository;
     private readonly ISongFileStorage _songFileStorage;
+    private readonly ISongRepository _songRepository;
 
     public SongService(ISongRepository songRepository, ISongFileStorage songFileStorage)
     {

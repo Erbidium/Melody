@@ -1,6 +1,12 @@
-﻿using FluentValidation;
+﻿using System.Reflection;
+using System.Text;
+using FluentValidation;
 using Melody.Core.Interfaces;
+using Melody.Core.Services;
+using Melody.Infrastructure;
+using Melody.Infrastructure.Auth.Services;
 using Melody.Infrastructure.Auth.Stores;
+using Melody.Infrastructure.Data.DbEntites;
 using Melody.Infrastructure.Data.Interfaces;
 using Melody.Infrastructure.Data.Repositories;
 using Melody.WebAPI.MappingProfiles;
@@ -8,12 +14,6 @@ using Melody.WebAPI.Validators.User;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using System.Reflection;
-using System.Text;
-using Melody.Core.Services;
-using Melody.Infrastructure;
-using Melody.Infrastructure.Auth.Services;
-using Melody.Infrastructure.Data.DbEntites;
 
 namespace Melody.WebAPI.Extensions;
 

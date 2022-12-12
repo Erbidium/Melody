@@ -14,8 +14,8 @@ namespace Melody.Infrastructure.Auth.Services;
 public class TokenService : ITokenService
 {
     private readonly IConfiguration _configuration;
-    private readonly UserManager<UserIdentity> _userManager;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
+    private readonly UserManager<UserIdentity> _userManager;
 
     public TokenService(IConfiguration configuration, UserManager<UserIdentity> userManager,
         IRefreshTokenRepository refreshTokenRepository)
@@ -62,27 +62,6 @@ public class TokenService : ITokenService
         return (accessToken, refreshToken);
     }
 
-    private async Task<string> GenerateAccessToken(UserIdentity user)
-    {
-        var roles = await _userManager.GetRolesAsync(user);
-        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-        var claims = new List<Claim>
-        {
-            new("UserId", user.Id.ToString())
-        };
-        claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)).ToArray());
-
-        var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
-            _configuration["Jwt:Audience"],
-            claims,
-            expires: DateTime.Now.AddMinutes(15),
-            signingCredentials: credentials);
-
-        return new JwtSecurityTokenHandler().WriteToken(token);
-    }
-
     public UserRoles GetCurrentUser(ClaimsIdentity identity)
     {
         var userClaims = identity.Claims;
@@ -102,6 +81,27 @@ public class TokenService : ITokenService
         await _refreshTokenRepository.CreateOrUpdateAsync(refreshToken, user.Id);
         var accessToken = await GenerateAccessToken(user);
         return (accessToken, refreshToken);
+    }
+
+    private async Task<string> GenerateAccessToken(UserIdentity user)
+    {
+        var roles = await _userManager.GetRolesAsync(user);
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+        var claims = new List<Claim>
+        {
+            new("UserId", user.Id.ToString())
+        };
+        claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)).ToArray());
+
+        var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
+            _configuration["Jwt:Audience"],
+            claims,
+            expires: DateTime.Now.AddMinutes(15),
+            signingCredentials: credentials);
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
     private string? GetEmailFromRefreshToken(string refreshTokenString)
