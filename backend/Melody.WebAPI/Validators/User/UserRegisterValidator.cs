@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using Melody.Infrastructure.Auth.Models;
+using Melody.WebAPI.DTO.Auth.Models;
 
 namespace Melody.WebAPI.Validators.User;
 
