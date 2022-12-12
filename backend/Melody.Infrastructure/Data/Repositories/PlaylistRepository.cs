@@ -3,6 +3,7 @@ using Melody.Core.Entities;
 using Melody.Core.Interfaces;
 using Melody.Infrastructure.Data.Context;
 using System.Data;
+using Melody.Core.ValueObjects;
 using Melody.Infrastructure.Data.DbEntites;
 
 namespace Melody.Infrastructure.Data.Repositories;

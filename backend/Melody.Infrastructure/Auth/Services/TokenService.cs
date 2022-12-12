@@ -1,6 +1,4 @@
-﻿using Melody.Infrastructure.Auth.Models;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Melody.Core.Interfaces;
@@ -8,8 +6,10 @@ using Melody.Core.ValueObjects;
 using Melody.Infrastructure.Data.DbEntites;
 using Melody.Infrastructure.Data.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 
-namespace Melody.WebAPI.Services;
+namespace Melody.Infrastructure.Auth.Services;
 
 public class TokenService : ITokenService
 {

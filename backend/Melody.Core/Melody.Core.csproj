@@ -7,8 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Folder Include="Exceptions" />
-        <Folder Include="ProjectAggregate\" />
         <Folder Include="Services\" />
     </ItemGroup>
 

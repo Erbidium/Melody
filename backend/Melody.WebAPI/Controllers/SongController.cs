@@ -1,17 +1,13 @@
 using AutoMapper;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using FluentValidation.Results;
 using Melody.Core.Entities;
-using Melody.Infrastructure.Data.Repositories;
 using Melody.WebAPI.DTO.Song;
-using Melody.WebAPI.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Melody.Core.Interfaces;
-using Melody.Infrastructure.Data.DbEntites;
+using Melody.Core.ValueObjects;
 using Melody.WebAPI.DTO.Genre;
 using NAudio.Wave;
 
@@ -24,16 +20,14 @@ public class SongController : ControllerBase
     private readonly ISongRepository _songRepository;
     private readonly IGenreRepository _genreRepository;
     private readonly ITokenService _tokenService;
+    private readonly ISongService _songService;
     private readonly IMapper _mapper;
     private readonly IValidator<NewSongDto> _newSongDtoValidator;
     private readonly IValidator<UpdateSongDto> _updateSongDtoValidator;
-    private const string soundExtension = ".mp3";
-    private const string folderName = "Sounds";
-    private const long userUploadsLimit = 1000000000;
 
     public SongController(ISongRepository songRepository, IGenreRepository genreRepository, IMapper mapper,
         IValidator<NewSongDto> newSongDtoValidator, IValidator<UpdateSongDto> updateSongDtoValidator,
-        ITokenService tokenService)
+        ITokenService tokenService, ISongService songService)
     {
         _songRepository = songRepository;
         _genreRepository = genreRepository;
@@ -41,6 +35,7 @@ public class SongController : ControllerBase
         _newSongDtoValidator = newSongDtoValidator;
         _updateSongDtoValidator = updateSongDtoValidator;
         _tokenService = tokenService;
+        _songService = songService;
     }
     
     [Authorize]
@@ -106,39 +101,25 @@ public class SongController : ControllerBase
 
     [Authorize]
     [HttpPost]
-    public async Task<ActionResult<SongDto>> CreateSong([FromForm] NewSongDto newSong, IFormFile uploadedSoundFile)
+    public async Task<IActionResult> CreateSong([FromForm] NewSongDto newSong, IFormFile uploadedSoundFile)
     {
-        var identity = HttpContext.User.Identity as ClaimsIdentity;
-        var currentUserFromToken = _tokenService.GetCurrentUser(identity);
-
-        var userUploadsSize = await _songRepository.GetTotalBytesSumUploadsByUser(currentUserFromToken.UserId);
-        if (userUploadsSize + uploadedSoundFile.Length > userUploadsLimit)
+        var validationResult = await _newSongDtoValidator.ValidateAsync(newSong);
+        if (!validationResult.IsValid)
         {
-            throw new Exception("You have reached your upload limit 1 Gb");
-        }
-
-        var extension = Path.GetExtension(uploadedSoundFile.FileName);
-        if (extension != soundExtension)
-        {
-            throw new Exception("Your sound file has wrong extension");
-        }
-
-        var path = await WriteFile(uploadedSoundFile);
-        var reader = new MediaFoundationReader(path);
-        var duration = reader.TotalTime;
-
-        // validate path
-        var result = await _newSongDtoValidator.ValidateAsync(newSong);
-        if (!result.IsValid)
-        {
-            result.AddToModelState(ModelState);
+            validationResult.AddToModelState(ModelState);
             return BadRequest(ModelState);
         }
 
-        var song = new Song(currentUserFromToken.UserId, newSong.Name, path, newSong.AuthorName, newSong.Year,
-            newSong.GenreId,
-            uploadedSoundFile.Length, DateTime.Now, duration);
-        return Ok(_mapper.Map<SongDto>(await _songRepository.Create(song)));
+        var identity = HttpContext.User.Identity as ClaimsIdentity;
+        var currentUserFromToken = _tokenService.GetCurrentUser(identity);
+        var extension = Path.GetExtension(uploadedSoundFile.FileName);
+
+        var result = await _songService.Upload(
+            uploadedSoundFile.OpenReadStream(),
+            new NewSongData(currentUserFromToken.UserId, newSong.Name, newSong.AuthorName, newSong.Year, newSong.GenreId, extension));
+        return result.Match<IActionResult>(
+            song => Ok(_mapper.Map<SongDto>(song)),
+            exception => BadRequest(exception.Message));
     }
 
     [Authorize]
@@ -189,32 +170,5 @@ public class SongController : ControllerBase
     {
         await _songRepository.Delete(id);
         return NoContent();
-    }
-
-    private static async Task<string> WriteFile(IFormFile uploadedSoundFile)
-    {
-        var currentDirectory = Directory.GetCurrentDirectory();
-        var pathToSave = Path.Combine(currentDirectory, folderName);
-        if (!Directory.Exists(pathToSave))
-        {
-            Directory.CreateDirectory(pathToSave);
-        }
-        var guidFileName = Guid.NewGuid() + soundExtension;
-        var guidSubFolders = string.Empty;
-        for (var i = 0; i < 6; i += 2)
-        {
-            var guidSubstr = guidFileName.Substring(i, 2);
-            guidSubFolders = Path.Combine(guidSubFolders, guidSubstr);
-            var currentPath = Path.Combine(pathToSave, guidSubFolders);
-            if (!Directory.Exists(currentPath))
-            {
-                Directory.CreateDirectory(currentPath);
-            }
-        }
-
-        var fullPath = Path.Combine(pathToSave, guidSubFolders, guidFileName);
-        await using var stream = new FileStream(fullPath, FileMode.Create);
-        await uploadedSoundFile.CopyToAsync(stream);
-        return Path.Combine(folderName, guidSubFolders, guidFileName);
     }
 }

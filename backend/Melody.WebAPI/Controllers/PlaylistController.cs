@@ -4,9 +4,9 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Melody.Core.Entities;
 using Melody.Core.Interfaces;
+using Melody.Core.ValueObjects;
 using Melody.WebAPI.DTO.Playlist;
 using Melody.WebAPI.DTO.Song;
-using Melody.WebAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -93,8 +93,7 @@ public class PlaylistController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        await _playlistRepository.Create(new CreatePlaylist
-            { Name = playlist.Name, SongIds = playlist.SongIds, AuthorId = currentUserFromToken.UserId });
+        await _playlistRepository.Create(new CreatePlaylist(playlist.Name, currentUserFromToken.UserId, playlist.SongIds));
         return Ok();
     }
 

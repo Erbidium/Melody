@@ -11,7 +11,6 @@ public class Playlist : EntityBase<long>
     }
 
     public List<FavouriteSong> Songs { get; set; } = new();
-
     public string Name { get; }
     public long AuthorId { get; }
 }

@@ -1,4 +1,5 @@
 ﻿using Melody.Core.Entities;
+using Melody.Core.ValueObjects;
 
 namespace Melody.Core.Interfaces;
 

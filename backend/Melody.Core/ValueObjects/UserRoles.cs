@@ -1,6 +1,8 @@
-﻿namespace Melody.Core.ValueObjects;
+﻿using Melody.SharedKernel;
 
-public class UserRoles
+namespace Melody.Core.ValueObjects;
+
+public class UserRoles : ValueObject
 {
     public UserRoles(long userId, IEnumerable<string> roles)
     {
@@ -9,4 +11,12 @@ public class UserRoles
     }
     public long UserId { get; }
     public IReadOnlyCollection<string> Roles { get; }
+    protected override IEnumerable<object> GetEqualityComponents()
+    {
+        yield return UserId;
+        foreach (var role in Roles.OrderBy(role => role))
+        {
+            yield return role;
+        }
+    }
 }
