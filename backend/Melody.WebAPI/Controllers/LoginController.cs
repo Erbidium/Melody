@@ -3,6 +3,7 @@ using Melody.Core.Interfaces;
 using Melody.Infrastructure.Data.DbEntites;
 using Melody.Infrastructure.Data.Interfaces;
 using Melody.WebAPI.DTO.Auth.Models;
+using Melody.WebAPI.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -73,9 +74,8 @@ public class LoginController : ControllerBase
     [HttpPost("/api/logout")]
     public async Task<IActionResult> Logout()
     {
-        var identity = HttpContext.User.Identity as ClaimsIdentity;
-        var currentUser = _tokenService.GetCurrentUser(identity);
-        var user = await _userManager.FindByIdAsync(currentUser.UserId.ToString());
+        var userId = HttpContext.User.GetId();
+        var user = await _userManager.FindByIdAsync(userId.ToString());
         var refreshToken = await _tokenService.GenerateRefreshToken(user.Email, true);
         Response.Cookies.Append("X-Refresh-Token", refreshToken,
             new CookieOptions

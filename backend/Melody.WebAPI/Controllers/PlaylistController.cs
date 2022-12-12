@@ -6,6 +6,7 @@ using Melody.Core.Interfaces;
 using Melody.Core.ValueObjects;
 using Melody.WebAPI.DTO.Playlist;
 using Melody.WebAPI.DTO.Song;
+using Melody.WebAPI.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -42,36 +43,32 @@ public class PlaylistController : ControllerBase
     [HttpGet("{id:long}/new-songs-to-add")]
     public async Task<ActionResult<IEnumerable<SongDto>>> GetSongsToAddToPlaylist(long id)
     {
-        var identity = HttpContext.User.Identity as ClaimsIdentity;
-        var currentUserFromToken = _tokenService.GetCurrentUser(identity);
-        var songs = await _songRepository.GetSongsForPlaylistToAdd(id, currentUserFromToken.UserId);
+        var userId = HttpContext.User.GetId();
+        var songs = await _songRepository.GetSongsForPlaylistToAdd(id, userId);
         return Ok(_mapper.Map<List<SongDto>>(songs));
     }
 
     [HttpGet("created")]
     public async Task<ActionResult<IEnumerable<FavouritePlaylistWithPerformersDto>>> GetPlaylistsCreatedByUser()
     {
-        var identity = HttpContext.User.Identity as ClaimsIdentity;
-        var currentUserFromToken = _tokenService.GetCurrentUser(identity);
-        var playlists = await _playlistRepository.GetPlaylistsCreatedByUser(currentUserFromToken.UserId);
+        var userId = HttpContext.User.GetId();
+        var playlists = await _playlistRepository.GetPlaylistsCreatedByUser(userId);
         return Ok(_mapper.Map<List<FavouritePlaylistWithPerformersDto>>(playlists));
     }
 
     [HttpGet("favourite")]
     public async Task<ActionResult<IEnumerable<FavouritePlaylistWithPerformersDto>>> GetFavouritePlaylists()
     {
-        var identity = HttpContext.User.Identity as ClaimsIdentity;
-        var currentUserFromToken = _tokenService.GetCurrentUser(identity);
-        var playlists = await _playlistRepository.GetFavouritePlaylists(currentUserFromToken.UserId);
+        var userId = HttpContext.User.GetId();
+        var playlists = await _playlistRepository.GetFavouritePlaylists(userId);
         return Ok(_mapper.Map<List<FavouritePlaylistWithPerformersDto>>(playlists));
     }
 
     [HttpGet("{id:long}")]
     public async Task<ActionResult<FavouritePlaylistDto>> GetPlaylist(long id)
     {
-        var identity = HttpContext.User.Identity as ClaimsIdentity;
-        var currentUserFromToken = _tokenService.GetCurrentUser(identity);
-        var playlist = await _playlistRepository.GetById(id, currentUserFromToken.UserId);
+        var userId = HttpContext.User.GetId();
+        var playlist = await _playlistRepository.GetById(id, userId);
         if (playlist is null) throw new KeyNotFoundException("Playlist is not found");
 
         return Ok(_mapper.Map<FavouritePlaylistDto>(playlist));
@@ -80,8 +77,7 @@ public class PlaylistController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreatePlaylist(NewPlaylistDto playlist)
     {
-        var identity = HttpContext.User.Identity as ClaimsIdentity;
-        var currentUserFromToken = _tokenService.GetCurrentUser(identity);
+        var userId = HttpContext.User.GetId();
         var result = await _newPlaylistDtoValidator.ValidateAsync(playlist);
         if (!result.IsValid)
         {
@@ -89,7 +85,7 @@ public class PlaylistController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        await _playlistRepository.Create(new CreatePlaylist(playlist.Name, currentUserFromToken.UserId,
+        await _playlistRepository.Create(new CreatePlaylist(playlist.Name, userId,
             playlist.SongIds));
         return Ok();
     }
@@ -98,22 +94,20 @@ public class PlaylistController : ControllerBase
     [HttpPatch("{id:long}/like")]
     public async Task<IActionResult> UpdatePlaylistStatus(PlaylistStatusDto playlistStatusDto, long id)
     {
-        var identity = HttpContext.User.Identity as ClaimsIdentity;
-        var currentUserFromToken = _tokenService.GetCurrentUser(identity);
+        var userId = HttpContext.User.GetId();
         if (playlistStatusDto.IsLiked)
-            await _playlistRepository.CreateFavouritePlaylist(id, currentUserFromToken.UserId);
+            await _playlistRepository.CreateFavouritePlaylist(id, userId);
         else
-            await _playlistRepository.DeleteFavouritePlaylist(id, currentUserFromToken.UserId);
+            await _playlistRepository.DeleteFavouritePlaylist(id, userId);
         return Ok();
     }
 
     [HttpPut("{id:long}")]
     public async Task<IActionResult> UpdatePlaylist([FromBody] UpdatePlaylistDto updatePlaylistDto, long id)
     {
-        var identity = HttpContext.User.Identity as ClaimsIdentity;
-        var currentUserFromToken = _tokenService.GetCurrentUser(identity);
-        var playlist = await _playlistRepository.GetById(id, currentUserFromToken.UserId);
-        if (playlist == null || playlist.AuthorId != currentUserFromToken.UserId) return BadRequest();
+        var userId = HttpContext.User.GetId();
+        var playlist = await _playlistRepository.GetById(id, userId);
+        if (playlist == null || playlist.AuthorId != userId) return BadRequest();
         await _playlistRepository.AddSongs(id, updatePlaylistDto.NewSongIds);
         return Ok();
     }
@@ -129,19 +123,17 @@ public class PlaylistController : ControllerBase
     [HttpDelete("favourite/{id:long}")]
     public async Task<IActionResult> DeleteFavouritePlaylist(long id)
     {
-        var identity = HttpContext.User.Identity as ClaimsIdentity;
-        var currentUserFromToken = _tokenService.GetCurrentUser(identity);
-        await _playlistRepository.DeleteFavouritePlaylist(id, currentUserFromToken.UserId);
+        var userId = HttpContext.User.GetId();
+        await _playlistRepository.DeleteFavouritePlaylist(id, userId);
         return Ok();
     }
 
     [HttpDelete("{id:long}")]
     public async Task<IActionResult> DeletePlaylist(long id)
     {
-        var identity = HttpContext.User.Identity as ClaimsIdentity;
-        var currentUserFromToken = _tokenService.GetCurrentUser(identity);
-        var playlist = await _playlistRepository.GetById(id, currentUserFromToken.UserId);
-        if (playlist == null || playlist.AuthorId != currentUserFromToken.UserId) return BadRequest();
+        var userId = HttpContext.User.GetId();
+        var playlist = await _playlistRepository.GetById(id, userId);
+        if (playlist == null || playlist.AuthorId != userId) return BadRequest();
         await _playlistRepository.Delete(id);
         return NoContent();
     }

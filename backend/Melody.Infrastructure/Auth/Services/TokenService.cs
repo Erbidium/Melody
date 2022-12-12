@@ -62,14 +62,6 @@ public class TokenService : ITokenService
         return (accessToken, refreshToken);
     }
 
-    public UserRoles GetCurrentUser(ClaimsIdentity identity)
-    {
-        var userClaims = identity.Claims;
-        return new UserRoles(
-            long.Parse(userClaims.FirstOrDefault(o => o.Type == "UserId")?.Value),
-            userClaims.Where(o => o.Type == ClaimTypes.Role).Select(r => r.Value));
-    }
-
     public async Task<(string? accessToken, string? refreshToken)> GetAccessTokenAndUpdatedRefreshToken(
         string refreshTokenString)
     {

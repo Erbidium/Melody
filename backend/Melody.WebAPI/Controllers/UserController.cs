@@ -3,6 +3,7 @@ using Melody.Core.Interfaces;
 using Melody.Infrastructure.Data.DbEntites;
 using Melody.WebAPI.DTO.Auth.Models;
 using Melody.WebAPI.DTO.User;
+using Melody.WebAPI.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -45,8 +46,7 @@ public class UserController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<UserDto>> GetCurrentUser()
     {
-        var identity = HttpContext.User.Identity as ClaimsIdentity;
-        var userId = _tokenService.GetCurrentUser(identity).UserId;
+        var userId = HttpContext.User.GetId();
         var userIdentity = await _userManager.FindByIdAsync(userId.ToString());
         var roles = await _userManager.GetRolesAsync(userIdentity);
         return Ok(new UserDto(userIdentity) { Roles = roles });
@@ -70,17 +70,17 @@ public class UserController : ControllerBase
     [Authorize(Roles = "Admin")]
     public IActionResult AdminsEndpoint()
     {
-        var identity = HttpContext.User.Identity as ClaimsIdentity;
-        var currentUser = _tokenService.GetCurrentUser(identity);
-        return Ok($"Hi {currentUser.UserId}, you are an {currentUser.Roles.FirstOrDefault()}");
+        var userId = HttpContext.User.GetId();
+        var roles = HttpContext.User.GetUserRoles();
+        return Ok($"Hi {userId}, you are an {roles.First()}");
     }
 
     [HttpGet("AdminsAndUsers")]
     [Authorize(Roles = "Admin,User")]
     public IActionResult AdminsAndUsersEndpoint()
     {
-        var identity = HttpContext.User.Identity as ClaimsIdentity;
-        var currentUser = _tokenService.GetCurrentUser(identity);
-        return Ok($"Hi {currentUser.UserId}, you are an {currentUser.Roles.FirstOrDefault()}");
+        var userId = HttpContext.User.GetId();
+        var roles = HttpContext.User.GetUserRoles();
+        return Ok($"Hi {userId}, you are an {roles.First()}");
     }
 }

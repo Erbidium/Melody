@@ -7,6 +7,7 @@ using Melody.Core.Interfaces;
 using Melody.Core.ValueObjects;
 using Melody.WebAPI.DTO.Genre;
 using Melody.WebAPI.DTO.Song;
+using Melody.WebAPI.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -41,29 +42,26 @@ public class SongController : ControllerBase
     [HttpGet("favourite")]
     public async Task<ActionResult<IEnumerable<SongDto>>> GetFavouriteUserSongs()
     {
-        var identity = HttpContext.User.Identity as ClaimsIdentity;
-        var currentUserFromToken = _tokenService.GetCurrentUser(identity);
-        return Ok(_mapper.Map<List<SongDto>>(await _songRepository.GetFavouriteUserSongs(currentUserFromToken.UserId)));
+        var userId = HttpContext.User.GetId();
+        return Ok(_mapper.Map<List<SongDto>>(await _songRepository.GetFavouriteUserSongs(userId)));
     }
 
     [Authorize]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<SongDto>>> GetSongsUploadedByUser()
     {
-        var identity = HttpContext.User.Identity as ClaimsIdentity;
-        var currentUserFromToken = _tokenService.GetCurrentUser(identity);
+        var userId = HttpContext.User.GetId();
         return Ok(_mapper.Map<List<SongDto>>(
-            await _songRepository.GetSongsUploadedByUserId(currentUserFromToken.UserId)));
+            await _songRepository.GetSongsUploadedByUserId(userId)));
     }
 
     [Authorize]
     [HttpGet("favourite-and-uploaded")]
     public async Task<ActionResult<IEnumerable<SongDto>>> GetFavoriteAndUploadedSongs()
     {
-        var identity = HttpContext.User.Identity as ClaimsIdentity;
-        var currentUserFromToken = _tokenService.GetCurrentUser(identity);
+        var userId = HttpContext.User.GetId();
         return Ok(_mapper.Map<List<SongDto>>(
-            await _songRepository.GetFavouriteAndUploadedUserSongs(currentUserFromToken.UserId)));
+            await _songRepository.GetFavouriteAndUploadedUserSongs(userId)));
     }
 
     [HttpGet("file/{id:long}")]
@@ -84,9 +82,8 @@ public class SongController : ControllerBase
     [HttpPost("new-listening")]
     public async Task<IActionResult> SaveNewListening(NewListeningDto newListeningDto)
     {
-        var identity = HttpContext.User.Identity as ClaimsIdentity;
-        var currentUserFromToken = _tokenService.GetCurrentUser(identity);
-        await _songRepository.SaveNewSongListening(newListeningDto.SongId, currentUserFromToken.UserId);
+        var userId = HttpContext.User.GetId();
+        await _songRepository.SaveNewSongListening(newListeningDto.SongId, userId);
         return Ok();
     }
 
@@ -108,13 +105,12 @@ public class SongController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        var identity = HttpContext.User.Identity as ClaimsIdentity;
-        var currentUserFromToken = _tokenService.GetCurrentUser(identity);
+        var userId = HttpContext.User.GetId();
         var extension = Path.GetExtension(uploadedSoundFile.FileName);
 
         var result = await _songService.Upload(
             uploadedSoundFile.OpenReadStream(),
-            new NewSongData(currentUserFromToken.UserId, newSong.Name, newSong.AuthorName, newSong.Year,
+            new NewSongData(userId, newSong.Name, newSong.AuthorName, newSong.Year,
                 newSong.GenreId, extension));
         return result.Match<IActionResult>(
             song => Ok(_mapper.Map<SongDto>(song)),
@@ -140,12 +136,11 @@ public class SongController : ControllerBase
     [HttpPatch("{id:long}/like")]
     public async Task<IActionResult> UpdateSongStatus(SongStatusDto songStatusDto, long id)
     {
-        var identity = HttpContext.User.Identity as ClaimsIdentity;
-        var currentUserFromToken = _tokenService.GetCurrentUser(identity);
+        var userId = HttpContext.User.GetId();
         if (songStatusDto.IsLiked)
-            await _songRepository.CreateFavouriteSong(id, currentUserFromToken.UserId);
+            await _songRepository.CreateFavouriteSong(id, userId);
         else
-            await _songRepository.DeleteFavouriteSong(id, currentUserFromToken.UserId);
+            await _songRepository.DeleteFavouriteSong(id, userId);
         return Ok();
     }
 
@@ -153,9 +148,8 @@ public class SongController : ControllerBase
     [HttpDelete("favourite/{id:long}")]
     public async Task<IActionResult> DeleteFavouriteSong(long id)
     {
-        var identity = HttpContext.User.Identity as ClaimsIdentity;
-        var currentUserFromToken = _tokenService.GetCurrentUser(identity);
-        await _songRepository.DeleteFavouriteSong(id, currentUserFromToken.UserId);
+        var userId = HttpContext.User.GetId();
+        await _songRepository.DeleteFavouriteSong(id, userId);
         return Ok();
     }
 
