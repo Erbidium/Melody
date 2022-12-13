@@ -22,19 +22,14 @@ public class SongController : ControllerBase
     private readonly IValidator<NewSongDto> _newSongDtoValidator;
     private readonly ISongRepository _songRepository;
     private readonly ISongService _songService;
-    private readonly ITokenService _tokenService;
-    private readonly IValidator<UpdateSongDto> _updateSongDtoValidator;
 
     public SongController(ISongRepository songRepository, IGenreRepository genreRepository, IMapper mapper,
-        IValidator<NewSongDto> newSongDtoValidator, IValidator<UpdateSongDto> updateSongDtoValidator,
-        ITokenService tokenService, ISongService songService)
+        IValidator<NewSongDto> newSongDtoValidator, ISongService songService)
     {
         _songRepository = songRepository;
         _genreRepository = genreRepository;
         _mapper = mapper;
         _newSongDtoValidator = newSongDtoValidator;
-        _updateSongDtoValidator = updateSongDtoValidator;
-        _tokenService = tokenService;
         _songService = songService;
     }
 
@@ -113,21 +108,6 @@ public class SongController : ControllerBase
             new NewSongData(userId, newSong.Name, newSong.AuthorName, newSong.Year,
                 newSong.GenreId, extension));
         return result.ToOk(song => _mapper.Map<SongDto>(song));
-    }
-
-    [Authorize]
-    [HttpPut]
-    public async Task<IActionResult> UpdateSong(UpdateSongDto song)
-    {
-        var result = await _updateSongDtoValidator.ValidateAsync(song);
-        if (!result.IsValid)
-        {
-            result.AddToModelState(ModelState);
-            return BadRequest(ModelState);
-        }
-
-        await _songRepository.Update(_mapper.Map<Song>(song));
-        return NoContent();
     }
 
     [Authorize]

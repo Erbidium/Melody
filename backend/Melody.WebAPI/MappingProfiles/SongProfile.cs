@@ -9,7 +9,6 @@ public class SongProfile : Profile
     public SongProfile()
     {
         CreateMap<NewSongDto, Song>();
-        CreateMap<UpdateSongDto, Song>();
         CreateMap<Song, SongDto>();
         CreateMap<FavouriteSong, SongInPlaylistDto>();
     }

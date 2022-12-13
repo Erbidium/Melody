@@ -14,13 +14,11 @@ namespace Melody.WebAPI.Controllers;
 [ApiController]
 public class UserController : ControllerBase
 {
-    private readonly ITokenService _tokenService;
     private readonly UserManager<UserIdentity> _userManager;
 
-    public UserController(UserManager<UserIdentity> userManager, ITokenService tokenService)
+    public UserController(UserManager<UserIdentity> userManager)
     {
         _userManager = userManager;
-        _tokenService = tokenService;
     }
 
     [AllowAnonymous]

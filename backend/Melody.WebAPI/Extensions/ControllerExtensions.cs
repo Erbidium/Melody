@@ -1,5 +1,4 @@
 ﻿using LanguageExt.Common;
-using Melody.WebAPI.DTO.Song;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Melody.WebAPI.Extensions;
