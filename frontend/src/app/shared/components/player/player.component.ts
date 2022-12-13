@@ -67,28 +67,26 @@ export class PlayerComponent extends BaseComponent {
     }
 
     next() {
-        const index = this.currentSongId ? this.files.findIndex((file) => file.id === this.currentSongId) + 1 : 0;
+        let index = this.currentSongId ? this.files.findIndex((file) => file.id === this.currentSongId) + 1 : 0;
+
+        if (index > this.files.length - 1) {
+            index = 0;
+        }
+
         const file = this.files[index];
 
         this.openFile(file.id);
     }
 
     previous() {
-        const index = this.currentSongId ? this.files.findIndex((file) => file.id === this.currentSongId) - 1 : 0;
+        let index = this.currentSongId ? this.files.findIndex((file) => file.id === this.currentSongId) - 1 : 0;
+
+        if (index < 0) {
+            index = 0;
+        }
         const file = this.files[index];
 
         this.openFile(file.id);
-    }
-
-    isFirstPlaying(): boolean {
-        return this.currentSongId !== undefined && this.files.findIndex((file) => file.id === this.currentSongId) === 0;
-    }
-
-    isLastPlaying(): boolean {
-        return (
-            this.currentSongId !== undefined &&
-            this.files.findIndex((file) => file.id === this.currentSongId) === this.files.length - 1
-        );
     }
 
     onSliderChangeEnd(change: MatSliderChange) {

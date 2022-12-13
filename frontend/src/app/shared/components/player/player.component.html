@@ -7,7 +7,7 @@
                 {{ state?.readableDuration }}
             </mat-toolbar-row>
             <mat-toolbar-row class="media-action-bar">
-                <button mat-button [disabled]="isFirstPlaying() || this.currentSongId === undefined" (click)="previous()">
+                <button mat-button [disabled]="this.currentSongId === undefined" (click)="previous()">
                     <mat-icon mat-list-icon>skip_previous</mat-icon>
                 </button>
                 <button mat-button (click)="play()" [disabled]="state?.error || this.currentSongId === undefined" *ngIf="!state?.playing">
@@ -16,7 +16,7 @@
                 <button mat-button (click)="pause()" *ngIf="state?.playing">
                     <mat-icon mat-list-icon>pause</mat-icon>
                 </button>
-                <button  mat-button [disabled]="isLastPlaying() || this.currentSongId === undefined" (click)="next()">
+                <button  mat-button [disabled]="this.currentSongId === undefined" (click)="next()">
                     <mat-icon mat-list-icon>skip_next</mat-icon>
                 </button>
             </mat-toolbar-row>
