@@ -1,4 +1,5 @@
-﻿using Melody.Core.Constants;
+﻿using Ardalis.GuardClauses;
+using Melody.Core.Constants;
 using Melody.Core.Exceptions;
 using Melody.SharedKernel;
 
@@ -8,13 +9,14 @@ public class NewSongData : ValueObject
 {
     public NewSongData(long userId, string name, string authorName, int year, long genreId, string extension)
     {
-        UserId = userId;
-        Name = name;
-        AuthorName = authorName;
-        Year = year;
-        GenreId = genreId;
         if (extension != SongConstants.SoundExtension) throw new WrongExtensionException();
-        Extension = extension;
+
+        UserId = Guard.Against.Negative(userId, nameof(UserId));
+        Name = Guard.Against.NullOrWhiteSpace(name, nameof(Name));
+        AuthorName = Guard.Against.NullOrWhiteSpace(authorName, nameof(AuthorName));
+        Year = Guard.Against.Negative(year, nameof(Year));
+        GenreId = Guard.Against.Negative(genreId, nameof(GenreId));
+        Extension = Guard.Against.NullOrWhiteSpace(extension, nameof(extension));
     }
 
     public long UserId { get; }

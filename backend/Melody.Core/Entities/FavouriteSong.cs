@@ -1,4 +1,5 @@
-﻿using Melody.SharedKernel.Interfaces;
+﻿using Ardalis.GuardClauses;
+using Melody.SharedKernel.Interfaces;
 
 namespace Melody.Core.Entities;
 
@@ -7,11 +8,11 @@ public class FavouriteSong : EntityBase<long>
     public FavouriteSong(string name, string authorName, long genreId,
         DateTime uploadedAt, TimeSpan duration, bool isFavourite)
     {
-        Name = name;
-        AuthorName = authorName;
-        GenreId = genreId;
-        UploadedAt = uploadedAt;
-        Duration = duration;
+        Name = Guard.Against.NullOrWhiteSpace(name, nameof(Name));
+        AuthorName = Guard.Against.NullOrWhiteSpace(authorName, nameof(AuthorName));
+        GenreId = Guard.Against.Negative(genreId, nameof(GenreId));
+        UploadedAt = Guard.Against.Default(uploadedAt, nameof(UploadedAt));
+        Duration = Guard.Against.NegativeOrZero(duration, nameof(Duration));
         IsFavourite = isFavourite;
     }
 

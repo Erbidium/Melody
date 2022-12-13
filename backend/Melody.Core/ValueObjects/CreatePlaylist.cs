@@ -1,4 +1,5 @@
-﻿using Melody.SharedKernel;
+﻿using Ardalis.GuardClauses;
+using Melody.SharedKernel;
 
 namespace Melody.Core.ValueObjects;
 
@@ -6,8 +7,12 @@ public class CreatePlaylist : ValueObject
 {
     public CreatePlaylist(string name, long authorId, long[] songIds)
     {
-        Name = name;
-        AuthorId = authorId;
+        foreach (var songId in songIds)
+        {
+            Guard.Against.Negative(songId);
+        }
+        Name = Guard.Against.NullOrWhiteSpace(name, nameof(Name));
+        AuthorId = Guard.Against.Negative(authorId, nameof(AuthorId));
         SongIds = songIds;
     }
 
