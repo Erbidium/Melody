@@ -112,9 +112,7 @@ public class SongController : ControllerBase
             uploadedSoundFile.OpenReadStream(),
             new NewSongData(userId, newSong.Name, newSong.AuthorName, newSong.Year,
                 newSong.GenreId, extension));
-        return result.Match<IActionResult>(
-            song => Ok(_mapper.Map<SongDto>(song)),
-            exception => BadRequest(exception.Message));
+        return result.ToOk(song => _mapper.Map<SongDto>(song));
     }
 
     [Authorize]
