@@ -66,6 +66,19 @@ export class PlayerComponent extends BaseComponent {
         this.audioService.stop();
     }
 
+    getSongName() {
+        if (!this.currentSongId) {
+            return '';
+        }
+        const index = this.files.findIndex((file) => file.id === this.currentSongId);
+
+        if (index < 0) {
+            return '';
+        }
+
+        return this.files[index].name;
+    }
+
     next() {
         let index = this.currentSongId ? this.files.findIndex((file) => file.id === this.currentSongId) + 1 : 0;
 

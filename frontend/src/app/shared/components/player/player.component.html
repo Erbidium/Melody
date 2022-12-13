@@ -7,18 +7,24 @@
                 {{ state?.readableDuration }}
             </mat-toolbar-row>
             <mat-toolbar-row class="media-action-bar">
-                <button mat-button [disabled]="this.currentSongId === undefined" (click)="previous()">
-                    <mat-icon mat-list-icon>skip_previous</mat-icon>
-                </button>
-                <button mat-button (click)="play()" [disabled]="state?.error || this.currentSongId === undefined" *ngIf="!state?.playing">
-                    <mat-icon mat-list-icon>play_circle_filled</mat-icon>
-                </button>
-                <button mat-button (click)="pause()" *ngIf="state?.playing">
-                    <mat-icon mat-list-icon>pause</mat-icon>
-                </button>
-                <button  mat-button [disabled]="this.currentSongId === undefined" (click)="next()">
-                    <mat-icon mat-list-icon>skip_next</mat-icon>
-                </button>
+                <div class="right">
+                    {{ getSongName() }}
+                </div>
+                <div class="buttons-wrapper">
+                    <button mat-button [disabled]="this.currentSongId === undefined" (click)="previous()">
+                        <mat-icon mat-list-icon>skip_previous</mat-icon>
+                    </button>
+                    <button mat-button (click)="play()" [disabled]="state?.error || this.currentSongId === undefined" *ngIf="!state?.playing">
+                        <mat-icon mat-list-icon>play_circle_filled</mat-icon>
+                    </button>
+                    <button mat-button (click)="pause()" *ngIf="state?.playing">
+                        <mat-icon mat-list-icon>pause</mat-icon>
+                    </button>
+                    <button  mat-button [disabled]="this.currentSongId === undefined" (click)="next()">
+                        <mat-icon mat-list-icon>skip_next</mat-icon>
+                    </button>
+                </div>
+                <div class="right"></div>
             </mat-toolbar-row>
         </mat-toolbar>
     </div>
