@@ -20,17 +20,14 @@ public class PlaylistController : ControllerBase
     private readonly IValidator<NewPlaylistDto> _newPlaylistDtoValidator;
     private readonly IPlaylistRepository _playlistRepository;
     private readonly ISongRepository _songRepository;
-    private readonly ITokenService _tokenService;
 
     public PlaylistController(IPlaylistRepository playlistRepository, ISongRepository songRepository, IMapper mapper,
-        IValidator<NewPlaylistDto> newPlaylistDtoValidator,
-        ITokenService tokenService)
+        IValidator<NewPlaylistDto> newPlaylistDtoValidator)
     {
         _playlistRepository = playlistRepository;
         _songRepository = songRepository;
         _mapper = mapper;
         _newPlaylistDtoValidator = newPlaylistDtoValidator;
-        _tokenService = tokenService;
     }
 
     [HttpGet]
