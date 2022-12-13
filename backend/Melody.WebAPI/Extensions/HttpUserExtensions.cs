@@ -2,18 +2,16 @@
 
 namespace Melody.WebAPI.Extensions;
 
-public static class HttpUserExtensions {
+public static class HttpUserExtensions
+{
     public static long GetId(this ClaimsPrincipal user)
     {
         var stringId = user.Claims
             .FirstOrDefault(claim => claim.Type == "UserId")?
             .Value;
 
-        if (stringId is null)
-        {
-            throw new KeyNotFoundException("UserId not found in user's claims");
-        }
-        
+        if (stringId is null) throw new KeyNotFoundException("UserId not found in user's claims");
+
         return long.Parse(stringId);
     }
 
@@ -25,10 +23,7 @@ public static class HttpUserExtensions {
             .ToList()
             .AsReadOnly();
 
-        if (roles.Count == 0)
-        {
-            throw new KeyNotFoundException("Roles are not found in user's claims");
-        }
+        if (roles.Count == 0) throw new KeyNotFoundException("Roles are not found in user's claims");
 
         return roles;
     }

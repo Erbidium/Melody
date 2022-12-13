@@ -1,6 +1,4 @@
-﻿using System.Security.Claims;
-using Melody.Core.Interfaces;
-using Melody.Infrastructure.Data.DbEntites;
+﻿using Melody.Infrastructure.Data.DbEntites;
 using Melody.WebAPI.DTO.Auth.Models;
 using Melody.WebAPI.DTO.User;
 using Melody.WebAPI.Extensions;

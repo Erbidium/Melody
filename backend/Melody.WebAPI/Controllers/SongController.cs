@@ -1,8 +1,6 @@
-using System.Security.Claims;
 using AutoMapper;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using Melody.Core.Entities;
 using Melody.Core.Interfaces;
 using Melody.Core.ValueObjects;
 using Melody.WebAPI.DTO.Genre;

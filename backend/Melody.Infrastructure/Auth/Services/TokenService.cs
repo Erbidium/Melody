@@ -2,7 +2,6 @@
 using System.Security.Claims;
 using System.Text;
 using Melody.Core.Interfaces;
-using Melody.Core.ValueObjects;
 using Melody.Infrastructure.Data.DbEntites;
 using Melody.Infrastructure.Data.Interfaces;
 using Microsoft.AspNetCore.Identity;

@@ -1,7 +1,4 @@
-﻿using System.Security.Claims;
-using Melody.Core.ValueObjects;
-
-namespace Melody.Core.Interfaces;
+﻿namespace Melody.Core.Interfaces;
 
 public interface ITokenService
 {

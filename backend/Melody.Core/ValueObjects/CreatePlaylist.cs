@@ -7,10 +7,7 @@ public class CreatePlaylist : ValueObject
 {
     public CreatePlaylist(string name, long authorId, long[] songIds)
     {
-        foreach (var songId in songIds)
-        {
-            Guard.Against.Negative(songId);
-        }
+        foreach (var songId in songIds) Guard.Against.Negative(songId);
         Name = Guard.Against.NullOrWhiteSpace(name, nameof(Name));
         AuthorId = Guard.Against.Negative(authorId, nameof(AuthorId));
         SongIds = songIds;
