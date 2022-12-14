@@ -21,6 +21,7 @@
             (rowClickEvent)="selectSong($event)"
             [columnsToDisplay]="columnsToDisplay"
             [heartButtonForLikes]="currentUser.id !== playlist.authorId"
+            [currentSongSelected]="currentSongIdForMusicPlayer"
         ></app-songs-table>
     </ng-template>
     <form [formGroup]="addSongsPlaylistForm" *ngIf="playlist.authorId === currentUser.id">
@@ -33,6 +34,6 @@
 
         <button mat-raised-button type="button" [disabled]="!addSongsPlaylistForm.valid || addSongsPlaylistForm.value.songs?.length === 0" (click)="addSongs()">Додати пісні</button>
     </form>
-    <app-player [currentSongIdSetter]="currentSongIdForMusicPlayer" [files]="playlist.songs"></app-player>
+    <app-player [(currentSongId)]="currentSongIdForMusicPlayer" [files]="playlist.songs"></app-player>
 </div>
 

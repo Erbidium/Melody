@@ -19,6 +19,8 @@ export class SongsTableComponent {
 
     @Output() rowClickEvent = new EventEmitter<number>();
 
+    @Input() currentSongSelected?: number;
+
     getMatIconText(song: ISongTable) {
         if (!this.heartButtonForLikes) {
             return 'favorite';

@@ -10,7 +10,8 @@
         (heartButtonClickEvent)="removeSongFromFavourites($event.id, $event.event)"
         (rowClickEvent)="selectSong($event)"
         [columnsToDisplay]="columnsToDisplay"
+        [currentSongSelected]="currentSongIdForMusicPlayer"
     >
     </app-songs-table>
 </ng-template>
-<app-player [currentSongIdSetter]="currentSongIdForMusicPlayer" [files]="favouriteSongs"></app-player>
+<app-player [(currentSongId)]="currentSongIdForMusicPlayer" [files]="favouriteSongs"></app-player>

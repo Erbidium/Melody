@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatSliderChange } from '@angular/material/slider';
 import { BaseComponent } from '@core/base/base.component';
 import { NextSong } from '@core/enums/NextSong';
@@ -17,7 +17,7 @@ export class PlayerComponent extends BaseComponent implements OnInit {
 
     state?: StreamState;
 
-    currentSongId?: number;
+    currentSongIdValue?: number;
 
     nextSongMode: NextSong = NextSong.NextInOrder;
 
@@ -31,11 +31,11 @@ export class PlayerComponent extends BaseComponent implements OnInit {
             .pipe(this.untilThis)
             .subscribe((state) => {
                 this.state = state;
-                if (this.state?.isFinished && this.currentSongId) {
+                if (this.state?.isFinished && this.currentSongIdValue) {
                     if (this.nextSongMode === NextSong.NextInOrder) {
                         this.next();
                     } else if (this.nextSongMode === NextSong.Same) {
-                        this.openFile(this.currentSongId);
+                        this.openFile(this.currentSongIdValue);
                     } else if (this.nextSongMode === NextSong.Random) {
                         this.random();
                     }
@@ -50,23 +50,26 @@ export class PlayerComponent extends BaseComponent implements OnInit {
             .subscribe(() => {});
     }
 
-    @Input() set currentSongIdSetter(songId: number | undefined) {
-        if (songId && songId !== this.currentSongId) {
+    @Input() set currentSongId(songId: number | undefined) {
+        if (songId && songId !== this.currentSongIdValue) {
             this.openFile(songId);
-        } else {
+        } else if (songId === undefined) {
             this.stop();
-            this.currentSongId = undefined;
+            this.currentSongIdValue = undefined;
         }
     }
 
+    @Output() currentSongIdChange = new EventEmitter<number | undefined>();
+
     openFile(fileId: number) {
-        this.currentSongId = fileId;
+        this.currentSongIdValue = fileId;
+        this.currentSongIdChange.emit(this.currentSongIdValue);
         this.audioService.stop();
         this.songService
-            .saveNewListening(this.currentSongId)
+            .saveNewListening(this.currentSongIdValue)
             .pipe(this.untilThis)
             .subscribe();
-        this.playStream(`https://localhost:7284/api/Song/file/${this.currentSongId}`);
+        this.playStream(`https://localhost:7284/api/Song/file/${this.currentSongIdValue}`);
     }
 
     pause() {
@@ -82,10 +85,10 @@ export class PlayerComponent extends BaseComponent implements OnInit {
     }
 
     getSongName() {
-        if (!this.currentSongId) {
+        if (!this.currentSongIdValue) {
             return '';
         }
-        const index = this.files.findIndex((file) => file.id === this.currentSongId);
+        const index = this.files.findIndex((file) => file.id === this.currentSongIdValue);
 
         if (index < 0) {
             return '';
@@ -95,7 +98,7 @@ export class PlayerComponent extends BaseComponent implements OnInit {
     }
 
     next() {
-        let index = this.currentSongId ? this.files.findIndex((file) => file.id === this.currentSongId) + 1 : 0;
+        let index = this.currentSongIdValue ? this.files.findIndex((file) => file.id === this.currentSongIdValue) + 1 : 0;
 
         if (index > this.files.length - 1) {
             index = 0;
@@ -114,7 +117,7 @@ export class PlayerComponent extends BaseComponent implements OnInit {
     }
 
     previous() {
-        let index = this.currentSongId ? this.files.findIndex((file) => file.id === this.currentSongId) - 1 : 0;
+        let index = this.currentSongIdValue ? this.files.findIndex((file) => file.id === this.currentSongIdValue) - 1 : 0;
 
         if (index < 0) {
             index = 0;

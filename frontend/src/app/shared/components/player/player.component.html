@@ -3,7 +3,15 @@
         <mat-toolbar color="primary">
             <mat-toolbar-row>
                 {{ state?.readableCurrentTime }}
-                <mat-slider class="time-slider" min="0" [max]="state?.duration" step="1" [value]="state?.currentTime" (input)="onSliderChangeEnd($event)" [disabled]="state?.error || currentSongId === undefined"></mat-slider>
+                <mat-slider
+                    class="time-slider"
+                    min="0"
+                    [max]="state?.duration"
+                    step="1"
+                    [value]="state?.currentTime"
+                    (input)="onSliderChangeEnd($event)"
+                    [disabled]="state?.error || currentSongIdValue === undefined"
+                ></mat-slider>
                 {{ state?.readableDuration }}
             </mat-toolbar-row>
             <mat-toolbar-row class="media-action-bar">
@@ -18,16 +26,29 @@
                     >
                         <mat-icon mat-list-icon>shuffle</mat-icon>
                     </button>
-                    <button mat-button [disabled]="this.currentSongId === undefined" (click)="previous()">
+                    <button
+                        mat-button
+                        [disabled]="this.currentSongIdValue === undefined"
+                        (click)="previous()"
+                    >
                         <mat-icon mat-list-icon>skip_previous</mat-icon>
                     </button>
-                    <button mat-button (click)="play()" [disabled]="state?.error || this.currentSongId === undefined" *ngIf="!state?.playing">
+                    <button
+                        mat-button
+                        (click)="play()"
+                        [disabled]="state?.error || this.currentSongIdValue === undefined"
+                        *ngIf="!state?.playing"
+                    >
                         <mat-icon mat-list-icon>play_circle_filled</mat-icon>
                     </button>
                     <button mat-button (click)="pause()" *ngIf="state?.playing">
                         <mat-icon mat-list-icon>pause</mat-icon>
                     </button>
-                    <button  mat-button [disabled]="this.currentSongId === undefined" (click)="next()">
+                    <button
+                        mat-button
+                        [disabled]="this.currentSongIdValue === undefined"
+                        (click)="next()"
+                    >
                         <mat-icon mat-list-icon>skip_next</mat-icon>
                     </button>
                     <button

@@ -10,7 +10,8 @@
         (removeButtonClickEvent)="deleteSong($event.id, $event.event)"
         (rowClickEvent)="selectSong($event)"
         [columnsToDisplay]="columnsToDisplay"
+        [currentSongSelected]="currentSongIdForMusicPlayer"
     >
     </app-songs-table>
 </ng-template>
-<app-player [currentSongIdSetter]="currentSongIdForMusicPlayer" [files]="uploadedSongs"></app-player>
+<app-player [(currentSongId)]="currentSongIdForMusicPlayer" [files]="uploadedSongs"></app-player>
