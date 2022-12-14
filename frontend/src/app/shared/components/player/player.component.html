@@ -11,6 +11,13 @@
                     {{ getSongName() }}
                 </div>
                 <div class="buttons-wrapper">
+                    <button
+                        mat-button
+                        (click)="setRandomMode()"
+                        [ngClass]="{'activatedMode': isRandomMode()}"
+                    >
+                        <mat-icon mat-list-icon>shuffle</mat-icon>
+                    </button>
                     <button mat-button [disabled]="this.currentSongId === undefined" (click)="previous()">
                         <mat-icon mat-list-icon>skip_previous</mat-icon>
                     </button>
@@ -22,6 +29,13 @@
                     </button>
                     <button  mat-button [disabled]="this.currentSongId === undefined" (click)="next()">
                         <mat-icon mat-list-icon>skip_next</mat-icon>
+                    </button>
+                    <button
+                        mat-button
+                        (click)="setRepeatMode()"
+                        [ngClass]="{'activatedMode': isSameMode()}"
+                    >
+                        <mat-icon mat-list-icon>repeat_one</mat-icon>
                     </button>
                 </div>
                 <div class="right"></div>

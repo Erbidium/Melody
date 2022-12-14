@@ -20,6 +20,7 @@ export class AudioService {
         currentTime: undefined,
         canplay: false,
         error: false,
+        isFinished: false,
     };
 
     private stateChange: BehaviorSubject<StreamState> = new BehaviorSubject(
@@ -99,6 +100,9 @@ export class AudioService {
                 this.resetState();
                 this.state.error = true;
                 break;
+            case 'ended':
+                this.state.isFinished = true;
+                break;
             default:
                 this.state.playing = false;
                 break;
@@ -115,6 +119,7 @@ export class AudioService {
             currentTime: undefined,
             canplay: false,
             error: false,
+            isFinished: false,
         };
     }
 
