@@ -45,6 +45,6 @@ export class SongService {
     }
 
     public getAllSongs() {
-        return this.httpService.getRequest<ISong[]>('api/song/all');
+        return this.httpService.getRequest<ISong[]>('/api/song/all');
     }
 }

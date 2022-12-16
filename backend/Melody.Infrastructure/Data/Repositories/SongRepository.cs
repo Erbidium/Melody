@@ -19,7 +19,7 @@ public class SongRepository : ISongRepository
     public async Task<IReadOnlyCollection<Song>> GetAll()
     {
         using var connection = _context.CreateConnection();
-        var songs = await connection.QueryAsync<SongDb, GenreDb, Song>(SqlScriptsResource.GetSongsUploadedByUserId,
+        var songs = await connection.QueryAsync<SongDb, GenreDb, Song>(SqlScriptsResource.GetAllSongs,
             (songDb, genreDb) =>
             {
                 var song = new Song(songDb.UserId, songDb.Name, songDb.Path, songDb.AuthorName, songDb.Year,
