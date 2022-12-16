@@ -39,3 +39,4 @@ FROM Playlists p
       WHERE up.UserId = @UserId) up ON up.PlaylistId = p.Id
 WHERE p.Id = @Id
   AND p.IsDeleted = 0
+ORDER BY ps.UploadedAt DESC

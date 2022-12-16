@@ -11,3 +11,4 @@
        IsDeleted
 FROM Songs
 WHERE IsDeleted = 0
+ORDER BY UploadedAt DESC

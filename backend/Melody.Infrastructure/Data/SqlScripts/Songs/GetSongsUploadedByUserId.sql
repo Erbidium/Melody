@@ -16,3 +16,4 @@ FROM Songs
                     ON Songs.GenreId = Genres.Id
 WHERE IsDeleted = 0
   AND UserId = @UserId
+ORDER BY Songs.UploadedAt DESC

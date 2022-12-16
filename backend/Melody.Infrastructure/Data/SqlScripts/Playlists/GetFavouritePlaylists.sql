@@ -31,3 +31,4 @@ FROM Playlists p
          INNER JOIN UserPlaylists up ON up.PlaylistId = p.Id
 WHERE p.IsDeleted = 0
   AND up.UserId = @UserId
+ORDER BY ps.UploadedAt DESC
