@@ -1,4 +1,6 @@
-﻿using Melody.Infrastructure.Data.DbEntites;
+﻿using AutoMapper;
+using Melody.Core.Interfaces;
+using Melody.Infrastructure.Data.DbEntites;
 using Melody.WebAPI.DTO.Auth.Models;
 using Melody.WebAPI.DTO.User;
 using Melody.WebAPI.Extensions;
@@ -13,10 +15,14 @@ namespace Melody.WebAPI.Controllers;
 public class UserController : ControllerBase
 {
     private readonly UserManager<UserIdentity> _userManager;
+    private readonly IUserRepository _userRepository;
+    private readonly IMapper _mapper;
 
-    public UserController(UserManager<UserIdentity> userManager)
+    public UserController(UserManager<UserIdentity> userManager, IUserRepository userRepository, IMapper mapper)
     {
         _userManager = userManager;
+        _userRepository = userRepository;
+        _mapper = mapper;
     }
 
     [AllowAnonymous]
@@ -62,21 +68,10 @@ public class UserController : ControllerBase
         return Ok(await _userManager.FindByNameAsync(username) != null);
     }
 
-    [HttpGet("Admins")]
+    [HttpGet("all")]
     [Authorize(Roles = "Admin")]
-    public IActionResult AdminsEndpoint()
+    public async Task<ActionResult<IEnumerable<UserForAdminDto>>> GetUsersForAdministrator()
     {
-        var userId = HttpContext.User.GetId();
-        var roles = HttpContext.User.GetUserRoles();
-        return Ok($"Hi {userId}, you are an {roles.First()}");
-    }
-
-    [HttpGet("AdminsAndUsers")]
-    [Authorize(Roles = "Admin,User")]
-    public IActionResult AdminsAndUsersEndpoint()
-    {
-        var userId = HttpContext.User.GetId();
-        var roles = HttpContext.User.GetUserRoles();
-        return Ok($"Hi {userId}, you are an {roles.First()}");
+        return Ok(_mapper.Map<List<UserForAdminDto>>(await _userRepository.GetUsersWithoutAdministratorRole()));
     }
 }

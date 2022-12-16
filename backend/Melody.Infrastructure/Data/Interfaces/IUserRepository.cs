@@ -2,7 +2,7 @@
 
 namespace Melody.Infrastructure.Data.Interfaces;
 
-public interface IUserRepository
+public interface IUserRepository : Melody.Core.Interfaces.IUserRepository
 {
     public Task<bool> CreateAsync(UserIdentity user);
     public Task<bool> DeleteAsync(long userId);

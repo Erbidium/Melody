@@ -31,7 +31,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ISongRepository, SongRepository>();
         services.AddScoped<IPlaylistRepository, PlaylistRepository>();
         services.AddScoped<IGenreRepository, GenreRepository>();
-        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<Infrastructure.Data.Interfaces.IUserRepository, UserRepository>();
+        services.AddScoped<Core.Interfaces.IUserRepository, UserRepository>();
         services.AddScoped<IRoleRepository, RoleRepository>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
     }

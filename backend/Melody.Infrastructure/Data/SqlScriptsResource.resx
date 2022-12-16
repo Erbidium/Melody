@@ -233,9 +233,6 @@
     <value>sqlscripts\songs\getsongbyid.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="GetSongs" xml:space="preserve">
-    <value />
-  </data>
   <data name="GetSongsToAddToPlaylist" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqlscripts\songs\getsongstoaddtoplaylist.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089;utf-8</value>
@@ -262,6 +259,9 @@
   <data name="GetUsersInRole" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqlscripts\users\getusersinrole.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="GetUsersWithoutAdminRole" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\users\getuserswithoutadminrole.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="GetUserTotalUploadsSize" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqlscripts\songs\getusertotaluploadssize.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,

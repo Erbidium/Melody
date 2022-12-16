@@ -3,6 +3,7 @@ import { IUser } from '@core/models/IUser';
 import { HttpInternalService } from '@core/services/http-internal-service';
 import { NotificationService } from '@core/services/notification.service';
 import { Observable, tap } from 'rxjs';
+import {IUserForAdmin} from "@core/models/IUserForAdmin";
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -33,5 +34,9 @@ export class UserService {
                     this.notificationService.showErrorMessage('Something went wrong. Failed to verify username exists.'),
             }),
         );
+    }
+
+    public getUsersWithoutAdminRole() {
+        return this.httpService.getRequest<IUserForAdmin[]>('/api/user/all');
     }
 }

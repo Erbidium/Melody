@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using Dapper;
+using Melody.Core.Entities;
 using Melody.Infrastructure.Data.Context;
 using Melody.Infrastructure.Data.DbEntites;
 using Melody.Infrastructure.Data.Interfaces;
@@ -141,5 +142,14 @@ public class UserRepository : IUserRepository
         }
 
         return true;
+    }
+
+    public async Task<IReadOnlyCollection<User>> GetUsersWithoutAdministratorRole()
+    {
+        using var connection = _context.CreateConnection();
+
+        var users = await connection.QueryAsync<UserIdentity>(SqlScriptsResource.GetUsersWithoutAdminRole);
+        return users.Select(record => new User(record.UserName, record.Email, record.PhoneNumber, record.IsBanned) { Id = record.Id }).ToList()
+            .AsReadOnly();
     }
 }

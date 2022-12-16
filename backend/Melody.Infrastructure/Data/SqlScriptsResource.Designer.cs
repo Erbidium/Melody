@@ -511,15 +511,6 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на .
-        /// </summary>
-        internal static string GetSongs {
-            get {
-                return ResourceManager.GetString("GetSongs", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Ищет локализованную строку, похожую на WITH PlaylistSongsIds AS
         ///         (SELECT s.Id
         ///          FROM Songs s
@@ -665,6 +656,32 @@ namespace Melody.Infrastructure.Data {
         internal static string GetUsersInRole {
             get {
                 return ResourceManager.GetString("GetUsersInRole", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на SELECT Users.Id,
+        ///       Users.UserName,
+        ///       Users.NormalizedUserName,
+        ///       Users.Email,
+        ///       Users.NormalizedEmail,
+        ///       Users.EmailConfirmed,
+        ///       Users.PasswordHash,
+        ///       Users.PhoneNumber,
+        ///       Users.IsBanned,
+        ///       Users.IsDeleted
+        ///FROM Users
+        ///WHERE NOT EXISTS (
+        ///    SELECT u.Id
+        ///    FROM Users u
+        ///    INNER JOIN UserRoles ur ON ur.UserId = u.Id
+        ///    WHERE ur.RoleId = 1 AND ur.UserId = Users.Id
+        ///)
+        ///ORDER BY Users.UserName;.
+        /// </summary>
+        internal static string GetUsersWithoutAdminRole {
+            get {
+                return ResourceManager.GetString("GetUsersWithoutAdminRole", resourceCulture);
             }
         }
         
