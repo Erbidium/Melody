@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { IUser } from '@core/models/IUser';
+import { IUserForAdmin } from '@core/models/IUserForAdmin';
 import { HttpInternalService } from '@core/services/http-internal-service';
 import { NotificationService } from '@core/services/notification.service';
 import { Observable, tap } from 'rxjs';
-import {IUserForAdmin} from "@core/models/IUserForAdmin";
 
 @Injectable({ providedIn: 'root' })
 export class UserService {

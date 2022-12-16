@@ -178,6 +178,9 @@
     <value>sqlscripts\songs\deletesong.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="DeleteUploadedSong" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\songs\deleteuploadedsong.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="DeleteUser" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqlscripts\users\deleteuser.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089;utf-8</value>

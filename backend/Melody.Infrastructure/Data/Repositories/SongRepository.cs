@@ -83,11 +83,12 @@ public class SongRepository : ISongRepository
         await connection.ExecuteAsync(SqlScriptsResource.UpdateSong, parameters);
     }
 
-    public async Task Delete(long id)
+    public async Task<bool> Delete(long id)
     {
         using var connection = _context.CreateConnection();
 
-        await connection.ExecuteAsync(SqlScriptsResource.DeleteSong, new { id });
+        var rowsDeleted = await connection.ExecuteAsync(SqlScriptsResource.DeleteSong, new { id });
+        return rowsDeleted == 1;
     }
 
     public async Task<long> GetTotalBytesSumUploadsByUser(long userId)
@@ -154,11 +155,12 @@ public class SongRepository : ISongRepository
         await connection.ExecuteAsync(SqlScriptsResource.CreateFavouriteSong, new { id, userId });
     }
 
-    public async Task DeleteFavouriteSong(long id, long userId)
+    public async Task<bool> DeleteFavouriteSong(long id, long userId)
     {
         using var connection = _context.CreateConnection();
 
-        await connection.ExecuteAsync(SqlScriptsResource.DeleteFavouriteSong, new { id, userId });
+        var rowsDeleted = await connection.ExecuteAsync(SqlScriptsResource.DeleteFavouriteSong, new { id, userId });
+        return rowsDeleted == 1;
     }
 
     public async Task<IReadOnlyCollection<Song>> GetFavouriteAndUploadedUserSongs(long userId)
@@ -186,5 +188,13 @@ public class SongRepository : ISongRepository
         using var connection = _context.CreateConnection();
 
         await connection.ExecuteAsync(SqlScriptsResource.SaveNewSongListening, new { id, userId, Date = DateTime.Now });
+    }
+
+    public async Task<bool> DeleteUploadedSong(long id, long userId)
+    {
+        using var connection = _context.CreateConnection();
+
+        var rowsDeleted = await connection.ExecuteAsync(SqlScriptsResource.DeleteUploadedSong, new { id, userId });
+        return rowsDeleted == 1;
     }
 }

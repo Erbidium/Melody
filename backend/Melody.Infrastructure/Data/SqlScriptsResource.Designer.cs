@@ -228,6 +228,19 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на UPDATE Songs
+        ///SET IsDeleted = 1
+        ///WHERE Id = @Id
+        ///  AND UserId = @UserId
+        ///  AND IsDeleted = 0.
+        /// </summary>
+        internal static string DeleteUploadedSong {
+            get {
+                return ResourceManager.GetString("DeleteUploadedSong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на DELETE
         ///FROM Users
         ///WHERE Id = @Id;.

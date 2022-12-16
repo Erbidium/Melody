@@ -4,6 +4,7 @@ import { headerNavLinksAdministrator } from '@core/helpers/header-helpers';
 import { ISong } from '@core/models/ISong';
 import { SongService } from '@core/services/song.service';
 import { SpinnerOverlayService } from '@core/services/spinner-overlay.service';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
     selector: 'app-admin-songs-page',
@@ -14,6 +15,18 @@ export class AdminSongsPageComponent extends BaseComponent implements OnInit {
     navigationLinks = headerNavLinksAdministrator;
 
     songs: ISong[] = [];
+
+    columnsToDisplay = [
+        'position',
+        'name',
+        'author',
+        'genre',
+        'date',
+        'duration',
+        'remove',
+    ];
+
+    currentSongIdForMusicPlayer?: number;
 
     constructor(
         private songService: SongService,
@@ -34,6 +47,20 @@ export class AdminSongsPageComponent extends BaseComponent implements OnInit {
             .subscribe((resp) => {
                 this.spinnerOverlayService.hide();
                 this.songs = resp;
+            });
+    }
+
+    selectSong(songId: number) {
+        this.currentSongIdForMusicPlayer = songId;
+    }
+
+    deleteSong(id: number, event: MouseEvent) {
+        event.stopPropagation();
+        this.songService
+            .deleteSongByAdministrator(id)
+            .pipe(switchMap(async () => this.loadSongs()))
+            .subscribe(() => {
+                this.currentSongIdForMusicPlayer = undefined;
             });
     }
 }

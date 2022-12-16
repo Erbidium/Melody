@@ -132,15 +132,28 @@ public class SongController : ControllerBase
     public async Task<IActionResult> DeleteFavouriteSong(long id)
     {
         var userId = HttpContext.User.GetId();
-        await _songRepository.DeleteFavouriteSong(id, userId);
-        return Ok();
+        return await _songRepository.DeleteFavouriteSong(id, userId)
+            ? Ok()
+            : BadRequest();
+        
     }
 
     [Authorize]
     [HttpDelete("{id:long}")]
     public async Task<IActionResult> DeleteSong(long id)
     {
-        await _songRepository.Delete(id);
-        return NoContent();
+        var userId = HttpContext.User.GetId();
+        return await _songRepository.DeleteUploadedSong(id, userId)
+            ? NoContent()
+            : BadRequest();
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpDelete("admin/{id:long}")]
+    public async Task<IActionResult> DeleteSongByAdministrator(long id)
+    {
+        return await _songRepository.Delete(id)
+            ? NoContent()
+            : BadRequest();
     }
 }

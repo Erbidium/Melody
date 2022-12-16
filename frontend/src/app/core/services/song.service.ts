@@ -28,6 +28,10 @@ export class SongService {
         return this.httpService.deleteRequest(`/api/song/${id}`);
     }
 
+    public deleteSongByAdministrator(id: number) {
+        return this.httpService.deleteRequest(`/api/song/admin/${id}`);
+    }
+
     public getFavouriteUserSongs() {
         return this.httpService.getRequest<ISong[]>('/api/song/favourite');
     }

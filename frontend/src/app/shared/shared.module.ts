@@ -13,13 +13,13 @@ import { BackButtonComponent } from './components/back-button/back-button.compon
 import { HeaderComponent } from './components/header/header.component';
 import { PlayerComponent } from './components/player/player.component';
 import { SongsTableComponent } from './components/songs-table/songs-table.component';
+import { SpinnerComponent } from './components/spinner/spinner.component';
+import { SpinnerOverlayComponent } from './components/spinner-overlay/spinner-overlay.component';
 import { HorizontalPlaylistsScrollComponent } from './components/vertical-playlists-scroll/horizontal-playlists-scroll.component';
 import { HorizontalScrollDirective } from './directives/horizontal-scroll.directive';
 import { DateAgoPipe } from './pipes/date-ago.pipe';
 import { TextListPipe } from './pipes/text-list.pipe';
 import { TimePipe } from './pipes/time.pipe';
-import { SpinnerOverlayComponent } from './components/spinner-overlay/spinner-overlay.component';
-import { SpinnerComponent } from './components/spinner/spinner.component';
 
 @NgModule({
     declarations: [
