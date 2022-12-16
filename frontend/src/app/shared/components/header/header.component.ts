@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { BaseComponent } from '@core/base/base.component';
+import { headerNavLinks } from '@core/helpers/header-helpers';
 
 @Component({
     selector: 'app-header',
@@ -8,12 +9,9 @@ import { BaseComponent } from '@core/base/base.component';
     styleUrls: ['./header.component.sass'],
 })
 export class HeaderComponent extends BaseComponent {
-    public navLinks = [
-        { path: '/melody', label: 'Головна' },
-        { path: '/recommendations', label: 'Рекомендації' },
-        { path: '/statistics', label: 'Статистика' },
-        { path: '/upload', label: 'Завантажити пісню' },
-    ];
+    @Input() navLinks = headerNavLinks;
+
+    @Input() title = 'Melody';
 
     constructor(
         private router: Router,
