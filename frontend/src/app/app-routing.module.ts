@@ -3,6 +3,11 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
     {
+        path: '',
+        redirectTo: 'melody',
+        pathMatch: 'full',
+    },
+    {
         path: 'auth',
         loadChildren: () => import('./modules/auth/auth.module').then((m) => m.AuthModule),
     },
@@ -31,7 +36,11 @@ const routes: Routes = [
         path: 'playlist',
         loadChildren: () => import('./modules/playlist/playlist.module').then((m) => m.PlaylistModule),
     },
-    { path: '**', redirectTo: 'melody', pathMatch: 'full' },
+    {
+        path: 'admin',
+        loadChildren: () => import('./modules/admin/admin.module').then((m) => m.AdminModule),
+    },
+    { path: '**', redirectTo: '/melody', pathMatch: 'full' },
 ];
 
 @NgModule({

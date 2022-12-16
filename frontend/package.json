@@ -27,6 +27,7 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.2.1",
+    "jwt-decode": "^3.1.2",
     "moment": "^2.29.4",
     "prettier-eslint": "^15.0.1",
     "rxjs": "~7.5.0",
