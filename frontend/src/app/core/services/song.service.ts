@@ -43,4 +43,8 @@ export class SongService {
     public saveNewListening(id: number) {
         return this.httpService.postRequest('/api/song/new-listening', { SongId: id });
     }
+
+    public getAllSongs() {
+        return this.httpService.getRequest<ISong[]>('api/song/all');
+    }
 }

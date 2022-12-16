@@ -39,6 +39,13 @@ public class SongController : ControllerBase
         return Ok(_mapper.Map<List<SongDto>>(await _songRepository.GetFavouriteUserSongs(userId)));
     }
 
+    [Authorize(Roles = "Admin")]
+    [HttpGet("all")]
+    public async Task<ActionResult<IEnumerable<SongDto>>> GetAllSongs()
+    {
+        return Ok(_mapper.Map<List<SongDto>>(await _songRepository.GetAll()));
+    }
+
     [Authorize]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<SongDto>>> GetSongsUploadedByUser()

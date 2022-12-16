@@ -271,20 +271,24 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на SELECT Id,
+        ///   Ищет локализованную строку, похожую на SELECT Songs.Id,
         ///       UserId,
         ///       UploadedAt,
         ///       SizeBytes,
-        ///       Name,
+        ///       Songs.Name,
         ///       Path,
         ///       AuthorName,
         ///       Year,
         ///       GenreId,
         ///       Duration,
-        ///       IsDeleted
+        ///       IsDeleted,
+        ///       Genres.Id,
+        ///       Genres.Name
         ///FROM Songs
+        ///         INNER JOIN Genres
+        ///                    ON Songs.GenreId = Genres.Id
         ///WHERE IsDeleted = 0
-        ///ORDER BY UploadedAt DESC.
+        ///ORDER BY Songs.UploadedAt DESC.
         /// </summary>
         internal static string GetAllSongs {
             get {
