@@ -5,6 +5,7 @@ import { ISong } from '@core/models/ISong';
 import { SongService } from '@core/services/song.service';
 import { SpinnerOverlayService } from '@core/services/spinner-overlay.service';
 import { switchMap } from 'rxjs/operators';
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'app-admin-songs-page',
@@ -22,6 +23,7 @@ export class AdminSongsPageComponent extends BaseComponent implements OnInit {
         'author',
         'genre',
         'date',
+        'profile',
         'duration',
         'remove',
     ];
@@ -30,6 +32,7 @@ export class AdminSongsPageComponent extends BaseComponent implements OnInit {
 
     constructor(
         private songService: SongService,
+        private router: Router,
         private spinnerOverlayService: SpinnerOverlayService,
     ) {
         super();
@@ -62,5 +65,12 @@ export class AdminSongsPageComponent extends BaseComponent implements OnInit {
             .subscribe(() => {
                 this.currentSongIdForMusicPlayer = undefined;
             });
+    }
+
+    navigateToUserProfilePage(id: number, event: MouseEvent) {
+        event.stopPropagation();
+        this.router.navigateByUrl(
+            `/profile/${id}`,
+        );
     }
 }

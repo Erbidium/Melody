@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { BaseComponent } from '@core/base/base.component';
 import { IFavouritePlaylistWithPerformers } from '@core/models/IFavouritePlaylistWithPerformers';
 import { IUser } from '@core/models/IUser';
-import { AuthService } from '@core/services/auth.service';
 import { NotificationService } from '@core/services/notification.service';
 import { PlaylistService } from '@core/services/playlist.service';
 import { SpinnerOverlayService } from '@core/services/spinner-overlay.service';
@@ -17,48 +16,48 @@ import { switchMap } from 'rxjs/operators';
     styleUrls: ['./profile-page.component.sass'],
 })
 export class ProfilePageComponent extends BaseComponent implements OnInit {
-    currentUser?: IUser;
+    private id: number | undefined;
+
+    user?: IUser;
 
     userPlaylists: IFavouritePlaylistWithPerformers[] = [];
 
     constructor(
-        private authService: AuthService,
         private userService: UserService,
-        private spinnerOverlayService: SpinnerOverlayService,
         private playlistService: PlaylistService,
+        private activateRoute: ActivatedRoute,
+        private spinnerService: SpinnerOverlayService,
         private notificationService: NotificationService,
-        private router: Router,
     ) {
         super();
     }
 
-    ngOnInit(): void {
-        this.spinnerOverlayService.show();
-        const user = this.userService.getCurrentUser();
-        const playlists = this.playlistService.getPlaylistsCreatedByUser();
+    ngOnInit() {
+        this.activateRoute.params.pipe(this.untilThis).subscribe((params) => {
+            this.id = params['id'];
+            if (this.id) {
+                this.spinnerService.show();
+                const user = this.userService.getUserById(this.id);
+                const playlists = this.playlistService.getPlaylistsCreatedByUser();
 
-        forkJoin([user, playlists])
-            .pipe(this.untilThis)
-            .subscribe((results) => {
-                [this.currentUser, this.userPlaylists] = results;
-                this.spinnerOverlayService.hide();
-            });
-    }
-
-    logOut() {
-        this.authService
-            .signOut()
-            .pipe(this.untilThis)
-            .subscribe(() => {
-                this.notificationService.showSuccessMessage('Ти успішно вийшов з свого акаунту');
-                localStorage.removeItem('access-token');
-                this.router.navigateByUrl('auth');
-            });
+                forkJoin([user, playlists])
+                    .pipe(this.untilThis)
+                    .subscribe({
+                        next: (results) => {
+                            [this.user, this.userPlaylists] = results;
+                            this.spinnerService.hide();
+                        },
+                        error: () => {
+                            this.spinnerService.hide();
+                            this.notificationService.showErrorMessage('Не вдалося завантажити профіль користувача');
+                        } });
+            }
+        });
     }
 
     changePlaylistStatus(id: number, event: MouseEvent) {
         event.stopPropagation();
-        this.spinnerOverlayService.show();
+        this.spinnerService.show();
         const playlist = this.userPlaylists.find((p) => p.id === id);
 
         if (playlist) {
@@ -68,7 +67,7 @@ export class ProfilePageComponent extends BaseComponent implements OnInit {
                 .pipe(this.untilThis)
                 .subscribe((userPlaylists) => {
                     this.userPlaylists = userPlaylists;
-                    this.spinnerOverlayService.hide();
+                    this.spinnerService.hide();
                 });
         }
     }

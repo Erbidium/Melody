@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
+using Melody.Core.Entities;
 using Melody.Core.Interfaces;
 using Melody.Infrastructure.Data.DbEntites;
+using Melody.Infrastructure.Data.Repositories;
 using Melody.WebAPI.DTO.Auth.Models;
+using Melody.WebAPI.DTO.Playlist;
 using Melody.WebAPI.DTO.User;
 using Melody.WebAPI.Extensions;
 using Microsoft.AspNetCore.Authorization;
@@ -42,6 +45,21 @@ public class UserController : ControllerBase
 
         await _userManager.AddToRoleAsync(user, "User");
         return StatusCode(201);
+    }
+
+    [Authorize]
+    [HttpGet("{id:long}")]
+    public async Task<ActionResult<UserDto>> GetUserById(long id)
+    {
+        var userRoles = HttpContext.User.GetUserRoles();
+        var userIdentity = await _userManager.FindByIdAsync(id.ToString());
+
+        if (userIdentity is null || (!userRoles.Contains("Admin") && userIdentity.IsBanned))
+        {
+            return NotFound("User is not found");
+        }
+        var roles = await _userManager.GetRolesAsync(userIdentity);
+        return Ok(new UserDto(userIdentity) { Roles = roles });
     }
 
     [Authorize]

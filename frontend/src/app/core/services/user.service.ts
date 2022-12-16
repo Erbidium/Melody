@@ -14,6 +14,10 @@ export class UserService {
         return this.httpService.getRequest<IUser>('/api/user');
     }
 
+    public getUserById(id: number) {
+        return this.httpService.getRequest<IUser>(`/api/user/${id}`);
+    }
+
     public checkEmail(email: string): Observable<boolean> {
         const emailEncoded = encodeURIComponent(email);
 
