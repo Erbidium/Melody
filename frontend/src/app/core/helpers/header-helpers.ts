@@ -4,3 +4,9 @@ export const headerNavLinks = [
     { path: '/statistics', label: 'Статистика' },
     { path: '/upload', label: 'Завантажити пісню' },
 ];
+
+export const headerNavLinksAdministrator = [
+    { path: '/melody', label: 'Додаток' },
+    { path: '/admin/songs', label: 'Музичні твори' },
+    { path: '/admin/users', label: 'Користувачі' },
+];
