@@ -11,23 +11,29 @@
         </ng-container>
 
         <ng-container matColumnDef="username">
-            <th mat-header-cell *matHeaderCellDef> Username </th>
-            <td mat-cell *matCellDef="let user"> {{user.userName}} </td>
+            <th mat-header-cell *matHeaderCellDef>Username</th>
+            <td mat-cell *matCellDef="let user">{{user.userName}}</td>
         </ng-container>
 
         <ng-container matColumnDef="email">
-            <th mat-header-cell *matHeaderCellDef> Email </th>
-            <td mat-cell *matCellDef="let user"> {{user.email}} </td>
+            <th mat-header-cell *matHeaderCellDef>Email</th>
+            <td mat-cell *matCellDef="let user">{{user.email}}</td>
         </ng-container>
 
         <ng-container matColumnDef="phoneNumber">
-            <th mat-header-cell *matHeaderCellDef> Phone number </th>
-            <td mat-cell *matCellDef="let user"> {{user.phoneNumber}} </td>
+            <th mat-header-cell *matHeaderCellDef>Phone number</th>
+            <td mat-cell *matCellDef="let user">{{user.phoneNumber}}</td>
         </ng-container>
 
         <ng-container matColumnDef="ban">
             <th mat-header-cell *matHeaderCellDef> Ban </th>
-            <td mat-cell *matCellDef="let user"> {{user.isBanned}} </td>
+            <td mat-cell *matCellDef="let user">
+                <mat-slide-toggle
+                    checked="{{user.isBanned}}"
+                    (toggleChange)="changeUserBan(user.id)"
+                    (click)="$event.stopPropagation()"
+                ></mat-slide-toggle>
+            </td>
         </ng-container>
 
         <ng-container matColumnDef="remove">

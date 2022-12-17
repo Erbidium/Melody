@@ -37,7 +37,16 @@ public class RefreshTokenRepository : IRefreshTokenRepository
         return true;
     }
 
-    public async Task<bool> DeleteAsync(string token)
+    public async Task<bool> DeleteByUserIdAsync(long userId)
+    {
+        using var connection = _context.CreateConnection();
+        var rowsDeleted =
+            await connection.ExecuteAsync(SqlScriptsResource.DeleteRefreshTokenByUserId,
+                new { userId });
+        return rowsDeleted == 1;
+    }
+
+    public async Task<bool> DeleteByValueAsync(string token)
     {
         using var connection = _context.CreateConnection();
         var rowsDeleted =

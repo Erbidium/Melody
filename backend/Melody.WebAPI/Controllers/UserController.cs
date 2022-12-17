@@ -2,9 +2,11 @@
 using Melody.Core.Entities;
 using Melody.Core.Interfaces;
 using Melody.Infrastructure.Data.DbEntites;
+using Melody.Infrastructure.Data.Interfaces;
 using Melody.Infrastructure.Data.Repositories;
 using Melody.WebAPI.DTO.Auth.Models;
 using Melody.WebAPI.DTO.Playlist;
+using Melody.WebAPI.DTO.Song;
 using Melody.WebAPI.DTO.User;
 using Melody.WebAPI.Extensions;
 using Microsoft.AspNetCore.Authorization;
@@ -18,10 +20,11 @@ namespace Melody.WebAPI.Controllers;
 public class UserController : ControllerBase
 {
     private readonly UserManager<UserIdentity> _userManager;
-    private readonly IUserRepository _userRepository;
+    private readonly Core.Interfaces.IUserRepository _userRepository;
+    private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly IMapper _mapper;
 
-    public UserController(UserManager<UserIdentity> userManager, IUserRepository userRepository, IMapper mapper)
+    public UserController(UserManager<UserIdentity> userManager, Core.Interfaces.IUserRepository userRepository, IMapper mapper, IRefreshTokenRepository refreshTokenRepository)
     {
         _userManager = userManager;
         _userRepository = userRepository;
@@ -91,5 +94,16 @@ public class UserController : ControllerBase
     public async Task<ActionResult<IEnumerable<UserForAdminDto>>> GetUsersForAdministrator()
     {
         return Ok(_mapper.Map<List<UserForAdminDto>>(await _userRepository.GetUsersWithoutAdministratorRole()));
+    }
+
+    [HttpPatch("{id:long}/ban")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> BanUser(BannedStatusDto bannnedStatusDto, long id)
+    {
+        if (bannnedStatusDto.IsBanned)
+        {
+            _refreshTokenRepository.DeleteByUserIdAsync(id);
+        }
+        return Ok();
     }
 }

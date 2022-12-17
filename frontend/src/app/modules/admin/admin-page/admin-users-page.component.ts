@@ -5,6 +5,7 @@ import { headerNavLinksAdministrator } from '@core/helpers/header-helpers';
 import { IUserForAdmin } from '@core/models/IUserForAdmin';
 import { SpinnerOverlayService } from '@core/services/spinner-overlay.service';
 import { UserService } from '@core/services/user.service';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
     selector: 'app-admin-users-page',
@@ -16,18 +17,11 @@ export class AdminUsersPageComponent extends BaseComponent implements OnInit {
 
     users: IUserForAdmin[] = [];
 
-    columnsToDisplay = [
-        'position',
-        'username',
-        'email',
-        'phoneNumber',
-        'ban',
-        'remove',
-    ];
+    columnsToDisplay = ['position', 'username', 'email', 'phoneNumber', 'ban', 'remove'];
 
     constructor(
         private userService: UserService,
-        private spinnerOverlayService: SpinnerOverlayService,
+        private spinnerService: SpinnerOverlayService,
         private router: Router,
     ) {
         super();
@@ -38,19 +32,33 @@ export class AdminUsersPageComponent extends BaseComponent implements OnInit {
     }
 
     loadUsers() {
-        this.spinnerOverlayService.show();
+        this.spinnerService.show();
         this.userService
             .getUsersWithoutAdminRole()
             .pipe(this.untilThis)
             .subscribe((resp) => {
-                this.spinnerOverlayService.hide();
+                this.spinnerService.hide();
                 this.users = resp;
             });
     }
 
     navigateToUserProfilePage(id: number) {
-        this.router.navigateByUrl(
-            `/profile/${id}`,
-        );
+        this.router.navigateByUrl(`/profile/${id}`);
+    }
+
+    changeUserBan(id: number) {
+        const user = this.users.find((u) => u.id === id);
+
+        if (user) {
+            this.spinnerService.show();
+            this.userService
+                .setUserBanStatus(id, !user.isBanned)
+                .pipe(switchMap(() => this.userService.getUsersWithoutAdminRole()))
+                .pipe(this.untilThis)
+                .subscribe((results) => {
+                    this.users = results;
+                    this.spinnerService.hide();
+                });
+        }
     }
 }

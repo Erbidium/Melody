@@ -43,4 +43,8 @@ export class UserService {
     public getUsersWithoutAdminRole() {
         return this.httpService.getRequest<IUserForAdmin[]>('/api/user/all');
     }
+
+    public setUserBanStatus(id: number, isBanned: boolean) {
+        return this.httpService.patchRequest(`/api/user/${id}/ban`, { isBanned });
+    }
 }

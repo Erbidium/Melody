@@ -64,7 +64,7 @@ public class LoginController : ControllerBase
         }
         catch (Exception)
         {
-            await _refreshTokenRepository.DeleteAsync(refreshTokenString);
+            await _refreshTokenRepository.DeleteByValueAsync(refreshTokenString);
             return Unauthorized();
         }
     }

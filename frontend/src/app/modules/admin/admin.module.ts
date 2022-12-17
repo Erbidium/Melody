@@ -7,6 +7,7 @@ import { SharedModule } from '@shared/shared.module';
 
 import { AdminUsersPageComponent } from './admin-page/admin-users-page.component';
 import { AdminSongsPageComponent } from './admin-songs-page/admin-songs-page.component';
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 
 @NgModule({
     declarations: [
@@ -19,6 +20,7 @@ import { AdminSongsPageComponent } from './admin-songs-page/admin-songs-page.com
         SharedModule,
         MatTableModule,
         MaterialModule,
+        MatSlideToggleModule,
     ],
 })
 export class AdminModule { }

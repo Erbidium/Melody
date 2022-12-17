@@ -195,6 +195,17 @@ namespace Melody.Infrastructure.Data {
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на DELETE
+        ///FROM UserRefreshTokens
+        ///WHERE UserId = @UserId;.
+        /// </summary>
+        internal static string DeleteRefreshTokenByUserId {
+            get {
+                return ResourceManager.GetString("DeleteRefreshTokenByUserId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на DELETE
         ///FROM Roles
         ///WHERE Id = @Id;.
         /// </summary>
