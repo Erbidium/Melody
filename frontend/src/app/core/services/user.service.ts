@@ -47,4 +47,8 @@ export class UserService {
     public setUserBanStatus(id: number, isBanned: boolean) {
         return this.httpService.patchRequest(`/api/user/${id}/ban`, { isBanned });
     }
+
+    public deleteUser(id: number) {
+        return this.httpService.deleteRequest(`/api/user/${id}`);
+    }
 }

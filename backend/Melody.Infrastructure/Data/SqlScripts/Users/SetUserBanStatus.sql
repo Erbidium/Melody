@@ -1,3 +1,3 @@
 ﻿UPDATE Users
 SET IsBanned = @IsBanned
-WHERE Id = @UserId;
+WHERE Id = @UserId AND IsDeleted = 0;

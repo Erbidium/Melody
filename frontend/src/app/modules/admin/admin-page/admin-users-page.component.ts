@@ -61,4 +61,21 @@ export class AdminUsersPageComponent extends BaseComponent implements OnInit {
                 });
         }
     }
+
+    deleteUser(id: number, event: MouseEvent) {
+        event.stopPropagation();
+        const user = this.users.find((u) => u.id === id);
+
+        if (user) {
+            this.spinnerService.show();
+            this.userService
+                .deleteUser(id)
+                .pipe(switchMap(() => this.userService.getUsersWithoutAdminRole()))
+                .pipe(this.untilThis)
+                .subscribe((results) => {
+                    this.users = results;
+                    this.spinnerService.hide();
+                });
+        }
+    }
 }

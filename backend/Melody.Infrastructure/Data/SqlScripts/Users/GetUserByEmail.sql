@@ -9,4 +9,4 @@
        IsBanned,
        IsDeleted
 FROM Users
-WHERE NormalizedEmail = @NormalizedEmail
+WHERE NormalizedEmail = @NormalizedEmail AND IsDeleted = 0

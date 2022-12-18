@@ -6,4 +6,5 @@ public interface IUserRepository
 {
     Task<IReadOnlyCollection<User>> GetUsersWithoutAdministratorRole();
     Task<bool> SetUserBannedStatus(bool isBanned, long userId);
+    Task<bool> DeleteAsync(long userId);
 }

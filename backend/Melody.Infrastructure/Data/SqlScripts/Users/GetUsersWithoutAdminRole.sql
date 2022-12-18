@@ -14,5 +14,5 @@ WHERE NOT EXISTS (
     FROM Users u
     INNER JOIN UserRoles ur ON ur.UserId = u.Id
     WHERE ur.RoleId = 1 AND ur.UserId = Users.Id
-)
+) AND IsDeleted = 0
 ORDER BY Users.UserName;

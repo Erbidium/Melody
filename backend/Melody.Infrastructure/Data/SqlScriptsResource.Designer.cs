@@ -252,9 +252,10 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на DELETE
-        ///FROM Users
-        ///WHERE Id = @Id;.
+        ///   Ищет локализованную строку, похожую на UPDATE Users
+        ///SET IsDeleted = 1
+        ///WHERE Id = @Id
+        ///  AND IsDeleted = 0;.
         /// </summary>
         internal static string DeleteUser {
             get {
@@ -606,7 +607,7 @@ namespace Melody.Infrastructure.Data {
         ///       IsBanned,
         ///       IsDeleted
         ///FROM Users
-        ///WHERE NormalizedEmail = @NormalizedEmail.
+        ///WHERE NormalizedEmail = @NormalizedEmail AND IsDeleted = 0.
         /// </summary>
         internal static string GetUserByEmail {
             get {
@@ -626,7 +627,7 @@ namespace Melody.Infrastructure.Data {
         ///       IsBanned,
         ///       IsDeleted
         ///FROM Users
-        ///WHERE Id = @Id;.
+        ///WHERE Id = @Id AND IsDeleted = 0;.
         /// </summary>
         internal static string GetUserById {
             get {
@@ -646,7 +647,7 @@ namespace Melody.Infrastructure.Data {
         ///       IsBanned,
         ///       IsDeleted
         ///FROM Users
-        ///WHERE NormalizedUserName = @NormalizedUserName;.
+        ///WHERE NormalizedUserName = @NormalizedUserName AND IsDeleted = 0;.
         /// </summary>
         internal static string GetUserByName {
             get {
@@ -679,7 +680,7 @@ namespace Melody.Infrastructure.Data {
         ///       Users.IsDeleted
         ///FROM Users
         ///         INNER JOIN Roles ON Users.RoleId = Roles.Id
-        ///WHERE Roles.NormalizedName = @NormalizedName;.
+        ///WHERE Roles.NormalizedName = @NormalizedName AND Users.IsDeleted = 0;.
         /// </summary>
         internal static string GetUsersInRole {
             get {
@@ -704,7 +705,7 @@ namespace Melody.Infrastructure.Data {
         ///    FROM Users u
         ///    INNER JOIN UserRoles ur ON ur.UserId = u.Id
         ///    WHERE ur.RoleId = 1 AND ur.UserId = Users.Id
-        ///)
+        ///) AND IsDeleted = 0
         ///ORDER BY Users.UserName;.
         /// </summary>
         internal static string GetUsersWithoutAdminRole {
@@ -758,7 +759,7 @@ namespace Melody.Infrastructure.Data {
         /// <summary>
         ///   Ищет локализованную строку, похожую на UPDATE Users
         ///SET IsBanned = @IsBanned
-        ///WHERE Id = @UserId;.
+        ///WHERE Id = @UserId AND IsDeleted = 0;.
         /// </summary>
         internal static string SetUserBanStatus {
             get {
@@ -820,7 +821,7 @@ namespace Melody.Infrastructure.Data {
         ///    PhoneNumber        = @PhoneNumber,
         ///    IsBanned           = @IsBanned,
         ///    IsDeleted          = @IsDeleted
-        ///WHERE Id = @Id;.
+        ///WHERE Id = @Id AND Users.IsDeleted = 0;.
         /// </summary>
         internal static string UpdateUser {
             get {

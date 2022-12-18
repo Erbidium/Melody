@@ -108,4 +108,13 @@ public class UserController : ControllerBase
         await _userRepository.SetUserBannedStatus(bannnedStatusDto.IsBanned, id);
         return Ok();
     }
+
+    [Authorize(Roles = "Admin")]
+    [HttpDelete("{id:long}")]
+    public async Task<IActionResult> DeleteUser(long id)
+    {
+        return await _userRepository.DeleteAsync(id)
+            ? NoContent()
+            : BadRequest();
+    }
 }
