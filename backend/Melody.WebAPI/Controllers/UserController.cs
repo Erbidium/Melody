@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Melody.Core.Entities;
+using Melody.Core.Interfaces;
 using Melody.Infrastructure.Data.DbEntites;
 using Melody.Infrastructure.Data.Interfaces;
 using Melody.WebAPI.DTO.Auth.Models;
@@ -18,13 +20,20 @@ public class UserController : ControllerBase
     private readonly Core.Interfaces.IUserRepository _userRepository;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly IMapper _mapper;
+    private readonly ITokenService _tokenService;
 
-    public UserController(UserManager<UserIdentity> userManager, Core.Interfaces.IUserRepository userRepository, IMapper mapper, IRefreshTokenRepository refreshTokenRepository)
+    public UserController(
+        UserManager<UserIdentity> userManager,
+        Core.Interfaces.IUserRepository userRepository,
+        IMapper mapper,
+        IRefreshTokenRepository refreshTokenRepository,
+        ITokenService tokenService)
     {
         _userManager = userManager;
         _userRepository = userRepository;
         _refreshTokenRepository = refreshTokenRepository;
         _mapper = mapper;
+        _tokenService = tokenService;
     }
 
     [AllowAnonymous]
@@ -104,10 +113,30 @@ public class UserController : ControllerBase
         return Ok();
     }
 
+    [Authorize]
+    [HttpDelete()]
+    public async Task<IActionResult> DeleteUser()
+    {
+        var userId = HttpContext.User.GetId();
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+        var refreshToken = await _tokenService.GenerateRefreshToken(user.Email, true);
+        Response.Cookies.Append("X-Refresh-Token", refreshToken,
+            new CookieOptions
+            {
+                HttpOnly = true, SameSite = SameSiteMode.None, Secure = true,
+                Expires = DateTimeOffset.Now.AddDays(-1)
+            });
+        await _refreshTokenRepository.DeleteByUserIdAsync(userId);
+        return await _userRepository.DeleteAsync(userId)
+            ? NoContent()
+            : BadRequest();
+    }
+
     [Authorize(Roles = "Admin")]
     [HttpDelete("{id:long}")]
     public async Task<IActionResult> DeleteUser(long id)
     {
+        await _refreshTokenRepository.DeleteByUserIdAsync(id);
         return await _userRepository.DeleteAsync(id)
             ? NoContent()
             : BadRequest();

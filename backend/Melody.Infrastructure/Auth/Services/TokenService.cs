@@ -51,13 +51,14 @@ public class TokenService : ITokenService
         var currentUser = await _userManager.FindByEmailAsync(email);
 
         if (currentUser == null ||
+            currentUser.IsBanned ||
+            currentUser.IsDeleted ||
             !await _userManager.CheckPasswordAsync(currentUser, password))
             return (null, null);
-        ;
+
         var refreshToken = await GenerateRefreshToken(email);
-        var user = await _userManager.FindByEmailAsync(email);
-        var accessToken = await GenerateAccessToken(user);
-        await _refreshTokenRepository.CreateOrUpdateAsync(refreshToken, user.Id);
+        var accessToken = await GenerateAccessToken(currentUser);
+        await _refreshTokenRepository.CreateOrUpdateAsync(refreshToken, currentUser.Id);
         return (accessToken, refreshToken);
     }
 
@@ -68,6 +69,7 @@ public class TokenService : ITokenService
         if (dbEntry == null) return (null, null);
         var email = GetEmailFromRefreshToken(refreshTokenString);
         var user = await _userManager.FindByEmailAsync(email);
+        if (user.IsBanned || user.IsDeleted) return (null, null);
         var refreshToken = await GenerateRefreshToken(email);
         await _refreshTokenRepository.CreateOrUpdateAsync(refreshToken, user.Id);
         var accessToken = await GenerateAccessToken(user);

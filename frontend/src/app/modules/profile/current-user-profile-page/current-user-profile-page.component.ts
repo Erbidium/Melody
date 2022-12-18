@@ -72,4 +72,15 @@ export class CurrentUserProfilePageComponent extends BaseComponent implements On
                 });
         }
     }
+
+    deleteAccount() {
+        this.userService
+            .deleteAccount()
+            .pipe(this.untilThis)
+            .subscribe(() => {
+                this.notificationService.showSuccessMessage('Ти успішно видалив свій акаунт');
+                localStorage.removeItem('access-token');
+                this.router.navigateByUrl('auth');
+            });
+    }
 }

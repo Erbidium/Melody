@@ -51,4 +51,8 @@ export class UserService {
     public deleteUser(id: number) {
         return this.httpService.deleteRequest(`/api/user/${id}`);
     }
+
+    public deleteAccount() {
+        return this.httpService.deleteRequest('/api/user');
+    }
 }

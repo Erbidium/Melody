@@ -20,9 +20,9 @@ public class UserRepository : IUserRepository
     {
         var parameters = new DynamicParameters();
         parameters.Add("UserName", user.UserName, DbType.String);
-        parameters.Add("NormalizedUserName", "default", DbType.String);
+        parameters.Add("NormalizedUserName", user.NormalizedUserName, DbType.String);
         parameters.Add("Email", user.Email, DbType.String);
-        parameters.Add("NormalizedEmail", "default", DbType.String);
+        parameters.Add("NormalizedEmail", user.NormalizedEmail, DbType.String);
         parameters.Add("EmailConfirmed", user.EmailConfirmed, DbType.Boolean);
         parameters.Add("PasswordHash", user.PasswordHash, DbType.String);
         parameters.Add("PhoneNumber", user.PhoneNumber, DbType.String);
