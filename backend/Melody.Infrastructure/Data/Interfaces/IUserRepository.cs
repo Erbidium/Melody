@@ -14,4 +14,5 @@ public interface IUserRepository : Core.Interfaces.IUserRepository
     public Task<IEnumerable<RoleIdentity>> GetRolesAsync(long userId);
     public Task<UserRole> FindUserRoleAsync(long userId, long roleId);
     public Task<IEnumerable<UserIdentity>> GetUsersInRoleAsync(string roleName);
+    public Task<bool> SetUserBannedStatus(bool isBanned, long userId);
 }

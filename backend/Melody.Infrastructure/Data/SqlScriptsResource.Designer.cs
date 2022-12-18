@@ -756,6 +756,17 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на UPDATE Users
+        ///SET IsBanned = @IsBanned
+        ///WHERE Id = @UserId;.
+        /// </summary>
+        internal static string SetUserBanStatus {
+            get {
+                return ResourceManager.GetString("SetUserBanStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на UPDATE UserRefreshTokens
         ///SET RefreshToken = @Token
         ///WHERE UserId = @Id;.

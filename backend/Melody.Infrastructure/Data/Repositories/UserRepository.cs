@@ -85,6 +85,14 @@ public class UserRepository : IUserRepository
             new { NormalizedName = roleName });
     }
 
+    public async Task<bool> SetUserBannedStatus(bool isBanned, long userId)
+    {
+        using var connection = _context.CreateConnection();
+
+        var rowsAffected = await connection.ExecuteAsync(SqlScriptsResource.SetUserBanStatus, new { userId, isBanned });
+        return rowsAffected == 1;
+    }
+
     public async Task<bool> UpdateAsync(UserIdentity user)
     {
         using var connection = _context.CreateConnection();

@@ -28,6 +28,7 @@ public class UserController : ControllerBase
     {
         _userManager = userManager;
         _userRepository = userRepository;
+        _refreshTokenRepository = refreshTokenRepository;
         _mapper = mapper;
     }
 
@@ -102,8 +103,9 @@ public class UserController : ControllerBase
     {
         if (bannnedStatusDto.IsBanned)
         {
-            _refreshTokenRepository.DeleteByUserIdAsync(id);
+            await _refreshTokenRepository.DeleteByUserIdAsync(id);
         }
+        await _userRepository.SetUserBannedStatus(bannnedStatusDto.IsBanned, id);
         return Ok();
     }
 }
