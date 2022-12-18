@@ -6,35 +6,41 @@
           WHERE s.IsDeleted = 0
             AND p.IsDeleted = 0
             AND p.Id = @PlaylistId)
-SELECT Id,
-       UserId,
-       UploadedAt,
-       SizeBytes,
-       Name,
-       Path,
-       AuthorName,
-       Year,
-       GenreId,
-       Duration,
-       IsDeleted
-FROM Songs
-WHERE IsDeleted = 0
-  AND UserId = @UserId
-  AND Id NOT IN (Select Id FROM PlaylistSongsIds)
+SELECT s.Id,
+       s.UserId,
+       s.UploadedAt,
+       s.SizeBytes,
+       s.Name,
+       s.Path,
+       s.AuthorName,
+       s.Year,
+       s.GenreId,
+       s.Duration,
+       s.IsDeleted
+FROM Songs s
+INNER JOIN Users u ON u.Id = s.UserId
+WHERE s.IsDeleted = 0
+  AND s.UserId = @UserId
+  AND s.Id NOT IN (Select Id FROM PlaylistSongsIds)
+  AND u.IsDeleted = 0
+  AND u.IsBanned = 0
 UNION
-SELECT Id,
-       Songs.UserId,
-       UploadedAt,
-       SizeBytes,
-       Name,
-       Path,
-       AuthorName,
-       Year,
-       GenreId,
-       Duration,
-       IsDeleted
-FROM Songs
+SELECT s.Id,
+       s.UserId,
+       s.UploadedAt,
+       s.SizeBytes,
+       s.Name,
+       s.Path,
+       s.AuthorName,
+       s.Year,
+       s.GenreId,
+       s.Duration,
+       s.IsDeleted
+FROM Songs s
          INNER JOIN FavouriteSongs fs ON fs.SongId = Id
-WHERE IsDeleted = 0
+         INNER JOIN Users u ON u.Id = fs.UserId
+WHERE s.IsDeleted = 0
   AND fs.UserId = @UserId
-  AND Id NOT IN (Select Id FROM PlaylistSongsIds)
+  AND s.Id NOT IN (Select Id FROM PlaylistSongsIds)
+  AND u.IsDeleted = 0
+  AND u.IsBanned = 0

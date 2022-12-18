@@ -196,15 +196,13 @@
             PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="GetAllPlaylists" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqlscripts\playlists\getallplaylists.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089;utf-8</value>
+    <value>sqlscripts\playlists\getallplaylists.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="GetAllSongs" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqlscripts\songs\getallsongs.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="GetFavouriteAndUploadedUserSongs" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqlscripts\songs\getfavouriteanduploadedusersongs.sql;System.String, mscorlib, Version=4.0.0.0,
-            Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    <value>sqlscripts\songs\getfavouriteanduploadedusersongs.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="GetFavouritePlaylists" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqlscripts\playlists\getfavouriteplaylists.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
@@ -235,12 +233,10 @@
             PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="GetSongById" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqlscripts\songs\getsongbyid.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089;utf-8</value>
+    <value>sqlscripts\songs\getsongbyid.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="GetSongsToAddToPlaylist" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqlscripts\songs\getsongstoaddtoplaylist.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089;utf-8</value>
+    <value>sqlscripts\songs\getsongstoaddtoplaylist.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="GetSongsUploadedByUserId" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqlscripts\songs\getsongsuploadedbyuserid.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
@@ -292,8 +288,7 @@
             PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="UpdateSong" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqlscripts\songs\updatesong.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089;utf-8</value>
+    <value>sqlscripts\songs\updatesong.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="UpdateUser" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqlscripts\users\updateuser.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>

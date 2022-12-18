@@ -29,6 +29,9 @@ FROM Playlists p
             WHERE fs.UserId = @UserId) fs ON fs.SongId = s.Id
       WHERE s.IsDeleted = 0) ps ON ps.PlaylistId = p.Id
          INNER JOIN UserPlaylists up ON up.PlaylistId = p.Id
+         INNER JOIN Users u ON u.Id = p.AuthorId
 WHERE p.IsDeleted = 0
   AND up.UserId = @UserId
+  AND u.IsDeleted = 0
+  AND u.IsBanned = 0
 ORDER BY ps.UploadedAt DESC

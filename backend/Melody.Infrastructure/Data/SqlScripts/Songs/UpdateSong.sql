@@ -7,6 +7,6 @@ SET UserId     = @UserId,
     SizeBytes  = @SizeBytes,
     UploadedAt = @UploadedAt,
     GenreId    = @GenreId,
-    Duration   = @Duration,
+    Duration   = @Duration
     WHERE Id = @Id
         AND IsDeleted = 0

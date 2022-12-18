@@ -1,6 +1,4 @@
 using Melody.Core.Entities;
-using Melody.SharedKernel.Interfaces;
-using System.Security.Cryptography;
 
 namespace Melody.Core.Interfaces;
 

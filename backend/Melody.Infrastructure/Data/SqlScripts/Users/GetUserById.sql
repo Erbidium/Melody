@@ -9,4 +9,4 @@
        IsBanned,
        IsDeleted
 FROM Users
-WHERE Id = @Id AND IsDeleted = 0;
+WHERE Id = @Id;

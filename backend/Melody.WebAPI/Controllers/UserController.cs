@@ -1,12 +1,7 @@
 ﻿using AutoMapper;
-using Melody.Core.Entities;
-using Melody.Core.Interfaces;
 using Melody.Infrastructure.Data.DbEntites;
 using Melody.Infrastructure.Data.Interfaces;
-using Melody.Infrastructure.Data.Repositories;
 using Melody.WebAPI.DTO.Auth.Models;
-using Melody.WebAPI.DTO.Playlist;
-using Melody.WebAPI.DTO.Song;
 using Melody.WebAPI.DTO.User;
 using Melody.WebAPI.Extensions;
 using Microsoft.AspNetCore.Authorization;
