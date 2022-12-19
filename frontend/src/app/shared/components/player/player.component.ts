@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatSliderChange } from '@angular/material/slider';
 import { BaseComponent } from '@core/base/base.component';
 import { NextSong } from '@core/enums/NextSong';
@@ -14,13 +14,15 @@ import { SongService } from '@core/services/song.service';
     styleUrls: ['./player.component.sass'],
 })
 export class PlayerComponent extends BaseComponent implements OnInit {
-    files: Array<IBaseSong> = [];
+    files: IBaseSong[] = [];
 
     state?: StreamState;
 
     currentSongIdValue?: number;
 
     nextSongMode: NextSong = NextSong.NextInOrder;
+
+    previouslyListenedSongsIds: number[] = [];
 
     constructor(
         public audioService: AudioService,
@@ -42,6 +44,9 @@ export class PlayerComponent extends BaseComponent implements OnInit {
                     } else if (this.nextSongMode === NextSong.Same) {
                         this.openFile(this.currentSongIdValue);
                     } else if (this.nextSongMode === NextSong.Random) {
+                        if (this.currentSongIdValue) {
+                            this.previouslyListenedSongsIds.push(this.currentSongIdValue);
+                        }
                         this.random();
                     }
                 }
@@ -59,6 +64,8 @@ export class PlayerComponent extends BaseComponent implements OnInit {
                     this.stop();
                     this.currentSongIdValue = undefined;
                     this.files = playerState.files;
+                    this.previouslyListenedSongsIds = [];
+                    this.nextSongMode = NextSong.NextInOrder;
                 }
             });
     }
@@ -119,10 +126,18 @@ export class PlayerComponent extends BaseComponent implements OnInit {
     }
 
     random() {
-        const index = Math.floor(Math.random() * this.files.length);
-        const file = this.files[index];
+        if (this.files.length === 1) {
+            this.openFile(this.files[0].id);
+        } else {
+            let index = Math.floor(Math.random() * this.files.length);
+            let file = this.files[index];
 
-        this.openFile(file.id);
+            while (file.id === this.currentSongIdValue) {
+                index = Math.floor(Math.random() * this.files.length);
+                file = this.files[index];
+            }
+            this.openFile(file.id);
+        }
     }
 
     previous() {
@@ -147,11 +162,13 @@ export class PlayerComponent extends BaseComponent implements OnInit {
         } else {
             this.nextSongMode = NextSong.Same;
         }
+        this.previouslyListenedSongsIds = [];
     }
 
     setRandomMode() {
         if (this.nextSongMode === NextSong.Random) {
             this.nextSongMode = NextSong.NextInOrder;
+            this.previouslyListenedSongsIds = [];
         } else {
             this.nextSongMode = NextSong.Random;
         }
@@ -163,5 +180,30 @@ export class PlayerComponent extends BaseComponent implements OnInit {
 
     isSameMode() {
         return this.nextSongMode === NextSong.Same;
+    }
+
+    previousClickHandler() {
+        if (this.nextSongMode === NextSong.Random && this.previouslyListenedSongsIds.length > 0) {
+            const songId = this.previouslyListenedSongsIds.pop();
+
+            if (songId) {
+                this.openFile(songId);
+            } else {
+                this.previous();
+            }
+        } else {
+            this.previous();
+        }
+    }
+
+    nextClickHandler() {
+        if (this.nextSongMode === NextSong.Random) {
+            if (this.currentSongIdValue) {
+                this.previouslyListenedSongsIds.push(this.currentSongIdValue);
+            }
+            this.random();
+        } else {
+            this.next();
+        }
     }
 }

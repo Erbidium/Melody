@@ -29,7 +29,7 @@
                     <button
                         mat-button
                         [disabled]="this.currentSongIdValue === undefined"
-                        (click)="previous()"
+                        (click)="previousClickHandler()"
                     >
                         <mat-icon mat-list-icon>skip_previous</mat-icon>
                     </button>
@@ -47,7 +47,7 @@
                     <button
                         mat-button
                         [disabled]="this.currentSongIdValue === undefined"
-                        (click)="next()"
+                        (click)="nextClickHandler()"
                     >
                         <mat-icon mat-list-icon>skip_next</mat-icon>
                     </button>
