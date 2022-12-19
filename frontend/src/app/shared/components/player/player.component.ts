@@ -58,6 +58,7 @@ export class PlayerComponent extends BaseComponent implements OnInit {
                 } else if (songId === undefined) {
                     this.stop();
                     this.currentSongIdValue = undefined;
+                    this.files = playerState.files;
                 }
             });
     }
