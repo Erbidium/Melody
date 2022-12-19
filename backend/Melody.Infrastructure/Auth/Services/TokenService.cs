@@ -1,6 +1,8 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using LanguageExt.Common;
+using Melody.Core.Exceptions;
 using Melody.Core.Interfaces;
 using Melody.Infrastructure.Data.DbEntites;
 using Melody.Infrastructure.Data.Interfaces;
@@ -45,16 +47,17 @@ public class TokenService : ITokenService
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    public async Task<(string? accessToken, string? refreshToken)> CreateAccessTokenAndRefreshToken(string email,
+    public async Task<Result<(string accessToken, string refreshToken)>> CreateAccessTokenAndRefreshToken(string email,
         string password)
     {
         var currentUser = await _userManager.FindByEmailAsync(email);
 
-        if (currentUser == null ||
-            currentUser.IsBanned ||
-            currentUser.IsDeleted ||
-            !await _userManager.CheckPasswordAsync(currentUser, password))
-            return (null, null);
+        if (currentUser is null || currentUser.IsDeleted)
+            return new Result<(string, string)>(new KeyNotFoundException("User is not found"));
+        if (currentUser.IsBanned)
+            return new Result<(string, string)>(new BannedUserException());
+        if (!await _userManager.CheckPasswordAsync(currentUser, password))
+            return new Result<(string, string)>(new WrongPasswordException());
 
         var refreshToken = await GenerateRefreshToken(email);
         var accessToken = await GenerateAccessToken(currentUser);
@@ -62,14 +65,18 @@ public class TokenService : ITokenService
         return (accessToken, refreshToken);
     }
 
-    public async Task<(string? accessToken, string? refreshToken)> GetAccessTokenAndUpdatedRefreshToken(
+    public async Task<Result<(string accessToken, string refreshToken)>> GetAccessTokenAndUpdatedRefreshToken(
         string refreshTokenString)
     {
         var dbEntry = await _refreshTokenRepository.FindAsync(refreshTokenString);
-        if (dbEntry == null) return (null, null);
+        if (dbEntry is null)
+            return new Result<(string, string)>(new KeyNotFoundException("Refresh token is not found"));
         var email = GetEmailFromRefreshToken(refreshTokenString);
         var user = await _userManager.FindByEmailAsync(email);
-        if (user.IsBanned || user.IsDeleted) return (null, null);
+        if (user.IsDeleted)
+            return new Result<(string, string)>(new KeyNotFoundException("User is not found"));
+        if (user.IsBanned)
+            return new Result<(string, string)>(new BannedUserException());
         var refreshToken = await GenerateRefreshToken(email);
         await _refreshTokenRepository.CreateOrUpdateAsync(refreshToken, user.Id);
         var accessToken = await GenerateAccessToken(user);

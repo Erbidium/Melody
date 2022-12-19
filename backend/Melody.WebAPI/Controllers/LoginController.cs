@@ -1,4 +1,6 @@
-﻿using Melody.Core.Interfaces;
+﻿using LanguageExt;
+using LanguageExt.SomeHelp;
+using Melody.Core.Interfaces;
 using Melody.Infrastructure.Data.DbEntites;
 using Melody.Infrastructure.Data.Interfaces;
 using Melody.WebAPI.DTO.Auth.Models;
@@ -29,17 +31,18 @@ public class LoginController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Login([FromBody] UserLogin userLogin)
     {
-        var tokens = await _tokenService.CreateAccessTokenAndRefreshToken(userLogin.Email, userLogin.Password);
-
-        if (tokens.accessToken is null || tokens.refreshToken is null) return NotFound("User not found");
-
-        Response.Cookies.Append("X-Refresh-Token", tokens.refreshToken,
-            new CookieOptions
+        var result = await _tokenService.CreateAccessTokenAndRefreshToken(userLogin.Email, userLogin.Password);
+        return result.Match(tokens =>
             {
-                HttpOnly = true, SameSite = SameSiteMode.None, Secure = true,
-                Expires = DateTimeOffset.Now.AddDays(60)
-            });
-        return Ok(new { tokens.accessToken });
+                Response.Cookies.Append("X-Refresh-Token", tokens.refreshToken,
+                    new CookieOptions
+                    {
+                        HttpOnly = true, SameSite = SameSiteMode.None, Secure = true,
+                        Expires = DateTimeOffset.Now.AddDays(60)
+                    });
+                return Ok(new { tokens.accessToken });
+            },
+            exception => exception.ToActionResult());
     }
 
     [AllowAnonymous]
@@ -48,25 +51,23 @@ public class LoginController : ControllerBase
     {
         if (!Request.Cookies.TryGetValue("X-Refresh-Token", out var refreshTokenString))
             return BadRequest();
-
-        try
-        {
-            var tokens = await _tokenService.GetAccessTokenAndUpdatedRefreshToken(refreshTokenString);
-            if (tokens.accessToken is null || tokens.refreshToken is null) return Unauthorized();
-
-            Response.Cookies.Append("X-Refresh-Token", tokens.refreshToken,
-                new CookieOptions
-                {
-                    HttpOnly = true, SameSite = SameSiteMode.None, Secure = true,
-                    Expires = DateTimeOffset.Now.AddDays(60)
-                });
-            return Ok(new { AccessToken = tokens.accessToken });
-        }
-        catch (Exception)
+        
+        var result = await _tokenService.GetAccessTokenAndUpdatedRefreshToken(refreshTokenString);
+        if (result.IsFaulted)
         {
             await _refreshTokenRepository.DeleteByValueAsync(refreshTokenString);
-            return Unauthorized();
         }
+        return result.Match<IActionResult>(tokens =>
+            {
+                Response.Cookies.Append("X-Refresh-Token", tokens.refreshToken,
+                    new CookieOptions
+                    {
+                        HttpOnly = true, SameSite = SameSiteMode.None, Secure = true,
+                        Expires = DateTimeOffset.Now.AddDays(60)
+                    });
+                return Ok(new { AccessToken = tokens.accessToken });
+            },
+            _ => Unauthorized());
     }
 
     [Authorize]
