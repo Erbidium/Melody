@@ -49,4 +49,3 @@
         <tr mat-row *matRowDef="let row; columns: columnsToDisplay" [ngClass]="{'selectedSong': row.id === currentSongIdForMusicPlayer}" (click)="selectSong(row.id)"></tr>
     </table>
 </ng-template>
-<app-player [(currentSongId)]="currentSongIdForMusicPlayer" [files]="songs"></app-player>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { BaseComponent } from '@core/base/base.component';
 import { columnsToDisplayWithRemoveColumn } from '@core/helpers/columns-to-display-helper';
 import { ISong } from '@core/models/ISong';
+import { PlayerService } from '@core/services/player.service';
 import { SongService } from '@core/services/song.service';
 import { SpinnerOverlayService } from '@core/services/spinner-overlay.service';
 import { switchMap } from 'rxjs/operators';
@@ -20,6 +21,7 @@ export class UserUploadsPageComponent extends BaseComponent implements OnInit {
 
     constructor(
         private songService: SongService,
+        private playerService: PlayerService,
         private spinnerOverlayService: SpinnerOverlayService,
     ) {
         super();
@@ -27,6 +29,12 @@ export class UserUploadsPageComponent extends BaseComponent implements OnInit {
 
     ngOnInit() {
         this.loadSongsUploadedByUser();
+        this.playerService
+            .playerStateEmitted$
+            .pipe(this.untilThis)
+            .subscribe(state => {
+                this.currentSongIdForMusicPlayer = state.id;
+            });
     }
 
     loadSongsUploadedByUser() {
@@ -41,7 +49,7 @@ export class UserUploadsPageComponent extends BaseComponent implements OnInit {
     }
 
     selectSong(songId: number) {
-        this.currentSongIdForMusicPlayer = songId;
+        this.playerService.emitPlayerStateChange(songId, this.uploadedSongs);
     }
 
     deleteSong(id: number, event: MouseEvent) {

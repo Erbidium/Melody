@@ -131,7 +131,10 @@ export class AudioService {
         return new Observable(observer => {
             this.audioObj.src = url;
             this.audioObj.load();
-            this.audioObj.play();
+            this.audioObj.autoplay = true;
+            const res = this.audioObj.play();
+
+            res.catch(e => e);
 
             const handler = (event: Event) => {
                 this.updateStateEvents(event);

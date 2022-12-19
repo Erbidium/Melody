@@ -5,6 +5,7 @@ import { IFavouritePlaylistWithPerformers } from '@core/models/IFavouritePlaylis
 import { IUser } from '@core/models/IUser';
 import { AuthService } from '@core/services/auth.service';
 import { NotificationService } from '@core/services/notification.service';
+import { PlayerService } from '@core/services/player.service';
 import { PlaylistService } from '@core/services/playlist.service';
 import { SpinnerOverlayService } from '@core/services/spinner-overlay.service';
 import { UserService } from '@core/services/user.service';
@@ -26,6 +27,7 @@ export class CurrentUserProfilePageComponent extends BaseComponent implements On
         private userService: UserService,
         private spinnerOverlayService: SpinnerOverlayService,
         private playlistService: PlaylistService,
+        private playerService: PlayerService,
         private notificationService: NotificationService,
         private router: Router,
     ) {
@@ -52,6 +54,8 @@ export class CurrentUserProfilePageComponent extends BaseComponent implements On
             .subscribe(() => {
                 this.notificationService.showSuccessMessage('Ти успішно вийшов з свого акаунту');
                 localStorage.removeItem('access-token');
+                this.playerService.emitPlayerStateChange(undefined, []);
+                sessionStorage.clear();
                 this.router.navigateByUrl('auth');
             });
     }
@@ -80,6 +84,7 @@ export class CurrentUserProfilePageComponent extends BaseComponent implements On
             .subscribe(() => {
                 this.notificationService.showSuccessMessage('Ти успішно видалив свій акаунт');
                 localStorage.removeItem('access-token');
+                sessionStorage.clear();
                 this.router.navigateByUrl('auth');
             });
     }

@@ -13,7 +13,7 @@
        Genres.Name
 FROM Songs
 INNER JOIN Genres ON Songs.GenreId = Genres.Id
-INNER JOIN Users u ON u.Id = p.AuthorId
+INNER JOIN Users u ON u.Id = Songs.UserId
 WHERE u.IsDeleted = 0
-  AND s.IsDeleted = 0
+  AND Songs.IsDeleted = 0
 ORDER BY Songs.UploadedAt DESC

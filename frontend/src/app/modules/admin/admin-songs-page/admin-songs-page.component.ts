@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { BaseComponent } from '@core/base/base.component';
 import { headerNavLinksAdministrator } from '@core/helpers/header-helpers';
 import { ISong } from '@core/models/ISong';
+import { PlayerService } from '@core/services/player.service';
 import { SongService } from '@core/services/song.service';
 import { SpinnerOverlayService } from '@core/services/spinner-overlay.service';
 import { switchMap } from 'rxjs/operators';
-import {Router} from "@angular/router";
 
 @Component({
     selector: 'app-admin-songs-page',
@@ -32,6 +33,7 @@ export class AdminSongsPageComponent extends BaseComponent implements OnInit {
 
     constructor(
         private songService: SongService,
+        private playerService: PlayerService,
         private router: Router,
         private spinnerOverlayService: SpinnerOverlayService,
     ) {
@@ -40,6 +42,12 @@ export class AdminSongsPageComponent extends BaseComponent implements OnInit {
 
     ngOnInit() {
         this.loadSongs();
+        this.playerService
+            .playerStateEmitted$
+            .pipe(this.untilThis)
+            .subscribe(state => {
+                this.currentSongIdForMusicPlayer = state.id;
+            });
     }
 
     loadSongs() {
@@ -54,7 +62,7 @@ export class AdminSongsPageComponent extends BaseComponent implements OnInit {
     }
 
     selectSong(songId: number) {
-        this.currentSongIdForMusicPlayer = songId;
+        this.playerService.emitPlayerStateChange(songId, this.songs);
     }
 
     deleteSong(id: number, event: MouseEvent) {

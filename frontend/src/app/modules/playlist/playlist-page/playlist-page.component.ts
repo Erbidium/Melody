@@ -8,6 +8,7 @@ import { IFavouritePlaylist } from '@core/models/IFavouritePlaylist';
 import { ISong } from '@core/models/ISong';
 import { IUser } from '@core/models/IUser';
 import { NotificationService } from '@core/services/notification.service';
+import { PlayerService } from '@core/services/player.service';
 import { PlaylistService } from '@core/services/playlist.service';
 import { SongService } from '@core/services/song.service';
 import { SpinnerOverlayService } from '@core/services/spinner-overlay.service';
@@ -47,6 +48,7 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
         private userService: UserService,
         private spinnerService: SpinnerOverlayService,
         private notificationService: NotificationService,
+        private playerService: PlayerService,
         private clipboard: Clipboard,
         private router: Router,
     ) {
@@ -70,10 +72,18 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
                     });
             }
         });
+        this.playerService
+            .playerStateEmitted$
+            .pipe(this.untilThis)
+            .subscribe(state => {
+                this.currentSongIdForMusicPlayer = state.id;
+            });
     }
 
     selectSong(songId: number) {
-        this.currentSongIdForMusicPlayer = songId;
+        if (this.playlist) {
+            this.playerService.emitPlayerStateChange(songId, this.playlist.songs);
+        }
     }
 
     copyPlaylistLink() {

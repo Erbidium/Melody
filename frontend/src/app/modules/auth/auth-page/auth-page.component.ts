@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BaseComponent } from '@core/base/base.component';
 import { AuthService } from '@core/services/auth.service';
+import { PlayerService } from '@core/services/player.service';
 import { UserService } from '@core/services/user.service';
 import { EmailValidator } from '@modules/auth/validators/email-validator';
 import { UsernameValidator } from '@modules/auth/validators/username-validator';
@@ -54,6 +55,7 @@ export class AuthPageComponent extends BaseComponent {
     constructor(
         private authService: AuthService,
         private userService: UserService,
+        private playerService: PlayerService,
         private router: Router,
     ) {
         super();
@@ -89,6 +91,8 @@ export class AuthPageComponent extends BaseComponent {
                 .subscribe({
                     next: () => {
                         this.signInForm.reset();
+                        sessionStorage.clear();
+                        this.playerService.emitPlayerStateChange(undefined, []);
                         this.router.navigateByUrl('melody');
                     },
                     error: () => this.setCredentialsIncorrect(),

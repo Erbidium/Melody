@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatSliderChange } from '@angular/material/slider';
 import { BaseComponent } from '@core/base/base.component';
 import { NextSong } from '@core/enums/NextSong';
 import { StreamState } from '@core/interfaces/stream-state';
 import { IBaseSong } from '@core/models/IBaseSong';
 import { AudioService } from '@core/services/audio.service';
+import { PlayerService } from '@core/services/player.service';
 import { SongService } from '@core/services/song.service';
 
 @Component({
@@ -13,7 +14,7 @@ import { SongService } from '@core/services/song.service';
     styleUrls: ['./player.component.sass'],
 })
 export class PlayerComponent extends BaseComponent implements OnInit {
-    @Input() files: Array<IBaseSong> = [];
+    files: Array<IBaseSong> = [];
 
     state?: StreamState;
 
@@ -21,7 +22,11 @@ export class PlayerComponent extends BaseComponent implements OnInit {
 
     nextSongMode: NextSong = NextSong.NextInOrder;
 
-    constructor(public audioService: AudioService, public songService: SongService) {
+    constructor(
+        public audioService: AudioService,
+        public songService: SongService,
+        public playerService: PlayerService,
+    ) {
         super();
     }
 
@@ -41,6 +46,20 @@ export class PlayerComponent extends BaseComponent implements OnInit {
                     }
                 }
             });
+        this.playerService
+            .playerStateEmitted$
+            .pipe(this.untilThis)
+            .subscribe((playerState) => {
+                const songId = playerState.id;
+
+                if (songId && songId !== this.currentSongIdValue) {
+                    this.files = playerState.files;
+                    this.openFile(songId);
+                } else if (songId === undefined) {
+                    this.stop();
+                    this.currentSongIdValue = undefined;
+                }
+            });
     }
 
     playStream(url: string) {
@@ -50,20 +69,9 @@ export class PlayerComponent extends BaseComponent implements OnInit {
             .subscribe(() => {});
     }
 
-    @Input() set currentSongId(songId: number | undefined) {
-        if (songId && songId !== this.currentSongIdValue) {
-            this.openFile(songId);
-        } else if (songId === undefined) {
-            this.stop();
-            this.currentSongIdValue = undefined;
-        }
-    }
-
-    @Output() currentSongIdChange = new EventEmitter<number | undefined>();
-
     openFile(fileId: number) {
         this.currentSongIdValue = fileId;
-        this.currentSongIdChange.emit(this.currentSongIdValue);
+        this.playerService.emitPlayerStateChange(this.currentSongIdValue, this.files);
         this.audioService.stop();
         this.songService
             .saveNewListening(this.currentSongIdValue)
