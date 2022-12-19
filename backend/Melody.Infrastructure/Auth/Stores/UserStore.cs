@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Melody.Infrastructure.Auth.Stores;
 
-public class UserStore : IUserStore<UserIdentity>, IUserRoleStore<UserIdentity>, IUserEmailStore<UserIdentity>,
+public class UserStore : IUserRoleStore<UserIdentity>, IUserEmailStore<UserIdentity>,
     IUserPasswordStore<UserIdentity>
 {
     private readonly IRoleRepository _roleRepository;
@@ -101,7 +101,7 @@ public class UserStore : IUserStore<UserIdentity>, IUserRoleStore<UserIdentity>,
             throw new ArgumentException($"Parameter {nameof(roleName)} cannot be null or empty.");
 
         var roleEntity = await FindRoleAsync(roleName, cancellationToken);
-        if (roleEntity == null) throw new InvalidOperationException($"Role '{roleName}' was not found.");
+        if (roleEntity is null) throw new InvalidOperationException($"Role '{roleName}' was not found.");
 
         var userRoles = (await _userRepository.GetRolesAsync(user.Id))?.Select(x => new UserRole
         {
@@ -236,8 +236,8 @@ public class UserStore : IUserStore<UserIdentity>, IUserRoleStore<UserIdentity>,
         CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        if (user == null) throw new ArgumentNullException(nameof(user));
-        if (normalizedName == null) throw new ArgumentNullException(nameof(normalizedName));
+        if (user is null) throw new ArgumentNullException(nameof(user));
+        if (normalizedName is null) throw new ArgumentNullException(nameof(normalizedName));
 
         user.NormalizedUserName = normalizedName;
         return Task.FromResult<object>(null);
@@ -246,8 +246,8 @@ public class UserStore : IUserStore<UserIdentity>, IUserRoleStore<UserIdentity>,
     public Task SetUserNameAsync(UserIdentity user, string userName, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        if (user == null) throw new ArgumentNullException(nameof(user));
-        if (userName == null) throw new ArgumentNullException(nameof(userName));
+        if (user is null) throw new ArgumentNullException(nameof(user));
+        if (userName is null) throw new ArgumentNullException(nameof(userName));
 
         user.UserName = userName;
         return Task.FromResult<object>(null);

@@ -28,6 +28,6 @@ public class GenreRepository : IGenreRepository
         using var connection = _context.CreateConnection();
 
         var record = await connection.QuerySingleOrDefaultAsync<GenreDb>(SqlScriptsResource.GetGenreById, new { id });
-        return record == null ? null : new Genre(record.Name) { Id = record.Id };
+        return record is null ? null : new Genre(record.Name) { Id = record.Id };
     }
 }

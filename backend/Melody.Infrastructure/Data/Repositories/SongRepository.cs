@@ -38,7 +38,7 @@ public class SongRepository : ISongRepository
         using var connection = _context.CreateConnection();
 
         var record = await connection.QuerySingleOrDefaultAsync<SongDb>(SqlScriptsResource.GetSongById, new { id });
-        return record == null
+        return record is null
             ? null
             : new Song(record.UserId, record.Name, record.Path, record.AuthorName, record.Year, record.GenreId,
                 record.SizeBytes, record.UploadedAt, record.Duration) { Id = record.Id };

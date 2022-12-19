@@ -144,7 +144,7 @@ public class PlaylistRepository : IPlaylistRepository
             return playlistWithSong;
         }).FirstOrDefault();
 
-        if (playlistWithSongs == null) return null;
+        if (playlistWithSongs is null) return null;
 
         var songs = playlistWithSongs.Songs.Select(s =>
             new FavouriteSong(s.Name, s.AuthorName, s.GenreId, s.UploadedAt, s.Duration, s.IsFavourite)

@@ -20,7 +20,7 @@ public class RefreshTokenRepository : IRefreshTokenRepository
         var entry = await FindAsync(token);
 
         using var connection = _context.CreateConnection();
-        if (entry == null)
+        if (entry is null)
         {
             var parameters = new DynamicParameters();
             parameters.Add("UserId", userId, DbType.Int64);
