@@ -59,6 +59,7 @@ export class UserUploadsPageComponent extends BaseComponent implements OnInit {
             .pipe(switchMap(async () => this.loadSongsUploadedByUser()))
             .subscribe(() => {
                 this.currentSongIdForMusicPlayer = undefined;
+                this.playerService.emitPlayerStateChange(undefined, []);
             });
     }
 }

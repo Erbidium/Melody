@@ -59,6 +59,7 @@ export class FavouriteSongsPageComponent extends BaseComponent implements OnInit
             .pipe(switchMap(async () => this.loadFavouriteUserSongs()))
             .subscribe(() => {
                 this.currentSongIdForMusicPlayer = undefined;
+                this.playerService.emitPlayerStateChange(undefined, []);
             });
     }
 }

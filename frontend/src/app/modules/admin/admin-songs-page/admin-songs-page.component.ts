@@ -72,6 +72,7 @@ export class AdminSongsPageComponent extends BaseComponent implements OnInit {
             .pipe(switchMap(async () => this.loadSongs()))
             .subscribe(() => {
                 this.currentSongIdForMusicPlayer = undefined;
+                this.playerService.emitPlayerStateChange(undefined, []);
             });
     }
 

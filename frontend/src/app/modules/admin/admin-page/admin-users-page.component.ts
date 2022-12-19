@@ -6,6 +6,7 @@ import { IUserForAdmin } from '@core/models/IUserForAdmin';
 import { SpinnerOverlayService } from '@core/services/spinner-overlay.service';
 import { UserService } from '@core/services/user.service';
 import { switchMap } from 'rxjs/operators';
+import {PlayerService} from "@core/services/player.service";
 
 @Component({
     selector: 'app-admin-users-page',
@@ -22,6 +23,7 @@ export class AdminUsersPageComponent extends BaseComponent implements OnInit {
     constructor(
         private userService: UserService,
         private spinnerService: SpinnerOverlayService,
+        private playerService: PlayerService,
         private router: Router,
     ) {
         super();
@@ -58,6 +60,9 @@ export class AdminUsersPageComponent extends BaseComponent implements OnInit {
                 .subscribe((results) => {
                     this.users = results;
                     this.spinnerService.hide();
+                    if (!user.isBanned) {
+                        this.playerService.emitPlayerStateChange(undefined, []);
+                    }
                 });
         }
     }
@@ -75,6 +80,7 @@ export class AdminUsersPageComponent extends BaseComponent implements OnInit {
                 .subscribe((results) => {
                     this.users = results;
                     this.spinnerService.hide();
+                    this.playerService.emitPlayerStateChange(undefined, []);
                 });
         }
     }

@@ -115,6 +115,7 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
                 .subscribe((results) => {
                     [this.playlist, this.newSongsToAdd] = results;
                     this.spinnerService.hide();
+                    this.playerService.emitPlayerStateChange(undefined, []);
                 });
         }
     }
@@ -138,6 +139,7 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
                     .subscribe((results) => {
                         [this.playlist, this.newSongsToAdd] = results;
                         this.spinnerService.hide();
+                        this.playerService.emitPlayerStateChange(undefined, []);
                     });
             }
         }
@@ -149,6 +151,7 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
                 .deletePlaylist(this.playlist.id)
                 .pipe(this.untilThis)
                 .subscribe(() => {
+                    this.playerService.emitPlayerStateChange(undefined, []);
                     this.router.navigateByUrl('melody');
                 });
         }
@@ -169,6 +172,7 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
                         [this.playlist, this.newSongsToAdd] = results;
                         this.spinnerService.hide();
                         this.addSongsPlaylistForm.reset();
+                        this.playerService.emitPlayerStateChange(undefined, []);
                         this.notificationService.showSuccessMessage('Нові пісні успішно додано!');
                     },
                     error: () => this.notificationService.showErrorMessage('Сталася помилка під час спроби додати нові пісні'),
