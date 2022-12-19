@@ -12,27 +12,27 @@ export class HttpInternalService {
     // eslint-disable-next-line no-empty-function
     constructor(private http: HttpClient) {}
 
-    public getStringRequest(url: string, httpParams?: any): Observable<string> {
+    getStringRequest(url: string, httpParams?: any): Observable<string> {
         return this.http.get(this.buildUrl(url), { headers: this.getHeaders(), params: httpParams, responseType: 'text' });
     }
 
-    public getRequest<T>(url: string, httpParams?: any): Observable<T> {
+    getRequest<T>(url: string, httpParams?: any): Observable<T> {
         return this.http.get<T>(this.buildUrl(url), { headers: this.getHeaders(), params: httpParams });
     }
 
-    public postRequest<T>(url: string, payload: object, httpParams?: any): Observable<T> {
+    postRequest<T>(url: string, payload: object, httpParams?: any): Observable<T> {
         return this.http.post<T>(this.buildUrl(url), payload, { headers: this.getHeaders(), params: httpParams, withCredentials: true });
     }
 
-    public putRequest<T>(url: string, payload: object, httpParams?: any): Observable<T> {
+    putRequest<T>(url: string, payload: object, httpParams?: any): Observable<T> {
         return this.http.put<T>(this.buildUrl(url), payload, { headers: this.getHeaders(), params: httpParams });
     }
 
-    public patchRequest<T>(url: string, payload: object, httpParams?: any): Observable<T> {
+    patchRequest<T>(url: string, payload: object, httpParams?: any): Observable<T> {
         return this.http.patch<T>(this.buildUrl(url), payload, { headers: this.getHeaders(), params: httpParams });
     }
 
-    public deleteRequest<T>(url: string, httpParams?: any): Observable<T> {
+    deleteRequest<T>(url: string, httpParams?: any): Observable<T> {
         return this.http.delete<T>(this.buildUrl(url), { headers: this.getHeaders(), params: httpParams });
     }
 

@@ -10,15 +10,15 @@ export class UserService {
     // eslint-disable-next-line no-empty-function
     constructor(private httpService: HttpInternalService, private notificationService: NotificationService) {}
 
-    public getCurrentUser() {
+    getCurrentUser() {
         return this.httpService.getRequest<IUser>('/api/user');
     }
 
-    public getUserById(id: number) {
+    getUserById(id: number) {
         return this.httpService.getRequest<IUser>(`/api/user/${id}`);
     }
 
-    public checkEmail(email: string): Observable<boolean> {
+    checkEmail(email: string): Observable<boolean> {
         const emailEncoded = encodeURIComponent(email);
 
         return this.httpService.getRequest<boolean>(`/api/user/check-email?email=${emailEncoded}`).pipe(
@@ -29,7 +29,7 @@ export class UserService {
         );
     }
 
-    public checkUsername(username: string): Observable<boolean> {
+    checkUsername(username: string): Observable<boolean> {
         const usernameEncoded = encodeURIComponent(username);
 
         return this.httpService.getRequest<boolean>(`/api/user/check-username?username=${usernameEncoded}`).pipe(
@@ -40,19 +40,19 @@ export class UserService {
         );
     }
 
-    public getUsersWithoutAdminRole() {
+    getUsersWithoutAdminRole() {
         return this.httpService.getRequest<IUserForAdmin[]>('/api/user/all');
     }
 
-    public setUserBanStatus(id: number, isBanned: boolean) {
+    setUserBanStatus(id: number, isBanned: boolean) {
         return this.httpService.patchRequest(`/api/user/${id}/ban`, { isBanned });
     }
 
-    public deleteUser(id: number) {
+    deleteUser(id: number) {
         return this.httpService.deleteRequest(`/api/user/${id}`);
     }
 
-    public deleteAccount() {
+    deleteAccount() {
         return this.httpService.deleteRequest('/api/user');
     }
 }

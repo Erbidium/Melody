@@ -12,7 +12,7 @@ export class SpinnerOverlayService {
     // eslint-disable-next-line no-empty-function
     constructor(private overlay: Overlay) { }
 
-    public show() {
+    show() {
         if (!this.overlayRef) {
             this.overlayRef = this.overlay.create();
         }
@@ -22,7 +22,7 @@ export class SpinnerOverlayService {
         this.overlayRef.attach(spinnerOverlayPortal);
     }
 
-    public hide() {
+    hide() {
         if (this.overlayRef) {
             this.overlayRef.detach();
         }

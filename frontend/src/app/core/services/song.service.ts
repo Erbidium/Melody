@@ -8,47 +8,47 @@ export class SongService {
     // eslint-disable-next-line no-empty-function
     constructor(private httpService: HttpInternalService) {}
 
-    public getSongsUploadedByUser() {
+    getSongsUploadedByUser() {
         return this.httpService.getRequest<ISong[]>('/api/song/');
     }
 
-    public getFavouriteAndUploadedUserSongs() {
+    getFavouriteAndUploadedUserSongs() {
         return this.httpService.getRequest<ISong[]>('/api/song/favourite-and-uploaded');
     }
 
-    public getAllGenres() {
+    getAllGenres() {
         return this.httpService.getRequest<IGenre[]>('/api/song/genres');
     }
 
-    public createSong(formData: FormData) {
+    createSong(formData: FormData) {
         return this.httpService.postRequest<ISong>('/api/song', formData);
     }
 
-    public deleteSong(id: number) {
+    deleteSong(id: number) {
         return this.httpService.deleteRequest(`/api/song/${id}`);
     }
 
-    public deleteSongByAdministrator(id: number) {
+    deleteSongByAdministrator(id: number) {
         return this.httpService.deleteRequest(`/api/song/admin/${id}`);
     }
 
-    public getFavouriteUserSongs() {
+    getFavouriteUserSongs() {
         return this.httpService.getRequest<ISong[]>('/api/song/favourite');
     }
 
-    public removeSongFromUserFavourites(id: number) {
+    removeSongFromUserFavourites(id: number) {
         return this.httpService.deleteRequest(`/api/song/favourite/${id}`);
     }
 
-    public setSongStatus(id: number, isLiked: boolean) {
+    setSongStatus(id: number, isLiked: boolean) {
         return this.httpService.patchRequest(`/api/song/${id}/like`, { isLiked });
     }
 
-    public saveNewListening(id: number) {
+    saveNewListening(id: number) {
         return this.httpService.postRequest('/api/song/new-listening', { SongId: id });
     }
 
-    public getAllSongs() {
+    getAllSongs() {
         return this.httpService.getRequest<ISong[]>('/api/song/all');
     }
 }
