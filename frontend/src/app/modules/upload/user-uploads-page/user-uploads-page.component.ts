@@ -82,7 +82,7 @@ export class UserUploadsPageComponent extends BaseComponent implements OnInit {
         this.songService
             .deleteSong(id)
             .pipe(switchMap(async () => {
-                this.uploadedSongs = [];
+                this.page = Math.ceil((this.uploadedSongs.length - 1) / this.pageSize);
                 this.loadSongsUploadedByUser(1, this.page * this.pageSize, true);
             }))
             .subscribe(() => {
