@@ -34,7 +34,7 @@ export class UserUploadsPageComponent extends BaseComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.loadSongsUploadedByUser(this.page);
+        this.loadSongsUploadedByUser(this.page, this.pageSize);
         this.playerService
             .playerStateEmitted$
             .pipe(this.untilThis)
@@ -47,23 +47,23 @@ export class UserUploadsPageComponent extends BaseComponent implements OnInit {
             .pipe(this.untilThis)
             .subscribe((status: boolean) => {
                 if (status) {
-                    this.loadSongsUploadedByUser(++this.page);
+                    this.loadSongsUploadedByUser(++this.page, this.pageSize);
                 }
             });
     }
 
-    loadSongsUploadedByUser(page: number) {
+    loadSongsUploadedByUser(page: number, pageSize: number, updateAllData = false) {
         this.spinnerOverlayService.show();
         this.songService
-            .getSongsUploadedByUser(page)
+            .getSongsUploadedByUser(page, pageSize)
             .pipe(this.untilThis)
             .subscribe((response) => {
                 this.spinnerOverlayService.hide();
 
-                this.uploadedSongs = this.uploadedSongs.concat(response);
+                this.uploadedSongs = updateAllData ? response : this.uploadedSongs.concat(response);
 
                 const clear = setInterval(() => {
-                    const target = document.querySelector(`#target${page * this.pageSize - 1}`);
+                    const target = document.querySelector(`#target${page * pageSize - 1}`);
 
                     if (target) {
                         clearInterval(clear);
@@ -81,7 +81,10 @@ export class UserUploadsPageComponent extends BaseComponent implements OnInit {
         event.stopPropagation();
         this.songService
             .deleteSong(id)
-            .pipe(switchMap(async () => this.loadSongsUploadedByUser(this.page)))
+            .pipe(switchMap(async () => {
+                this.uploadedSongs = [];
+                this.loadSongsUploadedByUser(1, this.page * this.pageSize, true);
+            }))
             .subscribe(() => {
                 this.currentSongIdForMusicPlayer = undefined;
                 this.playerService.emitPlayerStateChange(undefined, []);

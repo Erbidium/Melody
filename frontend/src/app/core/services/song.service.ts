@@ -8,8 +8,8 @@ export class SongService {
     // eslint-disable-next-line no-empty-function
     constructor(private httpService: HttpInternalService) {}
 
-    getSongsUploadedByUser(page: number) {
-        return this.httpService.getRequest<ISong[]>('/api/song/', { page });
+    getSongsUploadedByUser(page: number, pageSize: number) {
+        return this.httpService.getRequest<ISong[]>('/api/song/', { page, pageSize });
     }
 
     getFavouriteAndUploadedUserSongs() {
