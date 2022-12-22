@@ -3,10 +3,10 @@ import { Router } from '@angular/router';
 import { BaseComponent } from '@core/base/base.component';
 import { headerNavLinksAdministrator } from '@core/helpers/header-helpers';
 import { IUserForAdmin } from '@core/models/IUserForAdmin';
+import { PlayerService } from '@core/services/player.service';
 import { SpinnerOverlayService } from '@core/services/spinner-overlay.service';
 import { UserService } from '@core/services/user.service';
 import { switchMap } from 'rxjs/operators';
-import {PlayerService} from "@core/services/player.service";
 
 @Component({
     selector: 'app-admin-users-page',

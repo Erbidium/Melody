@@ -10,7 +10,7 @@ public interface ISongRepository
     public Task Update(Song song);
     public Task<bool> Delete(long id);
     public Task<long> GetTotalBytesSumUploadsByUser(long userId);
-    public Task<IReadOnlyCollection<Song>> GetSongsUploadedByUserId(long userId);
+    public Task<IReadOnlyCollection<Song>> GetSongsUploadedByUserId(long userId, int page = 1, int pageSize = 10);
     public Task<IReadOnlyCollection<Song>> GetSongsForPlaylistToAdd(long playlistId, long userId);
     public Task<IReadOnlyCollection<Song>> GetFavouriteUserSongs(long userId);
     public Task<IReadOnlyCollection<Song>> GetFavouriteAndUploadedUserSongs(long userId);

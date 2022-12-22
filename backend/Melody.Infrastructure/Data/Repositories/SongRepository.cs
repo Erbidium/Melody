@@ -99,7 +99,7 @@ public class SongRepository : ISongRepository
             new { UserId = userId });
     }
 
-    public async Task<IReadOnlyCollection<Song>> GetSongsUploadedByUserId(long userId)
+    public async Task<IReadOnlyCollection<Song>> GetSongsUploadedByUserId(long userId, int page = 1, int pageSize = 10)
     {
         using var connection = _context.CreateConnection();
 
@@ -114,7 +114,7 @@ public class SongRepository : ISongRepository
                 };
                 return song;
             },
-            new { UserId = userId });
+            new { userId, Offset = (page - 1) * pageSize, pageSize });
         return songs.ToList().AsReadOnly();
     }
 

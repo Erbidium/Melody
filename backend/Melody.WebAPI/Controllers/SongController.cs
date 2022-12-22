@@ -48,11 +48,11 @@ public class SongController : ControllerBase
 
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<SongDto>>> GetSongsUploadedByUser()
+    public async Task<ActionResult<IEnumerable<SongDto>>> GetSongsUploadedByUser(int page = 1, int pageSize = 10)
     {
         var userId = HttpContext.User.GetId();
         return Ok(_mapper.Map<List<SongDto>>(
-            await _songRepository.GetSongsUploadedByUserId(userId)));
+            await _songRepository.GetSongsUploadedByUserId(userId, page, pageSize)));
     }
 
     [Authorize]

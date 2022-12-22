@@ -314,9 +314,9 @@ namespace Melody.Infrastructure.Data {
         ///       Genres.Name
         ///FROM Songs
         ///INNER JOIN Genres ON Songs.GenreId = Genres.Id
-        ///INNER JOIN Users u ON u.Id = p.AuthorId
+        ///INNER JOIN Users u ON u.Id = Songs.UserId
         ///WHERE u.IsDeleted = 0
-        ///  AND s.IsDeleted = 0
+        ///  AND Songs.IsDeleted = 0
         ///ORDER BY Songs.UploadedAt DESC.
         /// </summary>
         internal static string GetAllSongs {
@@ -595,7 +595,9 @@ namespace Melody.Infrastructure.Data {
         ///INNER JOIN Genres ON s.GenreId = Genres.Id
         ///WHERE s.IsDeleted = 0
         ///  AND s.UserId = @UserId
-        ///ORDER BY s.UploadedAt DESC.
+        ///ORDER BY s.UploadedAt DESC
+        ///OFFSET @Offset ROWS
+        ///FETCH NEXT @PageSize ROWS ONLY.
         /// </summary>
         internal static string GetSongsUploadedByUserId {
             get {

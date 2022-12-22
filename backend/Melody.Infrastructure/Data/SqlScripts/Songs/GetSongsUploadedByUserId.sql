@@ -16,3 +16,5 @@ INNER JOIN Genres ON s.GenreId = Genres.Id
 WHERE s.IsDeleted = 0
   AND s.UserId = @UserId
 ORDER BY s.UploadedAt DESC
+OFFSET @Offset ROWS
+FETCH NEXT @PageSize ROWS ONLY
