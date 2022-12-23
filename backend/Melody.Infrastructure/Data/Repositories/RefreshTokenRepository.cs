@@ -17,7 +17,7 @@ public class RefreshTokenRepository : IRefreshTokenRepository
 
     public async Task<bool> CreateOrUpdateAsync(string token, long userId)
     {
-        var entry = await FindAsync(token);
+        var entry = await FindByUserIdAsync(userId);
 
         using var connection = _context.CreateConnection();
         if (entry is null)
@@ -55,10 +55,17 @@ public class RefreshTokenRepository : IRefreshTokenRepository
         return rowsDeleted == 1;
     }
 
-    public async Task<RefreshTokenDb?> FindAsync(string token)
+    public async Task<RefreshTokenDb?> FindByTokenValueAsync(string token)
     {
         using var connection = _context.CreateConnection();
-        return await connection.QuerySingleOrDefaultAsync<RefreshTokenDb>(SqlScriptsResource.FindRefreshToken,
+        return await connection.QuerySingleOrDefaultAsync<RefreshTokenDb>(SqlScriptsResource.FindRefreshTokenByValue,
             new { Token = token });
+    }
+
+    public async Task<RefreshTokenDb?> FindByUserIdAsync(long userId)
+    {
+        using var connection = _context.CreateConnection();
+        return await connection.QuerySingleOrDefaultAsync<RefreshTokenDb>(SqlScriptsResource.FindRefreshTokenByUserId,
+            new { UserId = userId });
     }
 }

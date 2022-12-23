@@ -266,11 +266,22 @@ namespace Melody.Infrastructure.Data {
         /// <summary>
         ///   Ищет локализованную строку, похожую на SELECT Id, UserId, RefreshToken
         ///FROM UserRefreshTokens
+        ///WHERE UserId = @UserId;.
+        /// </summary>
+        internal static string FindRefreshTokenByUserId {
+            get {
+                return ResourceManager.GetString("FindRefreshTokenByUserId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на SELECT Id, UserId, RefreshToken
+        ///FROM UserRefreshTokens
         ///WHERE RefreshToken = @Token;.
         /// </summary>
-        internal static string FindRefreshToken {
+        internal static string FindRefreshTokenByValue {
             get {
-                return ResourceManager.GetString("FindRefreshToken", resourceCulture);
+                return ResourceManager.GetString("FindRefreshTokenByValue", resourceCulture);
             }
         }
         

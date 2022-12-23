@@ -187,9 +187,11 @@
   <data name="DeleteUser" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqlscripts\users\deleteuser.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="FindRefreshToken" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>sqlscripts\refreshtokens\findrefreshtoken.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089;utf-8</value>
+  <data name="FindRefreshTokenByUserId" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\refreshtokens\findrefreshtokenbyuserid.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="FindRefreshTokenByValue" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\refreshtokens\findrefreshtokenbyvalue.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="GetAllGenres" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqlscripts\genres\getallgenres.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,

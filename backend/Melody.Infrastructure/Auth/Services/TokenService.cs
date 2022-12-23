@@ -1,4 +1,4 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using LanguageExt.Common;
@@ -68,7 +68,7 @@ public class TokenService : ITokenService
     public async Task<Result<(string accessToken, string refreshToken)>> GetAccessTokenAndUpdatedRefreshToken(
         string refreshTokenString)
     {
-        var dbEntry = await _refreshTokenRepository.FindAsync(refreshTokenString);
+        var dbEntry = await _refreshTokenRepository.FindByTokenValueAsync(refreshTokenString);
         if (dbEntry is null)
             return new Result<(string, string)>(new KeyNotFoundException("Refresh token is not found"));
         var email = GetEmailFromRefreshToken(refreshTokenString);
