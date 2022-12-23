@@ -134,7 +134,7 @@ public class SongController : ControllerBase
         var userId = HttpContext.User.GetId();
         return await _songRepository.DeleteFavouriteSong(id, userId)
             ? Ok()
-            : BadRequest();
+            : NotFound();
         
     }
 
@@ -145,7 +145,7 @@ public class SongController : ControllerBase
         var userId = HttpContext.User.GetId();
         return await _songRepository.DeleteUploadedSong(id, userId)
             ? NoContent()
-            : BadRequest();
+            : NotFound();
     }
 
     [Authorize(Roles = "Admin")]

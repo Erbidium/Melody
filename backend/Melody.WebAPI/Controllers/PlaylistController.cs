@@ -129,7 +129,7 @@ public class PlaylistController : ControllerBase
     {
         var userId = HttpContext.User.GetId();
         var playlist = await _playlistRepository.GetById(id, userId);
-        if (playlist is null || playlist.AuthorId != userId) return BadRequest();
+        if (playlist is null || playlist.AuthorId != userId) return NotFound();
         await _playlistRepository.Delete(id);
         return NoContent();
     }

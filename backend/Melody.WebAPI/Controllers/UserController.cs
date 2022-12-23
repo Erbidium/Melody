@@ -114,7 +114,7 @@ public class UserController : ControllerBase
     }
 
     [Authorize]
-    [HttpDelete()]
+    [HttpDelete]
     public async Task<IActionResult> DeleteUser()
     {
         var userId = HttpContext.User.GetId();
@@ -129,7 +129,7 @@ public class UserController : ControllerBase
         await _refreshTokenRepository.DeleteByUserIdAsync(userId);
         return await _userRepository.DeleteAsync(userId)
             ? NoContent()
-            : BadRequest();
+            : NotFound();
     }
 
     [Authorize(Roles = "Admin")]
@@ -139,6 +139,6 @@ public class UserController : ControllerBase
         await _refreshTokenRepository.DeleteByUserIdAsync(id);
         return await _userRepository.DeleteAsync(id)
             ? NoContent()
-            : BadRequest();
+            : NotFound();
     }
 }
