@@ -45,8 +45,9 @@ export class UserUploadsPageComponent extends BaseComponent implements OnInit {
         this.scrollService
             .getObservable()
             .pipe(this.untilThis)
-            .subscribe((status: boolean) => {
-                if (status) {
+            .subscribe((status: { isIntersecting: boolean, id: string }) => {
+
+                if (status.isIntersecting && status.id === `target${this.page * this.pageSize - 1}`) {
                     this.loadSongsUploadedByUser(++this.page, this.pageSize);
                 }
             });

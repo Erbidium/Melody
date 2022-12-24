@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs';
     providedIn: 'root',
 })
 export class InfiniteScrollingService {
-    private intersectionSubject = new BehaviorSubject<boolean>(false);
+    private intersectionSubject = new BehaviorSubject<{ isIntersecting: boolean, id: string } >({ isIntersecting: false, id: '' });
 
     public intersectionOptions = {
         root: null,
@@ -21,7 +21,7 @@ export class InfiniteScrollingService {
 
     intersectionCallback(entries: IntersectionObserverEntry[], _: IntersectionObserver) {
         entries.forEach((entry: IntersectionObserverEntry) => {
-            this.intersectionSubject.next(entry.intersectionRatio === 1);
+            this.intersectionSubject.next({ isIntersecting: entry.intersectionRatio === 1, id: entry.target.id });
         });
     }
 
