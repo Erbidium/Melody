@@ -46,6 +46,6 @@
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-        <tr mat-row *matRowDef="let row; columns: columnsToDisplay" [ngClass]="{'selectedSong': row.id === currentSongIdForMusicPlayer}" (click)="selectSong(row.id)"></tr>
+        <tr mat-row *matRowDef="let row, let i=index; columns: columnsToDisplay" [ngClass]="{'selectedSong': row.id === currentSongIdForMusicPlayer}" (click)="selectSong(row.id)" id="target{{i}}"></tr>
     </table>
 </ng-template>

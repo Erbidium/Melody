@@ -328,7 +328,9 @@ namespace Melody.Infrastructure.Data {
         ///INNER JOIN Users u ON u.Id = Songs.UserId
         ///WHERE u.IsDeleted = 0
         ///  AND Songs.IsDeleted = 0
-        ///ORDER BY Songs.UploadedAt DESC.
+        ///ORDER BY Songs.UploadedAt DESC
+        ///OFFSET @Offset ROWS
+        ///FETCH NEXT @PageSize ROWS ONLY.
         /// </summary>
         internal static string GetAllSongs {
             get {

@@ -16,7 +16,7 @@ public class SongRepository : ISongRepository
         _context = context;
     }
 
-    public async Task<IReadOnlyCollection<Song>> GetAll()
+    public async Task<IReadOnlyCollection<Song>> GetAll(int page = 1, int pageSize = 10)
     {
         using var connection = _context.CreateConnection();
         var songs = await connection.QueryAsync<SongDb, GenreDb, Song>(SqlScriptsResource.GetAllSongs,
@@ -29,7 +29,7 @@ public class SongRepository : ISongRepository
                     Genre = new Genre(genreDb.Name) { Id = genreDb.Id }
                 };
                 return song;
-            });
+            }, new { Offset = (page - 1) * pageSize, pageSize });
         return songs.ToList().AsReadOnly();
     }
 

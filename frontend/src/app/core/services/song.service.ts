@@ -48,7 +48,7 @@ export class SongService {
         return this.httpService.postRequest('/api/song/new-listening', { SongId: id });
     }
 
-    getAllSongs() {
-        return this.httpService.getRequest<ISong[]>('/api/song/all');
+    getAllSongs(page: number, pageSize: number) {
+        return this.httpService.getRequest<ISong[]>('/api/song/all', { page, pageSize });
     }
 }

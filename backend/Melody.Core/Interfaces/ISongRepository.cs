@@ -6,7 +6,7 @@ public interface ISongRepository
 {
     public Task<Song> Create(Song song);
     public Task<Song?> GetById(long id);
-    public Task<IReadOnlyCollection<Song>> GetAll();
+    public Task<IReadOnlyCollection<Song>> GetAll(int page = 1, int pageSize = 10);
     public Task Update(Song song);
     public Task<bool> Delete(long id);
     public Task<long> GetTotalBytesSumUploadsByUser(long userId);

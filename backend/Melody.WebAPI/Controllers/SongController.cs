@@ -41,9 +41,9 @@ public class SongController : ControllerBase
 
     [Authorize(Roles = "Admin")]
     [HttpGet("all")]
-    public async Task<ActionResult<IEnumerable<SongDto>>> GetAllSongs()
+    public async Task<ActionResult<IEnumerable<SongDto>>> GetAllSongs(int page = 1, int pageSize = 10)
     {
-        return Ok(_mapper.Map<List<SongDto>>(await _songRepository.GetAll()));
+        return Ok(_mapper.Map<List<SongDto>>(await _songRepository.GetAll(page, pageSize)));
     }
 
     [Authorize]
