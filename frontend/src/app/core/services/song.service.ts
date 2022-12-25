@@ -32,8 +32,8 @@ export class SongService {
         return this.httpService.deleteRequest(`/api/song/admin/${id}`);
     }
 
-    getFavouriteUserSongs() {
-        return this.httpService.getRequest<ISong[]>('/api/song/favourite');
+    getFavouriteUserSongs(page: number, pageSize: number) {
+        return this.httpService.getRequest<ISong[]>('/api/song/favourite', { page, pageSize });
     }
 
     removeSongFromUserFavourites(id: number) {
