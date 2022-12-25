@@ -120,7 +120,7 @@ public class PlaylistRepository : IPlaylistRepository
         }).ToList().AsReadOnly();
     }
 
-    public async Task<FavouritePlaylist?> GetById(long id, long userId)
+    public async Task<FavouritePlaylist?> GetById(long id, long userId, int page = 1, int pageSize = 10)
     {
         using var connection = _context.CreateConnection();
 
@@ -135,7 +135,7 @@ public class PlaylistRepository : IPlaylistRepository
                     }
 
                     return playlist;
-                }, new { id, userId });
+                }, new { id, userId, Offset = (page - 1) * pageSize, pageSize });
 
         var playlistWithSongs = records.GroupBy(p => p.Id).Select(g =>
         {

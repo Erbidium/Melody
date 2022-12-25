@@ -32,7 +32,10 @@ FROM Playlists p
            (SELECT SongId
             FROM FavouriteSongs fs
             WHERE fs.UserId = @UserId) fs ON fs.SongId = s.Id
-      WHERE s.IsDeleted = 0) ps ON ps.PlaylistId = p.Id
+      WHERE s.IsDeleted = 0
+      ORDER BY s.UploadedAt DESC
+      OFFSET @Offset ROWS
+      FETCH NEXT @PageSize ROWS ONLY) ps ON ps.PlaylistId = p.Id
          LEFT JOIN
      (SELECT PlaylistId
       FROM UserPlaylists up
@@ -42,4 +45,4 @@ WHERE p.Id = @Id
   AND p.IsDeleted = 0
   AND u.IsDeleted = 0
   AND u.IsBanned = 0
-ORDER BY ps.UploadedAt DESC
+ORDER BY ps.UploadedAt DESC;

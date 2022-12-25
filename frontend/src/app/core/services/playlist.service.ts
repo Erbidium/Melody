@@ -21,8 +21,8 @@ export class PlaylistService {
         return this.httpService.getRequest<IFavouritePlaylistWithPerformers[]>('/api/playlist/favourite');
     }
 
-    getPlaylistById(id: number) {
-        return this.httpService.getRequest<IFavouritePlaylist>(`/api/playlist/${id}`);
+    getPlaylistById(id: number, page: number, pageSize: number) {
+        return this.httpService.getRequest<IFavouritePlaylist>(`/api/playlist/${id}`, { page, pageSize });
     }
 
     removeSongFromPlaylist(songId: number, playlistId: number) {

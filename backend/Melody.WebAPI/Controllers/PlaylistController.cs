@@ -61,10 +61,10 @@ public class PlaylistController : ControllerBase
     }
 
     [HttpGet("{id:long}")]
-    public async Task<ActionResult<FavouritePlaylistDto>> GetPlaylist(long id)
+    public async Task<ActionResult<FavouritePlaylistDto>> GetPlaylist(long id, int page = 1, int pageSize = 10)
     {
         var userId = HttpContext.User.GetId();
-        var playlist = await _playlistRepository.GetById(id, userId);
+        var playlist = await _playlistRepository.GetById(id, userId, page, pageSize);
         if (playlist is null) throw new KeyNotFoundException("Playlist is not found");
 
         return Ok(_mapper.Map<FavouritePlaylistDto>(playlist));

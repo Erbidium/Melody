@@ -83,10 +83,12 @@ export class FavouriteSongsPageComponent extends BaseComponent implements OnInit
         this.songService
             .removeSongFromUserFavourites(id)
             .pipe(switchMap(async () => {
-                this.page = Math.ceil((this.favouriteSongs.length - 1) / this.pageSize);
-                this.loadFavouriteUserSongs(1, this.page * this.pageSize, true);
+                const page = Math.ceil((this.favouriteSongs.length - 1) / this.pageSize);
+
+                this.loadFavouriteUserSongs(1, page * this.pageSize, true);
             }))
             .subscribe(() => {
+                this.page = Math.ceil((this.favouriteSongs.length - 1) / this.pageSize);
                 this.currentSongIdForMusicPlayer = undefined;
                 this.playerService.emitPlayerStateChange(undefined, []);
             });

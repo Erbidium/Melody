@@ -7,6 +7,7 @@ import { columnsToDisplayWithFavouriteColumn } from '@core/helpers/columns-to-di
 import { IFavouritePlaylist } from '@core/models/IFavouritePlaylist';
 import { ISong } from '@core/models/ISong';
 import { IUser } from '@core/models/IUser';
+import { InfiniteScrollingService } from '@core/services/infinite-scrolling.service';
 import { NotificationService } from '@core/services/notification.service';
 import { PlayerService } from '@core/services/player.service';
 import { PlaylistService } from '@core/services/playlist.service';
@@ -41,6 +42,10 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
         }),
     });
 
+    page = 1;
+
+    pageSize = 10;
+
     constructor(
         private activateRoute: ActivatedRoute,
         private playlistService: PlaylistService,
@@ -49,6 +54,7 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
         private spinnerService: SpinnerOverlayService,
         private notificationService: NotificationService,
         private playerService: PlayerService,
+        private scrollService: InfiniteScrollingService,
         private clipboard: Clipboard,
         private router: Router,
     ) {
@@ -59,8 +65,10 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
         this.activateRoute.params.pipe(this.untilThis).subscribe((params) => {
             this.id = params['id'];
             if (this.id) {
+                this.page = 1;
+                this.pageSize = 10;
                 this.spinnerService.show();
-                const playlist = this.playlistService.getPlaylistById(this.id);
+                const playlist = this.playlistService.getPlaylistById(this.id, this.page, this.pageSize);
                 const songs = this.playlistService.getSongsToAddToPlaylist(this.id);
                 const user = this.userService.getCurrentUser();
 
@@ -68,7 +76,10 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
                     .pipe(this.untilThis)
                     .subscribe((results) => {
                         [this.playlist, this.newSongsToAdd, this.currentUser] = results;
+
                         this.spinnerService.hide();
+
+                        this.setObservableLastItem();
                     });
             }
         });
@@ -77,6 +88,21 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
             .pipe(this.untilThis)
             .subscribe(state => {
                 this.currentSongIdForMusicPlayer = state.id;
+            });
+        this.scrollService
+            .getObservable()
+            .pipe(this.untilThis)
+            .subscribe((status: { isIntersecting: boolean, id: string }) => {
+                if (status.isIntersecting && status.id === `target${this.page * this.pageSize - 1}`) {
+                    this.spinnerService.show();
+                    this.playlistService.getPlaylistById(this.playlist!.id, ++this.page, this.pageSize)
+                        .pipe(this.untilThis)
+                        .subscribe(playlist => {
+                            this.spinnerService.hide();
+                            this.playlist!.songs = this.playlist!.songs.concat(playlist.songs);
+                            this.setObservableLastItem();
+                        });
+                }
             });
     }
 
@@ -104,9 +130,10 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
                 .pipe(
                     switchMap(() => {
                         this.currentSongIdForMusicPlayer = undefined;
+                        const page = Math.ceil((this.playlist!.songs.length - 1) / this.pageSize);
 
                         return forkJoin([
-                            this.playlistService.getPlaylistById(this.playlist!.id),
+                            this.playlistService.getPlaylistById(this.playlist!.id, 1, page * this.pageSize),
                             this.playlistService.getSongsToAddToPlaylist(this.playlist!.id),
                         ]);
                     }),
@@ -114,8 +141,11 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
                 .pipe(this.untilThis)
                 .subscribe((results) => {
                     [this.playlist, this.newSongsToAdd] = results;
+                    this.page = Math.ceil((this.playlist!.songs.length - 1) / this.pageSize);
                     this.spinnerService.hide();
                     this.playerService.emitPlayerStateChange(undefined, []);
+
+                    this.setObservableLastItem();
                 });
         }
     }
@@ -131,7 +161,7 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
                     .setSongStatus(id, !song.isFavourite)
                     .pipe(
                         switchMap(() => forkJoin([
-                            this.playlistService.getPlaylistById(this.playlist!.id),
+                            this.playlistService.getPlaylistById(this.playlist!.id, 1, this.page * this.pageSize),
                             this.playlistService.getSongsToAddToPlaylist(this.playlist!.id),
                         ])),
                     )
@@ -140,6 +170,8 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
                         [this.playlist, this.newSongsToAdd] = results;
                         this.spinnerService.hide();
                         this.playerService.emitPlayerStateChange(undefined, []);
+
+                        this.setObservableLastItem();
                     });
             }
         }
@@ -163,7 +195,7 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
             this.playlistService
                 .addSongs(this.playlist.id, this.addSongsPlaylistForm.value.songs as unknown as number[])
                 .pipe(switchMap(() => forkJoin([
-                    this.playlistService.getPlaylistById(this.playlist!.id),
+                    this.playlistService.getPlaylistById(this.playlist!.id, 1, this.page * this.pageSize),
                     this.playlistService.getSongsToAddToPlaylist(this.playlist!.id),
                 ])))
                 .pipe(this.untilThis)
@@ -198,7 +230,7 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
                 .setPlaylistStatus(this.playlist.id, !this.playlist.isFavourite)
                 .pipe(
                     switchMap(() => forkJoin([
-                        this.playlistService.getPlaylistById(this.playlist!.id),
+                        this.playlistService.getPlaylistById(this.playlist!.id, 1, this.page * this.pageSize),
                         this.playlistService.getSongsToAddToPlaylist(this.playlist!.id),
                     ])),
                 )
@@ -208,5 +240,16 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
                     this.spinnerService.hide();
                 });
         }
+    }
+
+    setObservableLastItem() {
+        const clear = setInterval(() => {
+            const target = document.querySelector(`#target${this.page * this.pageSize - 1}`);
+
+            if (target) {
+                clearInterval(clear);
+                this.scrollService.setObserver().observe(target);
+            }
+        }, 100);
     }
 }
