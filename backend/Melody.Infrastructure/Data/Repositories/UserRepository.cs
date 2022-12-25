@@ -152,11 +152,11 @@ public class UserRepository : IUserRepository
         return true;
     }
 
-    public async Task<IReadOnlyCollection<User>> GetUsersWithoutAdministratorRole()
+    public async Task<IReadOnlyCollection<User>> GetUsersWithoutAdministratorRole(int page = 1, int pageSize = 10)
     {
         using var connection = _context.CreateConnection();
 
-        var users = await connection.QueryAsync<UserIdentity>(SqlScriptsResource.GetUsersWithoutAdminRole);
+        var users = await connection.QueryAsync<UserIdentity>(SqlScriptsResource.GetUsersWithoutAdminRole, new { Offset = (page - 1) * pageSize, pageSize });
         return users.Select(record => new User(record.UserName, record.Email, record.PhoneNumber, record.IsBanned) { Id = record.Id }).ToList()
             .AsReadOnly();
     }

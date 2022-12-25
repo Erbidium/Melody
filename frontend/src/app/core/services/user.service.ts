@@ -40,8 +40,8 @@ export class UserService {
         );
     }
 
-    getUsersWithoutAdminRole() {
-        return this.httpService.getRequest<IUserForAdmin[]>('/api/user/all');
+    getUsersWithoutAdminRole(page: number, pageSize: number) {
+        return this.httpService.getRequest<IUserForAdmin[]>('/api/user/all', { page, pageSize });
     }
 
     setUserBanStatus(id: number, isBanned: boolean) {

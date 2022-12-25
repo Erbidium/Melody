@@ -96,9 +96,9 @@ public class UserController : ControllerBase
 
     [HttpGet("all")]
     [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<IEnumerable<UserForAdminDto>>> GetUsersForAdministrator()
+    public async Task<ActionResult<IEnumerable<UserForAdminDto>>> GetUsersForAdministrator(int page = 1, int pageSize = 10)
     {
-        return Ok(_mapper.Map<List<UserForAdminDto>>(await _userRepository.GetUsersWithoutAdministratorRole()));
+        return Ok(_mapper.Map<List<UserForAdminDto>>(await _userRepository.GetUsersWithoutAdministratorRole(page, pageSize)));
     }
 
     [HttpPatch("{id:long}/ban")]
