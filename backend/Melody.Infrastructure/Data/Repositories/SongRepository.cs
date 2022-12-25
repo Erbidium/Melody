@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using Ardalis.GuardClauses;
 using Dapper;
 using Melody.Core.Entities;
 using Melody.Core.Interfaces;
@@ -18,6 +19,9 @@ public class SongRepository : ISongRepository
 
     public async Task<IReadOnlyCollection<Song>> GetAll(int page = 1, int pageSize = 10)
     {
+        Guard.Against.NegativeOrZero(page, nameof(page));
+        Guard.Against.NegativeOrZero(pageSize, nameof(pageSize));
+        
         using var connection = _context.CreateConnection();
         var songs = await connection.QueryAsync<SongDb, GenreDb, Song>(SqlScriptsResource.GetAllSongs,
             (songDb, genreDb) =>
@@ -101,6 +105,9 @@ public class SongRepository : ISongRepository
 
     public async Task<IReadOnlyCollection<Song>> GetSongsUploadedByUserId(long userId, int page = 1, int pageSize = 10)
     {
+        Guard.Against.NegativeOrZero(page, nameof(page));
+        Guard.Against.NegativeOrZero(pageSize, nameof(pageSize));
+
         using var connection = _context.CreateConnection();
 
         var songs = await connection.QueryAsync<SongDb, GenreDb, Song>(SqlScriptsResource.GetSongsUploadedByUserId,

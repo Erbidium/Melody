@@ -1,5 +1,7 @@
 ﻿using System.Data;
+using Ardalis.GuardClauses;
 using Dapper;
+using LanguageExt;
 using Melody.Core.Entities;
 using Melody.Infrastructure.Data.Context;
 using Melody.Infrastructure.Data.DbEntites;
@@ -154,6 +156,9 @@ public class UserRepository : IUserRepository
 
     public async Task<IReadOnlyCollection<User>> GetUsersWithoutAdministratorRole(int page = 1, int pageSize = 10)
     {
+        Guard.Against.NegativeOrZero(page, nameof(page));
+        Guard.Against.NegativeOrZero(pageSize, nameof(pageSize));
+
         using var connection = _context.CreateConnection();
 
         var users = await connection.QueryAsync<UserIdentity>(SqlScriptsResource.GetUsersWithoutAdminRole, new { Offset = (page - 1) * pageSize, pageSize });

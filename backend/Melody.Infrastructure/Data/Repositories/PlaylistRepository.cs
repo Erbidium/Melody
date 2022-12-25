@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using Ardalis.GuardClauses;
 using Dapper;
 using Melody.Core.Entities;
 using Melody.Core.Interfaces;
@@ -122,6 +123,9 @@ public class PlaylistRepository : IPlaylistRepository
 
     public async Task<FavouritePlaylist?> GetById(long id, long userId, int page = 1, int pageSize = 10)
     {
+        Guard.Against.NegativeOrZero(page, nameof(page));
+        Guard.Against.NegativeOrZero(pageSize, nameof(pageSize));
+
         using var connection = _context.CreateConnection();
 
         var records =
