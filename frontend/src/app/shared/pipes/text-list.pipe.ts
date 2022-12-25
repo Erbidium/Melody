@@ -9,6 +9,6 @@ export class TextListPipe implements PipeTransform {
             return value.join(', ');
         }
 
-        return `${value.join(', ')}...`;
+        return `${value.slice(0, 3).join(', ')}...`;
     }
 }
