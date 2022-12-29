@@ -5,16 +5,20 @@ using Melody.Core.Entities;
 using Melody.Core.Interfaces;
 using Melody.Infrastructure.Data.Context;
 using Melody.Infrastructure.Data.DbEntites;
+using Nest;
 
 namespace Melody.Infrastructure.Data.Repositories;
 
 public class SongRepository : ISongRepository
 {
     private readonly DapperContext _context;
+    private readonly IElasticClient _elasticClient;
+    private const string SongIndexName = "songs";
 
-    public SongRepository(DapperContext context)
+    public SongRepository(DapperContext context, IElasticClient elasticClient)
     {
         _context = context;
+        _elasticClient = elasticClient;
     }
 
     public async Task<IReadOnlyCollection<Song>> GetAll(string searchText, int page = 1, int pageSize = 10)
@@ -65,8 +69,12 @@ public class SongRepository : ISongRepository
 
         var id = await connection.ExecuteScalarAsync<long>(SqlScriptsResource.CreateSong, parameters);
 
-        return new Song(song.UserId, song.Name, song.Path, song.AuthorName, song.Year, song.GenreId, song.SizeBytes,
-            song.UploadedAt, song.Duration) { Id = song.Id };
+        var createdSong = new Song(song.UserId, song.Name, song.Path, song.AuthorName, song.Year, song.GenreId, song.SizeBytes,
+            song.UploadedAt, song.Duration) { Id = id };
+
+        await _elasticClient.IndexAsync(song, descriptor => descriptor.Index(SongIndexName).Id(id));
+
+        return createdSong;
     }
 
     public async Task Update(Song song)
@@ -92,7 +100,8 @@ public class SongRepository : ISongRepository
         using var connection = _context.CreateConnection();
 
         var rowsDeleted = await connection.ExecuteAsync(SqlScriptsResource.DeleteSong, new { id });
-        return rowsDeleted == 1;
+        var response = await _elasticClient.DeleteAsync(DocumentPath<Song>.Id(id).Index(SongIndexName));
+        return rowsDeleted == 1 && response.IsValid;
     }
 
     public async Task<long> GetTotalBytesSumUploadsByUser(long userId)
@@ -202,6 +211,8 @@ public class SongRepository : ISongRepository
         using var connection = _context.CreateConnection();
 
         var rowsDeleted = await connection.ExecuteAsync(SqlScriptsResource.DeleteUploadedSong, new { id, userId });
-        return rowsDeleted == 1;
+
+        var response = await _elasticClient.DeleteAsync(DocumentPath<Song>.Id(id).Index(SongIndexName));
+        return rowsDeleted == 1 && response.IsValid;
     }
 }

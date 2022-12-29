@@ -1,5 +1,4 @@
-﻿using LanguageExt.ClassInstances;
-using Melody.Infrastructure.Data.DbEntites;
+﻿using Melody.Core.Entities;
 using Nest;
 
 namespace Melody.WebAPI.Extensions;
@@ -27,7 +26,7 @@ public static class ElasticSearchExtensions
     private static void AddDefaultMappings(ConnectionSettings settings)
     {
         settings
-            .DefaultMappingFor<SongDb>(m => m
+            .DefaultMappingFor<Song>(m => m
                 .Ignore(s => s.Id)
                 .Ignore(s => s.Path)
                 .Ignore(s => s.SizeBytes)
@@ -38,7 +37,7 @@ public static class ElasticSearchExtensions
     private static void CreateIndex(IElasticClient client, string indexName)
     {
         client.Indices.Create(indexName,
-            index => index.Map<SongDb>(x => x.AutoMap())
+            index => index.Map<Song>(x => x.AutoMap())
         );
     }
 }
