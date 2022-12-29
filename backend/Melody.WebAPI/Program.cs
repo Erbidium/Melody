@@ -19,6 +19,8 @@ builder.Services.AddIdentityStores();
 builder.Services.AddAutoMapper();
 builder.Services.AddValidation();
 
+builder.Services.AddElasticsearch(builder.Configuration);
+
 builder.Services.AddLogging(c => c.AddFluentMigratorConsole())
     .AddFluentMigratorCore()
     .ConfigureRunner(c => c.AddSqlServer2016()

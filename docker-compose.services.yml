@@ -24,6 +24,17 @@ services:
             SA_PASSWORD: TestPassword!
             ACCEPT_EULA: "Y"
             MSSQL_AGENT_ENABLED: true
+    elasticsearch:
+        container_name: es-container
+        image: docker.elastic.co/elasticsearch/elasticsearch:8.5.3
+        environment:
+        - xpack.security.enabled=false
+        - discovery.type=single-node
+        - "ES_JAVA_OPTS=-Xmx512m -Xms512m"
+        networks:
+        - localnet
+        ports:
+        - 9200:9200
 volumes:
     grafana-storage:
 networks:
