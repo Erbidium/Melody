@@ -20,7 +20,5 @@ public class AddFullTextIndex_202212251607 : Migration
             CREATE FULLTEXT INDEX ON Songs(Name)
                 KEY INDEX PK_Songs;
         ");
-
-
     }
 }

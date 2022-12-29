@@ -154,14 +154,14 @@ public class UserRepository : IUserRepository
         return true;
     }
 
-    public async Task<IReadOnlyCollection<User>> GetUsersWithoutAdministratorRole(int page = 1, int pageSize = 10)
+    public async Task<IReadOnlyCollection<User>> GetUsersWithoutAdministratorRole(string searchText, int page = 1, int pageSize = 10)
     {
         Guard.Against.NegativeOrZero(page, nameof(page));
         Guard.Against.NegativeOrZero(pageSize, nameof(pageSize));
 
         using var connection = _context.CreateConnection();
 
-        var users = await connection.QueryAsync<UserIdentity>(SqlScriptsResource.GetUsersWithoutAdminRole, new { Offset = (page - 1) * pageSize, pageSize });
+        var users = await connection.QueryAsync<UserIdentity>(SqlScriptsResource.GetUsersWithoutAdminRole, new { Offset = (page - 1) * pageSize, pageSize, SearchText = searchText.Trim().ToLower() });
         return users.Select(record => new User(record.UserName, record.Email, record.PhoneNumber, record.IsBanned) { Id = record.Id }).ToList()
             .AsReadOnly();
     }

@@ -1,5 +1,12 @@
 <app-header [navLinks]="navigationLinks"></app-header>
 <h1>На цій сторінці ти можеш керувати користувачами додатку</h1>
+<form class="search-form">
+    <mat-form-field>
+        <input type="text" matInput [(ngModel)]="searchText" name="searchText">
+        <mat-placeholder>Search</mat-placeholder>
+        <mat-icon matSuffix class="search-icon" (click)="search()">search</mat-icon>
+    </mat-form-field>
+</form>
 <div *ngIf="users.length === 0; else usersTable">
     Жодного юзера не знайдено
 </div>

@@ -25,6 +25,8 @@ export class AdminUsersPageComponent extends BaseComponent implements OnInit {
 
     pageSize = 10;
 
+    searchText = '';
+
     constructor(
         private userService: UserService,
         private spinnerService: SpinnerOverlayService,
@@ -43,15 +45,15 @@ export class AdminUsersPageComponent extends BaseComponent implements OnInit {
             .pipe(this.untilThis)
             .subscribe((status: { isIntersecting: boolean, id: string }) => {
                 if (status.isIntersecting && status.id === `target${this.page * this.pageSize - 1}`) {
-                    this.loadUsers(++this.page, this.pageSize);
+                    this.loadUsers(++this.page, this.pageSize, false, this.searchText);
                 }
             });
     }
 
-    loadUsers(page: number, pageSize: number, updateAllData = false) {
+    loadUsers(page: number, pageSize: number, updateAllData = false, searchText: string = '') {
         this.spinnerService.show();
         this.userService
-            .getUsersWithoutAdminRole(page, pageSize)
+            .getUsersWithoutAdminRole(page, pageSize, searchText)
             .pipe(this.untilThis)
             .subscribe((resp) => {
                 this.spinnerService.hide();
@@ -117,5 +119,9 @@ export class AdminUsersPageComponent extends BaseComponent implements OnInit {
                     this.playerService.emitPlayerStateChange(undefined, []);
                 });
         }
+    }
+
+    search() {
+        this.loadUsers(1, this.page * this.pageSize, true, this.searchText);
     }
 }

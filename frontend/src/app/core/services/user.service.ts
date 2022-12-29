@@ -4,6 +4,7 @@ import { IUserForAdmin } from '@core/models/IUserForAdmin';
 import { HttpInternalService } from '@core/services/http-internal-service';
 import { NotificationService } from '@core/services/notification.service';
 import { Observable, tap } from 'rxjs';
+import {ISong} from "@core/models/ISong";
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -40,7 +41,11 @@ export class UserService {
         );
     }
 
-    getUsersWithoutAdminRole(page: number, pageSize: number) {
+    getUsersWithoutAdminRole(page: number, pageSize: number, searchText?: string) {
+        if (searchText) {
+            return this.httpService.getRequest<IUserForAdmin[]>('/api/user/all', { page, pageSize, searchText });
+        }
+
         return this.httpService.getRequest<IUserForAdmin[]>('/api/user/all', { page, pageSize });
     }
 

@@ -711,7 +711,9 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на SELECT Users.Id,
+        ///   Ищет локализованную строку, похожую на IF ISNULL(@SearchText,&apos;&apos;) = &apos;&apos; SET @SearchText = &apos;&quot;&quot;&apos;;
+        ///
+        ///SELECT Users.Id,
         ///       Users.UserName,
         ///       Users.NormalizedUserName,
         ///       Users.Email,
@@ -727,10 +729,7 @@ namespace Melody.Infrastructure.Data {
         ///    FROM Users u
         ///    INNER JOIN UserRoles ur ON ur.UserId = u.Id
         ///    WHERE ur.RoleId = 1 AND ur.UserId = Users.Id
-        ///) AND IsDeleted = 0
-        ///ORDER BY Users.UserName
-        ///OFFSET @Offset ROWS
-        ///FETCH NEXT @PageSi [остаток строки не уместился]&quot;;.
+        ///) AND IsDeleted = 0 AND (@S [остаток строки не уместился]&quot;;.
         /// </summary>
         internal static string GetUsersWithoutAdminRole {
             get {
