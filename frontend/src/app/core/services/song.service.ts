@@ -48,7 +48,11 @@ export class SongService {
         return this.httpService.postRequest('/api/song/new-listening', { SongId: id });
     }
 
-    getAllSongs(page: number, pageSize: number) {
+    getAllSongs(page: number, pageSize: number, searchText?: string) {
+        if (searchText) {
+            return this.httpService.getRequest<ISong[]>('/api/song/all', { page, pageSize, searchText });
+        }
+
         return this.httpService.getRequest<ISong[]>('/api/song/all', { page, pageSize });
     }
 }

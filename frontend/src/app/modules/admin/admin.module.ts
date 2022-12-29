@@ -8,6 +8,7 @@ import { SharedModule } from '@shared/shared.module';
 
 import { AdminUsersPageComponent } from './admin-page/admin-users-page.component';
 import { AdminSongsPageComponent } from './admin-songs-page/admin-songs-page.component';
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
     declarations: [
@@ -21,6 +22,7 @@ import { AdminSongsPageComponent } from './admin-songs-page/admin-songs-page.com
         MatTableModule,
         MaterialModule,
         MatSlideToggleModule,
+        FormsModule,
     ],
 })
 export class AdminModule { }

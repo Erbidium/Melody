@@ -36,6 +36,8 @@ export class AdminSongsPageComponent extends BaseComponent implements OnInit {
 
     pageSize = 10;
 
+    searchText = '';
+
     constructor(
         private songService: SongService,
         private playerService: PlayerService,
@@ -60,15 +62,15 @@ export class AdminSongsPageComponent extends BaseComponent implements OnInit {
             .pipe(this.untilThis)
             .subscribe((status: { isIntersecting: boolean, id: string }) => {
                 if (status.isIntersecting && status.id === `target${this.page * this.pageSize - 1}`) {
-                    this.loadSongs(++this.page, this.pageSize);
+                    this.loadSongs(++this.page, this.pageSize, false, this.searchText);
                 }
             });
     }
 
-    loadSongs(page: number, pageSize: number, updateAllData = false) {
+    loadSongs(page: number, pageSize: number, updateAllData = false, searchText: string = '') {
         this.spinnerOverlayService.show();
         this.songService
-            .getAllSongs(page, pageSize)
+            .getAllSongs(page, pageSize, searchText)
             .pipe(this.untilThis)
             .subscribe((resp) => {
                 this.spinnerOverlayService.hide();
@@ -111,5 +113,9 @@ export class AdminSongsPageComponent extends BaseComponent implements OnInit {
         this.router.navigateByUrl(
             `/profile/${id}`,
         );
+    }
+
+    search() {
+        this.loadSongs(1, this.page * this.pageSize, true, this.searchText);
     }
 }

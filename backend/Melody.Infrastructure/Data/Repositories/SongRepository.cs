@@ -17,7 +17,7 @@ public class SongRepository : ISongRepository
         _context = context;
     }
 
-    public async Task<IReadOnlyCollection<Song>> GetAll(int page = 1, int pageSize = 10)
+    public async Task<IReadOnlyCollection<Song>> GetAll(string searchText, int page = 1, int pageSize = 10)
     {
         Guard.Against.NegativeOrZero(page, nameof(page));
         Guard.Against.NegativeOrZero(pageSize, nameof(pageSize));
@@ -33,7 +33,7 @@ public class SongRepository : ISongRepository
                     Genre = new Genre(genreDb.Name) { Id = genreDb.Id }
                 };
                 return song;
-            }, new { Offset = (page - 1) * pageSize, pageSize });
+            }, new { Offset = (page - 1) * pageSize, pageSize, SearchText = searchText.Trim().ToLower() });
         return songs.ToList().AsReadOnly();
     }
 

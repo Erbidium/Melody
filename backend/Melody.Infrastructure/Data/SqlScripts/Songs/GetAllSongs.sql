@@ -1,4 +1,6 @@
-﻿SELECT Songs.Id,
+﻿IF ISNULL(@SearchText,'') = '' SET @SearchText = '""';
+
+SELECT Songs.Id,
        UserId,
        UploadedAt,
        SizeBytes,
@@ -15,7 +17,7 @@ FROM Songs
 INNER JOIN Genres ON Songs.GenreId = Genres.Id
 INNER JOIN Users u ON u.Id = Songs.UserId
 WHERE u.IsDeleted = 0
-  AND Songs.IsDeleted = 0
+  AND Songs.IsDeleted = 0 AND (@SearchText = '""' OR CONTAINS(Songs.Name, @SearchText))
 ORDER BY Songs.UploadedAt DESC
 OFFSET @Offset ROWS
-FETCH NEXT @PageSize ROWS ONLY
+FETCH NEXT @PageSize ROWS ONLY;

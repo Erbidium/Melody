@@ -12,7 +12,9 @@ services:
             GF_SECURITY_ALLOW_EMBEDDING: true
             GF_FEATURE_TOGGLES_ENABLE: publicDashboards
     sql_server:
-        image: mcr.microsoft.com/mssql/server:2017-latest
+        build:
+            context: ./mssql
+            dockerfile: ./Dockerfile
         container_name: melody_sql_server
         ports:
             - 1433:1433
@@ -21,6 +23,7 @@ services:
         environment:
             SA_PASSWORD: TestPassword!
             ACCEPT_EULA: "Y"
+            MSSQL_AGENT_ENABLED: true
 volumes:
     grafana-storage:
 networks:

@@ -310,7 +310,9 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на SELECT Songs.Id,
+        ///   Ищет локализованную строку, похожую на IF ISNULL(@SearchText,&apos;&apos;) = &apos;&apos; SET @SearchText = &apos;&quot;&quot;&apos;;
+        ///
+        ///SELECT Songs.Id,
         ///       UserId,
         ///       UploadedAt,
         ///       SizeBytes,
@@ -327,10 +329,7 @@ namespace Melody.Infrastructure.Data {
         ///INNER JOIN Genres ON Songs.GenreId = Genres.Id
         ///INNER JOIN Users u ON u.Id = Songs.UserId
         ///WHERE u.IsDeleted = 0
-        ///  AND Songs.IsDeleted = 0
-        ///ORDER BY Songs.UploadedAt DESC
-        ///OFFSET @Offset ROWS
-        ///FETCH NEXT @PageSize ROWS ONLY.
+        ///  AND Songs.IsDeleted = 0 AND (@SearchText = &apos;&quot;&quot;&apos; OR CONTA [остаток строки не уместился]&quot;;.
         /// </summary>
         internal static string GetAllSongs {
             get {
