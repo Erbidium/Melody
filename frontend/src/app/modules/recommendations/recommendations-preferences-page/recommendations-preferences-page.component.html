@@ -1,0 +1,32 @@
+<app-header></app-header>
+<app-back-button></app-back-button>
+<h1>Вподобання для рекомендацій</h1>
+<div class="wrapper">
+    <form [formGroup]="uploadForm">
+        <mat-form-field appearance="outline">
+            <input matInput id="author" type="text" formControlName="author" placeholder="Автор" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <input matInput id="startYear" type="number" formControlName="startYear" placeholder="Початковий рік" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <input matInput id="endYear" type="number" formControlName="endYear" placeholder="Кінцевий рік" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <input matInput id="averageLengthInMinutes" type="number" formControlName="averageDurationInMinutes" placeholder="Середня тривалість у хв" />
+        </mat-form-field>
+        <mat-form-field class="genre" appearance="fill">
+            <mat-label>Жанр</mat-label>
+            <mat-select [(value)]="selectedGenre">
+                <mat-option *ngFor="let genre of genres" [value]="genre">
+                    {{genre.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </form>
+    <div>
+        Ліміт завантаження музичних творів: 1 ГБ
+    </div>
+</div>
+<button mat-raised-button (click)="savePreferences()">Зберегти</button>
+

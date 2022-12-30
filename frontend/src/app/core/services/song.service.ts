@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { IGenre } from '@core/models/IGenre';
 import { ISong } from '@core/models/ISong';
+import { ISongFromPlaylist } from '@core/models/ISongFromPlaylist';
 import { HttpInternalService } from '@core/services/http-internal-service';
 
 @Injectable({ providedIn: 'root' })
@@ -34,6 +35,10 @@ export class SongService {
 
     getFavouriteUserSongs(page: number, pageSize: number) {
         return this.httpService.getRequest<ISong[]>('/api/song/favourite', { page, pageSize });
+    }
+
+    getRecommendedSongs(page: number, pageSize: number) {
+        return this.httpService.getRequest<ISongFromPlaylist[]>('/api/song/recommendations', { page, pageSize });
     }
 
     removeSongFromUserFavourites(id: number) {

@@ -1,4 +1,24 @@
-<app-header>
-</app-header>
+<app-header></app-header>
 <app-back-button></app-back-button>
 <h1>Рекомендації</h1>
+<div *ngIf="!userFilledPreferences; else recommendations">
+    Ти не заповнив свої вподобання, щоб отримувати рекомендації
+    <div>
+        <a [routerLink]="'/recommendations/preferences'">Заповнити вподобання</a>
+    </div>
+</div>
+<ng-template #recommendations>
+    <div *ngIf="recommendedSongs.length === 0; else songs">
+        На жаль рекомендованих пісень не знайдено. Спробуй змінити свій вибір рекомендацій або зачекати, поки на платформі з'явиться більше пісень відповідно до твоїх вподобань
+    </div>
+    <ng-template #songs>
+        <app-songs-table
+            [dataSource]="recommendedSongs"
+            (heartButtonClickEvent)="changeSongStatus($event.id, $event.event)"
+            (rowClickEvent)="selectSong($event)"
+            [columnsToDisplay]="columnsToDisplay"
+            [currentSongSelected]="currentSongIdForMusicPlayer"
+        >
+        </app-songs-table>
+    </ng-template>
+</ng-template>

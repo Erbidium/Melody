@@ -4,11 +4,19 @@ import { AuthGuard } from '@core/guards/auth.guard';
 import {
     RecommendationsPageComponent,
 } from '@modules/recommendations/recommendations-page/recommendations-page.component';
+import {
+    RecommendationsPreferencesPageComponent,
+} from '@modules/recommendations/recommendations-preferences-page/recommendations-preferences-page.component';
 
 const routes: Routes = [
     {
         path: '',
         component: RecommendationsPageComponent,
+        canActivate: [AuthGuard],
+    },
+    {
+        path: 'preferences',
+        component: RecommendationsPreferencesPageComponent,
         canActivate: [AuthGuard],
     },
     {

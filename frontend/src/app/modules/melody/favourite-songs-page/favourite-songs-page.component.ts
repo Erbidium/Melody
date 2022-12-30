@@ -60,7 +60,6 @@ export class FavouriteSongsPageComponent extends BaseComponent implements OnInit
             .subscribe((resp) => {
                 this.spinnerOverlayService.hide();
 
-                this.favouriteSongs = resp;
                 this.favouriteSongs = updateAllData ? resp : this.favouriteSongs.concat(resp);
 
                 const clear = setInterval(() => {
