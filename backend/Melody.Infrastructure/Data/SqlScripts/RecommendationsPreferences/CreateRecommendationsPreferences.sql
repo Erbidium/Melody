@@ -1,0 +1,2 @@
+﻿INSERT INTO RecommendationsPreferences(UserId, AuthorName, StartYear, EndYear, GenreId, AverageDurationInMinutes)
+VALUES (@UserId, @AuthorName, @StartYear, @EndYear, @GenreId, @AverageDurationInMinutes);

@@ -39,6 +39,14 @@ public class SongController : ControllerBase
         return Ok(_mapper.Map<List<SongDto>>(await _songRepository.GetFavouriteUserSongs(userId)));
     }
 
+    [Authorize]
+    [HttpGet("recommendations")]
+    public async Task<ActionResult<IEnumerable<SongDto>>> GetRecommendedSongs()
+    {
+        var userId = HttpContext.User.GetId();
+        return Ok(_mapper.Map<List<SongDto>>(await _songRepository.GetFavouriteUserSongs(userId)));
+    }
+
     [Authorize(Roles = "Admin")]
     [HttpGet("all")]
     public async Task<ActionResult<IEnumerable<SongDto>>> GetAllSongs(string? searchText, int page = 1, int pageSize = 10)

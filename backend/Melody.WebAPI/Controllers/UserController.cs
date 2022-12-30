@@ -4,6 +4,7 @@ using Melody.Core.Interfaces;
 using Melody.Infrastructure.Data.DbEntites;
 using Melody.Infrastructure.Data.Interfaces;
 using Melody.WebAPI.DTO.Auth.Models;
+using Melody.WebAPI.DTO.RecommendationsPreferences;
 using Melody.WebAPI.DTO.User;
 using Melody.WebAPI.Extensions;
 using Microsoft.AspNetCore.Authorization;
@@ -94,11 +95,34 @@ public class UserController : ControllerBase
         return Ok(await _userManager.FindByNameAsync(username) != null);
     }
 
+    [HttpGet("check-preferences")]
+    public async Task<ActionResult<bool>> CheckUserRecommendationsPreferences()
+    {
+        var userId = HttpContext.User.GetId();
+        return Ok(await _userRepository.GetUserRecommendationsPreferences(userId) != null);
+    }
+
     [HttpGet("all")]
     [Authorize(Roles = "Admin")]
     public async Task<ActionResult<IEnumerable<UserForAdminDto>>> GetUsersForAdministrator(string? searchText, int page = 1, int pageSize = 10)
     {
         return Ok(_mapper.Map<List<UserForAdminDto>>(await _userRepository.GetUsersWithoutAdministratorRole(searchText ?? "", page, pageSize)));
+    }
+
+    [Authorize]
+    [HttpGet("recommendations-preferences")]
+    public async Task<ActionResult<RecommendationsPreferences>> GetUserRecommendationsPreferences()
+    {
+        var userId = HttpContext.User.GetId();
+        return Ok(_mapper.Map<RecommendationsPreferencesDto>(await _userRepository.GetUserRecommendationsPreferences(userId)));
+    }
+
+    [Authorize]
+    [HttpPut("recommendations-preferences")]
+    public async Task<IActionResult> SaveUserRecommendationsPreferences(CreateRecommendationsPreferencesDto createRecommendationsPreferencesDto)
+    {
+        await _userRepository.CreateOrUpdateUserRecommendationsPreferences(_mapper.Map<RecommendationsPreferences>(createRecommendationsPreferencesDto));
+        return Ok();
     }
 
     [HttpPatch("{id:long}/ban")]

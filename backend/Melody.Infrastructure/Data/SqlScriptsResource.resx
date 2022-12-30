@@ -130,6 +130,9 @@
     <value>sqlscripts\playlists\createplaylist.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="CreateRecommendationsPreferences" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\recommendationspreferences\createrecommendationspreferences.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="CreateRefreshToken" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqlscripts\refreshtokens\createrefreshtoken.sql;System.String, mscorlib, Version=4.0.0.0,
             Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
@@ -222,6 +225,9 @@
   <data name="GetPlaylistsCreatedByUserId" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqlscripts\playlists\getplaylistscreatedbyuserid.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="GetRecommendationsPreferences" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\recommendationspreferences\getrecommendationspreferences.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="GetRoleById" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqlscripts\roles\getrolebyid.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089;utf-8</value>
@@ -280,6 +286,9 @@
   </data>
   <data name="SetUserBanStatus" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqlscripts\users\setuserbanstatus.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="UpdateRecommendationsPreferences" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>sqlscripts\recommendationspreferences\updaterecommendationspreferences.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="UpdateRefreshToken" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sqlscripts\refreshtokens\updaterefreshtoken.sql;System.String, mscorlib, Version=4.0.0.0,

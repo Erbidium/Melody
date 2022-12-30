@@ -1,11 +1,11 @@
 ﻿using System.Data;
 using Ardalis.GuardClauses;
 using Dapper;
-using LanguageExt;
 using Melody.Core.Entities;
 using Melody.Infrastructure.Data.Context;
 using Melody.Infrastructure.Data.DbEntites;
 using Melody.Infrastructure.Data.Interfaces;
+using Nest;
 
 namespace Melody.Infrastructure.Data.Repositories;
 
@@ -40,6 +40,58 @@ public class UserRepository : IUserRepository
         using var connection = _context.CreateConnection();
         var rowsDeleted = await connection.ExecuteAsync(SqlScriptsResource.DeleteUser, new { Id = userId });
         return rowsDeleted == 1;
+    }
+
+    public async Task<bool> CreateOrUpdateUserRecommendationsPreferences(RecommendationsPreferences recommendationsPreferences)
+    {
+        var entry = await GetUserRecommendationsPreferences(recommendationsPreferences.UserId);
+
+        using var connection = _context.CreateConnection();
+        if (entry is null)
+        {
+            var parameters = new DynamicParameters();
+            parameters.Add("UserId", recommendationsPreferences.UserId, DbType.Int64);
+
+            await connection.ExecuteAsync(SqlScriptsResource.CreateRecommendationsPreferences, new
+            {
+                recommendationsPreferences.UserId,
+                recommendationsPreferences.AuthorName,
+                recommendationsPreferences.StartYear,
+                recommendationsPreferences.EndYear,
+                recommendationsPreferences.GenreId,
+                recommendationsPreferences.AverageDurationInMinutes,
+            });
+        }
+        else
+        {
+            await connection.ExecuteAsync(SqlScriptsResource.UpdateRecommendationsPreferences, new
+            {
+                recommendationsPreferences.UserId,
+                recommendationsPreferences.AuthorName,
+                recommendationsPreferences.StartYear,
+                recommendationsPreferences.EndYear,
+                recommendationsPreferences.GenreId,
+                recommendationsPreferences.AverageDurationInMinutes,
+            });
+        }
+
+        return true;
+    }
+
+    public async Task<RecommendationsPreferences?> GetUserRecommendationsPreferences(long userId)
+    {
+        using var connection = _context.CreateConnection();
+        var dbEntry = await connection.QuerySingleOrDefaultAsync<RecommendationsPreferencesDb>(SqlScriptsResource.GetRecommendationsPreferences, new { userId });
+        return dbEntry is null
+            ? null
+            : new RecommendationsPreferences(
+                dbEntry.UserId,
+                dbEntry.GenreId,
+                dbEntry.AuthorName,
+                dbEntry.StartYear,
+                dbEntry.EndYear,
+                dbEntry.AverageDurationInMinutes
+              );
     }
 
     public async Task<UserIdentity> FindByEmailAsync(string normalizedEmail)

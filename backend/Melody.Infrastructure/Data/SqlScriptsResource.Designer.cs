@@ -92,6 +92,16 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на INSERT INTO RecommendationsPreferences(UserId, AuthorName, StartYear, EndYear, GenreId, AverageDurationInMinutes)
+        ///VALUES (@UserId, @AuthorName, @StartYear, @EndYear, @GenreId, @AverageDurationInMinutes);.
+        /// </summary>
+        internal static string CreateRecommendationsPreferences {
+            get {
+                return ResourceManager.GetString("CreateRecommendationsPreferences", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на INSERT INTO UserRefreshTokens(UserId, RefreshToken)
         ///VALUES (@UserId, @Token);.
         /// </summary>
@@ -501,6 +511,23 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на SELECT
+        ///    UserId,
+        ///    AuthorName,
+        ///    StartYear,
+        ///    EndYear,
+        ///    GenreId,
+        ///    AverageDurationInMinutes
+        ///FROM RecommendationsPreferences
+        ///WHERE UserId = @UserId;.
+        /// </summary>
+        internal static string GetRecommendationsPreferences {
+            get {
+                return ResourceManager.GetString("GetRecommendationsPreferences", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на SELECT Id, Name, NormalizedName
         ///FROM Roles
         ///WHERE Id = @Id;.
@@ -787,6 +814,22 @@ namespace Melody.Infrastructure.Data {
         internal static string SetUserBanStatus {
             get {
                 return ResourceManager.GetString("SetUserBanStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на UPDATE RecommendationsPreferences
+        ///SET
+        ///	AuthorName = @AuthorName,
+        ///	StartYear = @StartYear,
+        ///	EndYear = @EndYear,
+        ///	GenreId = @GenreId,
+        ///	AverageDurationInMinutes = @AverageDurationInMinutes
+        ///WHERE UserId = @UserId;.
+        /// </summary>
+        internal static string UpdateRecommendationsPreferences {
+            get {
+                return ResourceManager.GetString("UpdateRecommendationsPreferences", resourceCulture);
             }
         }
         
