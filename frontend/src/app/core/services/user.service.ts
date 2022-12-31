@@ -4,6 +4,7 @@ import { IUserForAdmin } from '@core/models/IUserForAdmin';
 import { HttpInternalService } from '@core/services/http-internal-service';
 import { NotificationService } from '@core/services/notification.service';
 import { Observable, tap } from 'rxjs';
+import {IPreferences} from "@core/models/IPreferences";
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -42,6 +43,14 @@ export class UserService {
 
     checkUserRecommendationPreferences() {
         return this.httpService.getRequest<boolean>('/api/user/check-preferences');
+    }
+
+    getUserRecommendationPreferences() {
+        return this.httpService.getRequest<IPreferences>('/api/user/recommendations-preferences');
+    }
+
+    saveUserRecommendationPreferences(preferences: IPreferences) {
+        return this.httpService.putRequest('/api/user/recommendations-preferences', preferences);
     }
 
     getUsersWithoutAdminRole(page: number, pageSize: number, searchText?: string) {

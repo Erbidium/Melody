@@ -119,10 +119,19 @@ public class UserController : ControllerBase
 
     [Authorize]
     [HttpPut("recommendations-preferences")]
-    public async Task<IActionResult> SaveUserRecommendationsPreferences(CreateRecommendationsPreferencesDto createRecommendationsPreferencesDto)
+    public async Task<IActionResult> SaveUserRecommendationsPreferences(CreateRecommendationsPreferencesDto createRecommendationsPreferences)
     {
-        await _userRepository.CreateOrUpdateUserRecommendationsPreferences(_mapper.Map<RecommendationsPreferences>(createRecommendationsPreferencesDto));
-        return Ok();
+        var userId = HttpContext.User.GetId();
+        var preferences = new RecommendationsPreferences(
+            userId,
+            createRecommendationsPreferences.GenreId,
+            createRecommendationsPreferences.AuthorName,
+            createRecommendationsPreferences.StartYear,
+            createRecommendationsPreferences.EndYear,
+            createRecommendationsPreferences.AverageDurationInMinutes);
+        return await _userRepository.CreateOrUpdateUserRecommendationsPreferences(preferences)
+            ? Ok()
+            : BadRequest();
     }
 
     [HttpPatch("{id:long}/ban")]

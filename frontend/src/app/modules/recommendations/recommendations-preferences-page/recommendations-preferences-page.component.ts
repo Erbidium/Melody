@@ -5,6 +5,7 @@ import { IGenre } from '@core/models/IGenre';
 import { IPreferences } from '@core/models/IPreferences';
 import { SongService } from '@core/services/song.service';
 import { UserService } from '@core/services/user.service';
+import {NotificationService} from "@core/services/notification.service";
 
 @Component({
     selector: 'app-recommendations-preferences-page',
@@ -34,6 +35,7 @@ export class RecommendationsPreferencesPageComponent extends BaseComponent imple
     constructor(
         private songService: SongService,
         private userService: UserService,
+        private notificationService: NotificationService,
     ) {
         super();
     }
@@ -56,6 +58,17 @@ export class RecommendationsPreferencesPageComponent extends BaseComponent imple
                 genreId: this.selectedGenre.id,
                 averageDurationInMinutes: (this.uploadForm.value.averageDurationInMinutes as unknown as number) ?? undefined,
             };
+            console.log(preferences);
+            this.userService.saveUserRecommendationPreferences(preferences)
+                .pipe(this.untilThis)
+                .subscribe({
+                    next: () => {
+                        this.notificationService.showSuccessMessage('Preferences were successfully uploaded');
+                        this.uploadForm.reset();
+                        this.selectedGenre = undefined;
+                    },
+                    error: () => this.notificationService.showErrorMessage('Error occurred'),
+                });
         }
     }
 }

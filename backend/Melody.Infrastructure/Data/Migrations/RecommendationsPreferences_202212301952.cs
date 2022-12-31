@@ -14,10 +14,10 @@ public class RecommendationsPreferences_202212301952 : Migration
     {
         Create.Table("RecommendationsPreferences")
             .WithColumn("UserId").AsInt64().NotNullable().Unique().ForeignKey("Users", "Id")
-            .WithColumn("AuthorName").AsString(50)
-            .WithColumn("StartYear").AsInt32()
-            .WithColumn("EndYear").AsInt32()
+            .WithColumn("AuthorName").AsString(50).Nullable()
+            .WithColumn("StartYear").AsInt32().Nullable()
+            .WithColumn("EndYear").AsInt32().Nullable()
             .WithColumn("GenreId").AsInt64().NotNullable().ForeignKey("Genres", "Id")
-            .WithColumn("AverageDurationInMinutes").AsInt32();
+            .WithColumn("AverageDurationInMinutes").AsInt32().Nullable();
     }
 }

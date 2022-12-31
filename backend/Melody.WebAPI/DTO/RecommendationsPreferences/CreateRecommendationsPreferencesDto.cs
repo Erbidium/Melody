@@ -2,7 +2,6 @@
 
 public class CreateRecommendationsPreferencesDto
 {
-    public long UserId { get; set; }
     public string? AuthorName { get; set; }
     public int? StartYear { get; set; }
     public int? EndYear { get; set; }
