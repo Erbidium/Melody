@@ -8,7 +8,7 @@ public class RecommendationsPreferences
     {
         UserId = Guard.Against.Negative(userId, nameof(UserId));
         GenreId = Guard.Against.Negative(genreId, nameof(GenreId));
-        AuthorName = authorName;
+        AuthorName = string.IsNullOrEmpty(authorName?.Trim()) ? null : authorName;
         StartYear = startYear;
         EndYear = endYear;
         AverageDurationInMinutes = averageDurationInMinutes;

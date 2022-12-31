@@ -3,9 +3,10 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { BaseComponent } from '@core/base/base.component';
 import { IGenre } from '@core/models/IGenre';
 import { IPreferences } from '@core/models/IPreferences';
+import { NotificationService } from '@core/services/notification.service';
 import { SongService } from '@core/services/song.service';
 import { UserService } from '@core/services/user.service';
-import {NotificationService} from "@core/services/notification.service";
+import { forkJoin } from 'rxjs';
 
 @Component({
     selector: 'app-recommendations-preferences-page',
@@ -41,11 +42,22 @@ export class RecommendationsPreferencesPageComponent extends BaseComponent imple
     }
 
     ngOnInit(): void {
-        this.songService
-            .getAllGenres()
+        forkJoin([
+            this.songService.getAllGenres(),
+            this.userService.getUserRecommendationPreferences(),
+        ])
             .pipe(this.untilThis)
             .subscribe((resp) => {
-                this.genres = resp;
+                [this.genres] = resp;
+                const preferences = resp[1];
+
+                this.uploadForm.patchValue({
+                    author: preferences.authorName,
+                    startYear: preferences.startYear?.toString(),
+                    endYear: preferences.endYear?.toString(),
+                    averageDurationInMinutes: preferences.averageDurationInMinutes?.toString(),
+                });
+                this.selectedGenre = this.genres.find(g => g.id === preferences.genreId);
             });
     }
 
@@ -58,14 +70,12 @@ export class RecommendationsPreferencesPageComponent extends BaseComponent imple
                 genreId: this.selectedGenre.id,
                 averageDurationInMinutes: (this.uploadForm.value.averageDurationInMinutes as unknown as number) ?? undefined,
             };
-            console.log(preferences);
+
             this.userService.saveUserRecommendationPreferences(preferences)
                 .pipe(this.untilThis)
                 .subscribe({
                     next: () => {
                         this.notificationService.showSuccessMessage('Preferences were successfully uploaded');
-                        this.uploadForm.reset();
-                        this.selectedGenre = undefined;
                     },
                     error: () => this.notificationService.showErrorMessage('Error occurred'),
                 });
