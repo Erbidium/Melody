@@ -1,11 +1,11 @@
 <app-header></app-header>
 <app-back-button></app-back-button>
 <h1>Рекомендації</h1>
+<div>
+    <a [routerLink]="'/recommendations/preferences'">Заповнити вподобання</a>
+</div>
 <div *ngIf="!userFilledPreferences; else recommendations">
     Ти не заповнив свої вподобання, щоб отримувати рекомендації
-    <div>
-        <a [routerLink]="'/recommendations/preferences'">Заповнити вподобання</a>
-    </div>
 </div>
 <ng-template #recommendations>
     <div *ngIf="recommendedSongs.length === 0; else songs">

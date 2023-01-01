@@ -1,6 +1,7 @@
 using AutoMapper;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Melody.Core.Entities;
 using Melody.Core.Interfaces;
 using Melody.Core.ValueObjects;
 using Melody.WebAPI.DTO.Genre;
@@ -8,6 +9,7 @@ using Melody.WebAPI.DTO.Song;
 using Melody.WebAPI.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Nest;
 
 namespace Melody.WebAPI.Controllers;
 
@@ -19,16 +21,20 @@ public class SongController : ControllerBase
     private readonly IMapper _mapper;
     private readonly IValidator<NewSongDto> _newSongDtoValidator;
     private readonly ISongRepository _songRepository;
+    private readonly IUserRepository _userRepository;
     private readonly ISongService _songService;
+    private readonly IElasticClient _elasticClient;
 
-    public SongController(ISongRepository songRepository, IGenreRepository genreRepository, IMapper mapper,
-        IValidator<NewSongDto> newSongDtoValidator, ISongService songService)
+    public SongController(ISongRepository songRepository, IGenreRepository genreRepository, IUserRepository userRepository, IMapper mapper,
+        IValidator<NewSongDto> newSongDtoValidator, ISongService songService, IElasticClient elasticClient)
     {
         _songRepository = songRepository;
         _genreRepository = genreRepository;
+        _userRepository = userRepository;
         _mapper = mapper;
         _newSongDtoValidator = newSongDtoValidator;
         _songService = songService;
+        _elasticClient = elasticClient;
     }
 
     [Authorize]
@@ -41,10 +47,70 @@ public class SongController : ControllerBase
 
     [Authorize]
     [HttpGet("recommendations")]
-    public async Task<ActionResult<IEnumerable<SongDto>>> GetRecommendedSongs()
+    public async Task<ActionResult<IEnumerable<SongDto>>> GetRecommendedSongs(int page = 1, int pageSize = 10)
     {
         var userId = HttpContext.User.GetId();
-        return Ok(_mapper.Map<List<SongDto>>(await _songRepository.GetFavouriteUserSongs(userId)));
+        var recommendationsPreferences = await _userRepository.GetUserRecommendationsPreferences(userId);
+        if (recommendationsPreferences is null)
+        {
+            return NotFound();
+        }
+
+        var queryContainers = new List<QueryContainer>();
+        var descriptor = new QueryContainerDescriptor<Song>();
+
+        if (recommendationsPreferences.StartYear.HasValue)
+        {
+            queryContainers.Add(descriptor.Range(selector => selector
+                .Field(song => song.Year)
+                .GreaterThanOrEquals(recommendationsPreferences.StartYear)));
+        }
+        if (recommendationsPreferences.EndYear.HasValue)
+        {
+            queryContainers.Add(descriptor.Range(selector => selector
+                .Field(song => song.Year)
+                .LessThanOrEquals(recommendationsPreferences.EndYear)));
+        }
+        
+        const int deltaSeconds = 30;
+        if (recommendationsPreferences.AverageDurationInMinutes.HasValue)
+        {
+            var startDuration = recommendationsPreferences.AverageDurationInMinutes.Value - deltaSeconds > 0
+                ? recommendationsPreferences.AverageDurationInMinutes.Value - deltaSeconds
+                : 1;
+            
+            queryContainers.Add(descriptor.Range(selector => selector
+                .Field(song => song.Duration)
+                .GreaterThanOrEquals(startDuration)
+                .LessThanOrEquals(recommendationsPreferences.AverageDurationInMinutes + deltaSeconds)));
+        }
+
+        if (!string.IsNullOrWhiteSpace(recommendationsPreferences.AuthorName))
+        {
+            var author = recommendationsPreferences.AuthorName;
+            queryContainers.Add(descriptor.Match(selector => selector
+                .Field(song => song.AuthorName)
+                .Analyzer(author)
+                .Fuzziness(Fuzziness.Auto)));
+        }
+        
+        queryContainers.Add(descriptor.Term(selector => selector
+            .Field(song => song.GenreId)
+            .Value(recommendationsPreferences.GenreId)));
+
+        var searchRequest = new SearchDescriptor<SongDto>();
+        searchRequest
+            .Index("songs")
+            .From((page - 1) * pageSize)
+            .Size(pageSize)
+            .Query(q => q.Bool(b => b.Must(queryContainers.ToArray())));
+        
+        var songs = await _elasticClient.SearchAsync<SongDto>(searchRequest);
+        if (!songs.IsValid)
+        {
+            return BadRequest();
+        }
+        return Ok(songs.Documents);
     }
 
     [Authorize(Roles = "Admin")]

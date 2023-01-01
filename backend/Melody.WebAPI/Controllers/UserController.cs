@@ -100,6 +100,7 @@ public class UserController : ControllerBase
         return Ok(await _userManager.FindByNameAsync(username) != null);
     }
 
+    [Authorize]
     [HttpGet("check-preferences")]
     public async Task<ActionResult<bool>> CheckUserRecommendationsPreferences()
     {
