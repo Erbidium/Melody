@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Melody.Core.Entities;
 using Melody.Core.Interfaces;
 using Melody.Infrastructure.Data.DbEntites;
@@ -22,12 +24,14 @@ public class UserController : ControllerBase
     private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly IMapper _mapper;
     private readonly ITokenService _tokenService;
+    private readonly IValidator<CreateRecommendationsPreferencesDto> _createRecommendationsPreferencesDtoValidator;
 
     public UserController(
         UserManager<UserIdentity> userManager,
         Core.Interfaces.IUserRepository userRepository,
         IMapper mapper,
         IRefreshTokenRepository refreshTokenRepository,
+        IValidator<CreateRecommendationsPreferencesDto> createRecommendationsPreferencesDtoValidator,
         ITokenService tokenService)
     {
         _userManager = userManager;
@@ -35,6 +39,7 @@ public class UserController : ControllerBase
         _refreshTokenRepository = refreshTokenRepository;
         _mapper = mapper;
         _tokenService = tokenService;
+        _createRecommendationsPreferencesDtoValidator = createRecommendationsPreferencesDtoValidator;
     }
 
     [AllowAnonymous]
@@ -121,6 +126,13 @@ public class UserController : ControllerBase
     [HttpPut("recommendations-preferences")]
     public async Task<IActionResult> SaveUserRecommendationsPreferences(CreateRecommendationsPreferencesDto createRecommendationsPreferences)
     {
+        var validationResult = await _createRecommendationsPreferencesDtoValidator.ValidateAsync(createRecommendationsPreferences);
+        if (!validationResult.IsValid)
+        {
+            validationResult.AddToModelState(ModelState);
+            return BadRequest(ModelState);
+        }
+        
         var userId = HttpContext.User.GetId();
         var preferences = new RecommendationsPreferences(
             userId,
