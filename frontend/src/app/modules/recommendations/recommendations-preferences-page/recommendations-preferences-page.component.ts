@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { BaseComponent } from '@core/base/base.component';
 import { IGenre } from '@core/models/IGenre';
 import { IPreferences } from '@core/models/IPreferences';
 import { NotificationService } from '@core/services/notification.service';
 import { SongService } from '@core/services/song.service';
 import { UserService } from '@core/services/user.service';
+import { CustomErrorStateMatcher } from '@modules/recommendations/validators/custom-error-state-matcher';
+import { CustomValidators } from '@modules/recommendations/validators/custom-validators';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -18,23 +20,31 @@ export class RecommendationsPreferencesPageComponent extends BaseComponent imple
 
     selectedGenre?: IGenre;
 
-    uploadForm = new FormGroup({
-        author: new FormControl('', {
+    matcher = new CustomErrorStateMatcher();
+
+    uploadForm = new FormGroup(
+        {
+            author: new FormControl('', {
+                updateOn: 'blur',
+            }),
+            startYear: new FormControl('', {
+                updateOn: 'blur',
+                validators: [Validators.min(1)],
+            }),
+            endYear: new FormControl('', {
+                updateOn: 'blur',
+                validators: [Validators.min(1)],
+            }),
+            averageDurationInMinutes: new FormControl('', {
+                updateOn: 'blur',
+                validators: [Validators.min(1)],
+            }),
+        },
+        {
+            validators: CustomValidators.yearsRangeCorrect,
             updateOn: 'blur',
-        }),
-        startYear: new FormControl('', {
-            updateOn: 'blur',
-            validators: [Validators.min(1)],
-        }),
-        endYear: new FormControl('', {
-            updateOn: 'blur',
-            validators: [Validators.min(1)],
-        }),
-        averageDurationInMinutes: new FormControl('', {
-            updateOn: 'blur',
-            validators: [Validators.min(1)],
-        }),
-    });
+        },
+    );
 
     constructor(
         private songService: SongService,
@@ -65,7 +75,7 @@ export class RecommendationsPreferencesPageComponent extends BaseComponent imple
     }
 
     savePreferences() {
-        if (this.selectedGenre) {
+        if (this.selectedGenre && this.uploadForm.valid) {
             const preferences: IPreferences = {
                 authorName: this.uploadForm.value.author ?? undefined,
                 startYear: (this.uploadForm.value.startYear as unknown as number) ?? undefined,

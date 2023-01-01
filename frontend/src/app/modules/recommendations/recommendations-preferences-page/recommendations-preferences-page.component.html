@@ -7,19 +7,33 @@
             <input matInput id="author" type="text" formControlName="author" placeholder="Автор" />
         </mat-form-field>
         <mat-form-field appearance="outline">
-            <input matInput id="startYear" type="number" pattern="\d*" formControlName="startYear" placeholder="Початковий рік" />
-            <mat-error *ngIf="uploadForm.controls['startYear'].hasError('min')">Start year should be positive</mat-error>
-            <mat-error *ngIf="uploadForm.controls['startYear'].hasError('pattern')">Start year should be integer</mat-error>
+            <input matInput id="startYear" type="number" pattern="\d*" formControlName="startYear" placeholder="Початковий рік" [errorStateMatcher]="matcher" />
+            <mat-error
+                *ngIf="uploadForm.hasError('incorrectYears') ||
+                       uploadForm.controls['startYear'].hasError('pattern') ||
+                       uploadForm.controls['startYear'].hasError('min')"
+            >
+                Invalid start year
+            </mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline">
-            <input matInput id="endYear" type="number" pattern="\d*" formControlName="endYear" placeholder="Кінцевий рік" />
-            <mat-error *ngIf="uploadForm.controls['endYear'].hasError('min')">End year should be positive</mat-error>
-            <mat-error *ngIf="uploadForm.controls['endYear'].hasError('pattern')">End year should be integer</mat-error>
+            <input matInput id="endYear" type="number" pattern="\d*" formControlName="endYear" placeholder="Кінцевий рік" [errorStateMatcher]="matcher"/>
+            <mat-error
+                *ngIf="uploadForm.hasError('incorrectYears') ||
+                       uploadForm.controls['endYear'].hasError('pattern') ||
+                       uploadForm.controls['endYear'].hasError('min')"
+            >
+                Invalid end year
+            </mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline">
             <input matInput id="averageLengthInMinutes" pattern="\d*" type="number" formControlName="averageDurationInMinutes" placeholder="Середня тривалість у хв" />
-            <mat-error *ngIf="uploadForm.controls['averageDurationInMinutes'].hasError('min')">Duration in minutes should be positive</mat-error>
-            <mat-error *ngIf="uploadForm.controls['averageDurationInMinutes'].hasError('pattern')">Duration in minutes should be integer</mat-error>
+            <mat-error
+                *ngIf="uploadForm.controls['averageDurationInMinutes'].hasError('min') ||
+                       uploadForm.controls['averageDurationInMinutes'].hasError('pattern')"
+            >
+                Invalid duration in minutes
+            </mat-error>
         </mat-form-field>
         <mat-form-field class="genre" appearance="fill">
             <mat-label>Жанр</mat-label>
@@ -31,5 +45,5 @@
         </mat-form-field>
     </form>
 </div>
-<button mat-raised-button (click)="savePreferences()">Зберегти</button>
+<button mat-raised-button (click)="savePreferences()" [disabled]="!uploadForm.valid">Зберегти</button>
 
