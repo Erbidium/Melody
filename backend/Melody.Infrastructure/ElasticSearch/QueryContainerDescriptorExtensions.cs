@@ -33,9 +33,9 @@ public static class QueryContainerDescriptorExtensions
     
     public static QueryContainer SearchSongsWithAuthorName(this QueryContainerDescriptor<SongElastic> descriptor, string author)
     {
-        return descriptor.Fuzzy(selector => selector
+        return descriptor.Match(selector => selector
             .Field(song => song.AuthorName)
-            .Value(author)
+            .Query(author)
             .Fuzziness(Fuzziness.Auto));
     }
 
