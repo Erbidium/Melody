@@ -46,7 +46,7 @@ public class SongController : ControllerBase
     public async Task<IActionResult> GetRecommendedSongs(int page = 1, int pageSize = 10)
     {
         var userId = HttpContext.User.GetId();
-        var result = await _songService.GetRecommendedSongs(userId);
+        var result = await _songService.GetRecommendedSongs(userId, page, pageSize);
         return result.ToOk(songs => _mapper.Map<List<SongInPlaylistDto>>(songs));
     }
 

@@ -43,7 +43,7 @@ public class SongService : ISongService
         return await _songRepository.Create(song);
     }
 
-    public async Task<Result<IReadOnlyCollection<FavouriteSong>>> GetRecommendedSongs(long userId)
+    public async Task<Result<IReadOnlyCollection<FavouriteSong>>> GetRecommendedSongs(long userId, int page = 1, int pageSize = 10)
     {
         var recommendationsPreferences = await _userRepository.GetUserRecommendationsPreferences(userId);
         if (recommendationsPreferences is null)
@@ -51,7 +51,7 @@ public class SongService : ISongService
             return new Result<IReadOnlyCollection<FavouriteSong>>(new KeyNotFoundException());
         }
 
-        var recommendedSongsIds = await _recommender.GetRecommendedSongsIds(recommendationsPreferences);
+        var recommendedSongsIds = await _recommender.GetRecommendedSongsIds(recommendationsPreferences, page, pageSize);
         return await recommendedSongsIds.Match<Task<Result<IReadOnlyCollection<FavouriteSong>>>>(
             async recommendations => new Result<IReadOnlyCollection<FavouriteSong>>(await _songRepository.GetSongsByIds(recommendations, userId)),
             error => Task.FromResult(new Result<IReadOnlyCollection<FavouriteSong>>(error)));

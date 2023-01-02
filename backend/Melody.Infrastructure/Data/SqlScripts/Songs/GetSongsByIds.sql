@@ -22,5 +22,5 @@ FROM Songs s
 WHERE s.IsDeleted = 0
   AND u.IsDeleted = 0
   AND u.IsBanned = 0
-  AND s.Id IN (@Ids)
+  AND s.Id IN @Ids
 ORDER BY s.UploadedAt DESC

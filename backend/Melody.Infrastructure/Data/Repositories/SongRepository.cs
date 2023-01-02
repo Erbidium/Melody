@@ -232,7 +232,7 @@ public class SongRepository : ISongRepository
         using var connection = _context.CreateConnection();
 
         var songs = await connection.QueryAsync<FavouriteSongFromPlaylistDb, GenreDb, FavouriteSong>(
-            SqlScriptsResource.GetFavouriteAndUploadedUserSongs,
+            SqlScriptsResource.GetSongsByIds,
             (songDb, genreDb) =>
             {
                 var song = new FavouriteSong(songDb.Name, songDb.AuthorName, songDb.GenreId, songDb.UploadedAt, songDb.Duration, songDb.IsFavourite)
@@ -242,7 +242,7 @@ public class SongRepository : ISongRepository
                 };
                 return song;
             },
-            new { UserId = userId, ids });
+            new { UserId = userId, Ids = ids.ToArray() });
         return songs.OrderBy(s => ids.IndexOf(s.Id)).ToList().AsReadOnly();
     }
 }
