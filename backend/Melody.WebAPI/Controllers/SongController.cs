@@ -61,43 +61,27 @@ public class SongController : ControllerBase
 
         if (recommendationsPreferences.StartYear.HasValue)
         {
-            queryContainers.Add(descriptor.Range(selector => selector
-                .Field(song => song.Year)
-                .GreaterThanOrEquals(recommendationsPreferences.StartYear)));
+            queryContainers.Add(descriptor.SearchSongsReleasedLaterThanYear(recommendationsPreferences.StartYear.Value));
         }
         if (recommendationsPreferences.EndYear.HasValue)
         {
-            queryContainers.Add(descriptor.Range(selector => selector
-                .Field(song => song.Year)
-                .LessThanOrEquals(recommendationsPreferences.EndYear)));
+            queryContainers.Add(descriptor.SearchSongsReleasedEarlierThanYear(recommendationsPreferences.EndYear.Value));
         }
         
         const int deltaSeconds = 30;
         if (recommendationsPreferences.AverageDurationInMinutes.HasValue)
         {
-            var startDuration = recommendationsPreferences.AverageDurationInMinutes.Value * 60 - deltaSeconds > 0
-                ? recommendationsPreferences.AverageDurationInMinutes.Value * 60 - deltaSeconds
-                : 60;
-
-            var endDuration = recommendationsPreferences.AverageDurationInMinutes.Value * 60 + 30;
-            queryContainers.Add(descriptor.Range(selector => selector
-                .Field(song => song.DurationInSeconds)
-                .GreaterThanOrEquals(startDuration)
-                .LessThanOrEquals(endDuration)));
+            queryContainers.Add(descriptor.SearchSongsWithDurationInRange(
+                recommendationsPreferences.AverageDurationInMinutes.Value,
+                deltaSeconds));
         }
 
         if (!string.IsNullOrWhiteSpace(recommendationsPreferences.AuthorName))
         {
-            var author = recommendationsPreferences.AuthorName;
-            queryContainers.Add(descriptor.Match(selector => selector
-                .Field(song => song.AuthorName)
-                .Analyzer(author)
-                .Fuzziness(Fuzziness.Auto)));
+            queryContainers.Add(descriptor.SearchSongsWithAuthorName(recommendationsPreferences.AuthorName));
         }
         
-        queryContainers.Add(descriptor.Term(selector => selector
-            .Field(song => song.GenreId)
-            .Value(recommendationsPreferences.GenreId)));
+        queryContainers.Add(descriptor.SearchSongsWithGenreId(recommendationsPreferences.GenreId));
 
         var searchRequest = new SearchDescriptor<SongElastic>();
         searchRequest
