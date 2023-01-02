@@ -14,6 +14,7 @@
     <ng-template #songs>
         <app-songs-table
             [dataSource]="recommendedSongs"
+            [heartButtonForLikes]="true"
             (heartButtonClickEvent)="changeSongStatus($event.id, $event.event)"
             (rowClickEvent)="selectSong($event)"
             [columnsToDisplay]="columnsToDisplay"
