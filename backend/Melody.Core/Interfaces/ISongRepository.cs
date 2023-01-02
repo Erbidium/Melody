@@ -1,3 +1,4 @@
+using LanguageExt;
 using Melody.Core.Entities;
 
 namespace Melody.Core.Interfaces;
@@ -18,4 +19,5 @@ public interface ISongRepository
     public Task<bool> DeleteFavouriteSong(long id, long userId);
     public Task SaveNewSongListening(long id, long userId);
     public Task<bool> DeleteUploadedSong(long id, long userId);
+    public Task<IReadOnlyCollection<Song>> GetSongsByIds(IList<long> ids);
 }
