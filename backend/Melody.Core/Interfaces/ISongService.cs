@@ -7,4 +7,5 @@ namespace Melody.Core.Interfaces;
 public interface ISongService
 {
     Task<Result<Song>> Upload(Stream uploadedSoundFile, NewSongData newSongData);
+    Task<Result<IReadOnlyCollection<FavouriteSong>>> GetRecommendedSongs(long userId);
 }

@@ -9,6 +9,7 @@ using Melody.Infrastructure.Auth.Stores;
 using Melody.Infrastructure.Data.DbEntites;
 using Melody.Infrastructure.Data.Interfaces;
 using Melody.Infrastructure.Data.Repositories;
+using Melody.Infrastructure.ElasticSearch;
 using Melody.WebAPI.MappingProfiles;
 using Melody.WebAPI.Validators.User;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -24,6 +25,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<ISongService, SongService>();
         services.AddScoped<ISongFileStorage, SongFileStorage>();
+        services.AddScoped<IRecommender, Recommender>();
     }
 
     public static void RegisterCustomRepositories(this IServiceCollection services)

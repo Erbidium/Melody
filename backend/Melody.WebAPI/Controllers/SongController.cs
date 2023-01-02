@@ -21,20 +21,16 @@ public class SongController : ControllerBase
     private readonly IMapper _mapper;
     private readonly IValidator<NewSongDto> _newSongDtoValidator;
     private readonly ISongRepository _songRepository;
-    private readonly IUserRepository _userRepository;
     private readonly ISongService _songService;
-    private readonly IElasticClient _elasticClient;
 
-    public SongController(ISongRepository songRepository, IGenreRepository genreRepository, IUserRepository userRepository, IMapper mapper,
-        IValidator<NewSongDto> newSongDtoValidator, ISongService songService, IElasticClient elasticClient)
+    public SongController(ISongRepository songRepository, IGenreRepository genreRepository, IMapper mapper,
+        IValidator<NewSongDto> newSongDtoValidator, ISongService songService)
     {
         _songRepository = songRepository;
         _genreRepository = genreRepository;
-        _userRepository = userRepository;
         _mapper = mapper;
         _newSongDtoValidator = newSongDtoValidator;
         _songService = songService;
-        _elasticClient = elasticClient;
     }
 
     [Authorize]
@@ -47,58 +43,11 @@ public class SongController : ControllerBase
 
     [Authorize]
     [HttpGet("recommendations")]
-    public async Task<ActionResult<IEnumerable<SongInPlaylistDto>>> GetRecommendedSongs(int page = 1, int pageSize = 10)
+    public async Task<IActionResult> GetRecommendedSongs(int page = 1, int pageSize = 10)
     {
         var userId = HttpContext.User.GetId();
-        var recommendationsPreferences = await _userRepository.GetUserRecommendationsPreferences(userId);
-        if (recommendationsPreferences is null)
-        {
-            return NotFound();
-        }
-
-        var queryContainers = new List<QueryContainer>();
-        var descriptor = new QueryContainerDescriptor<SongElastic>();
-
-        if (recommendationsPreferences.StartYear.HasValue)
-        {
-            queryContainers.Add(descriptor.SearchSongsReleasedLaterThanYear(recommendationsPreferences.StartYear.Value));
-        }
-        if (recommendationsPreferences.EndYear.HasValue)
-        {
-            queryContainers.Add(descriptor.SearchSongsReleasedEarlierThanYear(recommendationsPreferences.EndYear.Value));
-        }
-        
-        const int deltaSeconds = 30;
-        if (recommendationsPreferences.AverageDurationInMinutes.HasValue)
-        {
-            queryContainers.Add(descriptor.SearchSongsWithDurationInRange(
-                recommendationsPreferences.AverageDurationInMinutes.Value,
-                deltaSeconds));
-        }
-
-        if (!string.IsNullOrWhiteSpace(recommendationsPreferences.AuthorName))
-        {
-            queryContainers.Add(descriptor.SearchSongsWithAuthorName(recommendationsPreferences.AuthorName));
-        }
-        
-        queryContainers.Add(descriptor.SearchSongsWithGenreId(recommendationsPreferences.GenreId));
-
-        var searchRequest = new SearchDescriptor<SongElastic>();
-        searchRequest
-            .Index("songs")
-            .From((page - 1) * pageSize)
-            .Size(pageSize)
-            .Query(q => q.Bool(b => b.Must(queryContainers.ToArray())));
-        
-        var songsElasticResponse = await _elasticClient.SearchAsync<SongElastic>(searchRequest);
-        if (!songsElasticResponse.IsValid)
-        {
-            return BadRequest();
-        }
-
-        var songs = await _songRepository.GetSongsByIds(songsElasticResponse.Documents.Select(s => s.Id).ToList(), userId);
-
-        return Ok(_mapper.Map<List<SongInPlaylistDto>>(songs));
+        var result = await _songService.GetRecommendedSongs(userId);
+        return result.ToOk(songs => _mapper.Map<List<SongInPlaylistDto>>(songs));
     }
 
     [Authorize(Roles = "Admin")]

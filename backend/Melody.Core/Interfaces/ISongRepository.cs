@@ -20,5 +20,5 @@ public interface ISongRepository
     public Task<bool> DeleteFavouriteSong(long id, long userId);
     public Task SaveNewSongListening(long id, long userId);
     public Task<bool> DeleteUploadedSong(long id, long userId);
-    public Task<IReadOnlyCollection<FavouriteSong>> GetSongsByIds(IList<long> ids, long userId);
+    public Task<IReadOnlyCollection<FavouriteSong>> GetSongsByIds(IReadOnlyCollection<long> ids, long userId);
 }
