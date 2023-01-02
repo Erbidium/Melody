@@ -5,6 +5,7 @@ using Melody.Core.Entities;
 using Melody.Core.Interfaces;
 using Melody.Infrastructure.Data.Context;
 using Melody.Infrastructure.Data.DbEntites;
+using Melody.Infrastructure.ElasticSearch;
 using Nest;
 
 namespace Melody.Infrastructure.Data.Repositories;
@@ -72,7 +73,17 @@ public class SongRepository : ISongRepository
         var createdSong = new Song(song.UserId, song.Name, song.Path, song.AuthorName, song.Year, song.GenreId, song.SizeBytes,
             song.UploadedAt, song.Duration) { Id = id };
 
-        await _elasticClient.IndexAsync(song, descriptor => descriptor.Index(SongIndexName).Id(id));
+        var songElastic = new SongElastic
+        {
+            Id = song.Id,
+            Name = song.Name,
+            AuthorName = song.AuthorName,
+            DurationInSeconds = (int)song.Duration.TotalSeconds,
+            GenreId = song.GenreId,
+            UploadedAt = song.UploadedAt,
+            Year = song.Year
+        };
+        await _elasticClient.IndexAsync(songElastic, descriptor => descriptor.Index(SongIndexName).Id(id));
 
         return createdSong;
     }
@@ -100,7 +111,7 @@ public class SongRepository : ISongRepository
         using var connection = _context.CreateConnection();
 
         var rowsDeleted = await connection.ExecuteAsync(SqlScriptsResource.DeleteSong, new { id });
-        var response = await _elasticClient.DeleteAsync(DocumentPath<Song>.Id(id).Index(SongIndexName));
+        var response = await _elasticClient.DeleteAsync(DocumentPath<SongElastic>.Id(id).Index(SongIndexName));
         return rowsDeleted == 1 && response.IsValid;
     }
 
@@ -212,7 +223,7 @@ public class SongRepository : ISongRepository
 
         var rowsDeleted = await connection.ExecuteAsync(SqlScriptsResource.DeleteUploadedSong, new { id, userId });
 
-        var response = await _elasticClient.DeleteAsync(DocumentPath<Song>.Id(id).Index(SongIndexName));
+        var response = await _elasticClient.DeleteAsync(DocumentPath<SongElastic>.Id(id).Index(SongIndexName));
         return rowsDeleted == 1 && response.IsValid;
     }
 }

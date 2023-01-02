@@ -4,6 +4,7 @@ using FluentValidation.AspNetCore;
 using Melody.Core.Entities;
 using Melody.Core.Interfaces;
 using Melody.Core.ValueObjects;
+using Melody.Infrastructure.ElasticSearch;
 using Melody.WebAPI.DTO.Genre;
 using Melody.WebAPI.DTO.Song;
 using Melody.WebAPI.Extensions;
@@ -57,7 +58,7 @@ public class SongController : ControllerBase
         }
 
         var queryContainers = new List<QueryContainer>();
-        var descriptor = new QueryContainerDescriptor<Song>();
+        var descriptor = new QueryContainerDescriptor<SongElastic>();
 
         if (recommendationsPreferences.StartYear.HasValue)
         {
@@ -75,14 +76,15 @@ public class SongController : ControllerBase
         const int deltaSeconds = 30;
         if (recommendationsPreferences.AverageDurationInMinutes.HasValue)
         {
-            var startDuration = recommendationsPreferences.AverageDurationInMinutes.Value - deltaSeconds > 0
-                ? recommendationsPreferences.AverageDurationInMinutes.Value - deltaSeconds
-                : 1;
-            
+            var startDuration = recommendationsPreferences.AverageDurationInMinutes.Value * 60 - deltaSeconds > 0
+                ? recommendationsPreferences.AverageDurationInMinutes.Value * 60 - deltaSeconds
+                : 60;
+
+            var endDuration = recommendationsPreferences.AverageDurationInMinutes.Value * 60 + 30;
             queryContainers.Add(descriptor.Range(selector => selector
-                .Field(song => song.Duration)
+                .Field(song => song.DurationInSeconds)
                 .GreaterThanOrEquals(startDuration)
-                .LessThanOrEquals(recommendationsPreferences.AverageDurationInMinutes + deltaSeconds)));
+                .LessThanOrEquals(endDuration)));
         }
 
         if (!string.IsNullOrWhiteSpace(recommendationsPreferences.AuthorName))
@@ -98,14 +100,14 @@ public class SongController : ControllerBase
             .Field(song => song.GenreId)
             .Value(recommendationsPreferences.GenreId)));
 
-        var searchRequest = new SearchDescriptor<SongDto>();
+        var searchRequest = new SearchDescriptor<SongElastic>();
         searchRequest
             .Index("songs")
             .From((page - 1) * pageSize)
             .Size(pageSize)
             .Query(q => q.Bool(b => b.Must(queryContainers.ToArray())));
         
-        var songs = await _elasticClient.SearchAsync<SongDto>(searchRequest);
+        var songs = await _elasticClient.SearchAsync<SongElastic>(searchRequest);
         if (!songs.IsValid)
         {
             return BadRequest();

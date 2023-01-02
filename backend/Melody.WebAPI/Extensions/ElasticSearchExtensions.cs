@@ -1,4 +1,4 @@
-﻿using Melody.Core.Entities;
+﻿using Melody.Infrastructure.ElasticSearch;
 using Nest;
 
 namespace Melody.WebAPI.Extensions;
@@ -15,29 +15,16 @@ public static class ElasticSearchExtensions
             .PrettyJson()
             .DefaultIndex(defaultIndex);
 
-        AddDefaultMappings(settings);
-
         var client = new ElasticClient(settings);
         services.AddSingleton<IElasticClient>(client);
 
         CreateIndex(client, defaultIndex);
     }
 
-    private static void AddDefaultMappings(ConnectionSettings settings)
-    {
-        settings
-            .DefaultMappingFor<Song>(m => m
-                .Ignore(s => s.Id)
-                .Ignore(s => s.Path)
-                .Ignore(s => s.SizeBytes)
-                .Ignore(s => s.UserId)
-            );
-    }
-
     private static void CreateIndex(IElasticClient client, string indexName)
     {
         client.Indices.Create(indexName,
-            index => index.Map<Song>(x => x.AutoMap())
+            index => index.Map<SongElastic>(x => x.AutoMap())
         );
     }
 }
