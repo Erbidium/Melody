@@ -590,6 +590,35 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на SELECT s.Id,
+        ///       s.UserId,
+        ///       s.UploadedAt,
+        ///       s.SizeBytes,
+        ///       s.Name,
+        ///       s.Path,
+        ///       s.AuthorName,
+        ///       s.Year,
+        ///       s.GenreId,
+        ///       s.Duration,
+        ///       s.IsDeleted,
+        ///       CONVERT(BIT, IIF(fs.SongId IS NULL, 0, 1)) as IsFavourite,
+        ///       g.Id,
+        ///       g.Name
+        ///FROM Songs s
+        ///         INNER JOIN Genres g ON s.GenreId = g.Id
+        ///         INNER JOIN Users u ON u.Id = s.UserId
+        ///         LEFT JOIN
+        ///           (SELECT SongId
+        ///            FROM FavouriteSongs fs
+        ///            WHER [остаток строки не уместился]&quot;;.
+        /// </summary>
+        internal static string GetSongsByIds {
+            get {
+                return ResourceManager.GetString("GetSongsByIds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на WITH PlaylistSongsIds AS
         ///         (SELECT s.Id
         ///          FROM Songs s

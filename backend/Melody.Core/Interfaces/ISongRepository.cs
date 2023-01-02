@@ -1,5 +1,6 @@
 using LanguageExt;
 using Melody.Core.Entities;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Melody.Core.Interfaces;
 
@@ -19,5 +20,5 @@ public interface ISongRepository
     public Task<bool> DeleteFavouriteSong(long id, long userId);
     public Task SaveNewSongListening(long id, long userId);
     public Task<bool> DeleteUploadedSong(long id, long userId);
-    public Task<IReadOnlyCollection<Song>> GetSongsByIds(IList<long> ids);
+    public Task<IReadOnlyCollection<FavouriteSong>> GetSongsByIds(IList<long> ids, long userId);
 }

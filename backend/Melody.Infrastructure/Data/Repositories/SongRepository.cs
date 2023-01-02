@@ -226,4 +226,23 @@ public class SongRepository : ISongRepository
         var response = await _elasticClient.DeleteAsync(DocumentPath<SongElastic>.Id(id).Index(SongIndexName));
         return rowsDeleted == 1 && response.IsValid;
     }
+
+    public async Task<IReadOnlyCollection<FavouriteSong>> GetSongsByIds(IList<long> ids, long userId)
+    {
+        using var connection = _context.CreateConnection();
+
+        var songs = await connection.QueryAsync<FavouriteSongFromPlaylistDb, GenreDb, FavouriteSong>(
+            SqlScriptsResource.GetFavouriteAndUploadedUserSongs,
+            (songDb, genreDb) =>
+            {
+                var song = new FavouriteSong(songDb.Name, songDb.AuthorName, songDb.GenreId, songDb.UploadedAt, songDb.Duration, songDb.IsFavourite)
+                {
+                    Id = songDb.Id,
+                    Genre = new Genre(genreDb.Name) { Id = genreDb.Id }
+                };
+                return song;
+            },
+            new { UserId = userId, ids });
+        return songs.OrderBy(s => ids.IndexOf(s.Id)).ToList().AsReadOnly();
+    }
 }

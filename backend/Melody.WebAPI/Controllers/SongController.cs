@@ -1,7 +1,6 @@
 using AutoMapper;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using Melody.Core.Entities;
 using Melody.Core.Interfaces;
 using Melody.Core.ValueObjects;
 using Melody.Infrastructure.ElasticSearch;
@@ -48,7 +47,7 @@ public class SongController : ControllerBase
 
     [Authorize]
     [HttpGet("recommendations")]
-    public async Task<ActionResult<IEnumerable<SongDto>>> GetRecommendedSongs(int page = 1, int pageSize = 10)
+    public async Task<ActionResult<IEnumerable<SongInPlaylistDto>>> GetRecommendedSongs(int page = 1, int pageSize = 10)
     {
         var userId = HttpContext.User.GetId();
         var recommendationsPreferences = await _userRepository.GetUserRecommendationsPreferences(userId);
@@ -107,12 +106,15 @@ public class SongController : ControllerBase
             .Size(pageSize)
             .Query(q => q.Bool(b => b.Must(queryContainers.ToArray())));
         
-        var songs = await _elasticClient.SearchAsync<SongElastic>(searchRequest);
-        if (!songs.IsValid)
+        var songsElasticResponse = await _elasticClient.SearchAsync<SongElastic>(searchRequest);
+        if (!songsElasticResponse.IsValid)
         {
             return BadRequest();
         }
-        return Ok(songs.Documents);
+
+        var songs = await _songRepository.GetSongsByIds(songsElasticResponse.Documents.Select(s => s.Id).ToList(), userId);
+
+        return Ok(_mapper.Map<List<SongInPlaylistDto>>(songs));
     }
 
     [Authorize(Roles = "Admin")]
