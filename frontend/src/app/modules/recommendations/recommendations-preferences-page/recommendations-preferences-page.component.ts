@@ -29,15 +29,12 @@ export class RecommendationsPreferencesPageComponent extends BaseComponent imple
             }),
             startYear: new FormControl('', {
                 updateOn: 'blur',
-                validators: [Validators.min(1)],
             }),
             endYear: new FormControl('', {
                 updateOn: 'blur',
-                validators: [Validators.min(1)],
             }),
             averageDurationInMinutes: new FormControl('', {
                 updateOn: 'blur',
-                validators: [Validators.min(1)],
             }),
         },
         {
