@@ -8,12 +8,24 @@
         <form [formGroup]="createPlaylistForm">
             <mat-form-field appearance="outline">
                 <input matInput id="name" type="text" formControlName="name" placeholder="Назва плейлисту" />
+                <mat-error
+                    *ngIf="
+                    createPlaylistForm.controls['name'].hasError('required') ||
+                    createPlaylistForm.controls['name'].hasError('minlength') ||
+                    createPlaylistForm.controls['name'].hasError('maxlength')
+                "
+                >Playlist name is invalid</mat-error>
             </mat-form-field>
             <mat-form-field appearance="fill">
                 <mat-label>Пісні</mat-label>
                 <mat-select formControlName="songs" multiple>
                     <mat-option *ngFor="let song of uploadedSongs" [value]="song.id">{{song.name}}</mat-option>
                 </mat-select>
+                <mat-error
+                    *ngIf="
+                    createPlaylistForm.controls['songs'].hasError('required')">
+                    Songs are required
+                </mat-error>
             </mat-form-field>
             <button mat-raised-button type="button" (click)="create()" [disabled]="!createPlaylistForm.valid || createPlaylistForm.value.songs?.length === 0">Створити</button>
         </form>

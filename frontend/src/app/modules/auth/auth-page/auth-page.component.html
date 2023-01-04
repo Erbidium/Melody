@@ -11,7 +11,12 @@
               <mat-label>Email</mat-label>
               <mat-form-field appearance="outline">
                 <input matInput id="email" type="email" formControlName="emailRegistered" placeholder="email@email.com" />
-                  <mat-error *ngIf="signInForm.controls['emailRegistered'].hasError('email')">Email format is invalid</mat-error>
+                  <mat-error
+                      *ngIf="
+                    signInForm.controls['emailRegistered'].hasError('email') ||
+                    signInForm.controls['emailRegistered'].hasError('maxlength')">
+                      Email is invalid
+                  </mat-error>
                   <mat-error *ngIf="signInForm.controls['emailRegistered'].hasError('required')">Email is required field</mat-error>
                   <mat-error *ngIf="signInForm.controls['emailRegistered'].hasError('userInNotExist')">User with entered email address doesn't exist</mat-error>
               </mat-form-field>
@@ -19,6 +24,13 @@
               <mat-form-field appearance="outline">
                 <input matInput id="password" type="password" formControlName="passwordRegistered" placeholder="●●●●●●●●●●" />
                   <mat-error *ngIf="signInForm.controls['passwordRegistered'].hasError('required')">Password is required field</mat-error>
+                  <mat-error
+                      *ngIf="
+                    signInForm.controls['passwordRegistered'].hasError('pattern') ||
+                    signInForm.controls['passwordRegistered'].hasError('minlength') ||
+                    signInForm.controls['passwordRegistered'].hasError('maxlength')">
+                      Password is invalid
+                  </mat-error>
               </mat-form-field>
             </div>
             <div class="form-buttons">
