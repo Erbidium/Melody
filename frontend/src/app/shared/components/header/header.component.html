@@ -1,5 +1,5 @@
 <mat-toolbar color="primary">
-  <span>Melody</span>
+  <span><img src="assets/header/logo.svg" alt="header-logo" />{{title}}</span>
   <nav mat-tab-nav-bar>
     <a
       mat-tab-link
@@ -12,5 +12,5 @@
       {{ link.label }}
     </a>
   </nav>
-  <mat-icon>person</mat-icon>
+  <mat-icon (click)="navigateToProfile()">person</mat-icon>
 </mat-toolbar>

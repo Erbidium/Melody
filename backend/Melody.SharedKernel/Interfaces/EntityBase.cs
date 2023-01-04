@@ -1,6 +1,6 @@
 ﻿namespace Melody.SharedKernel.Interfaces;
 
-public interface IEntityBase<TId>
+public abstract class EntityBase<TId>
 {
-    public TId Id { get; }
+    public TId Id { get; set; }
 }

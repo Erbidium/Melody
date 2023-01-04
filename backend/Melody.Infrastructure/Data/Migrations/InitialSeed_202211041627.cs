@@ -1,7 +1,7 @@
 ﻿using FluentMigrator;
 using FluentMigrator.SqlServer;
 using Melody.Core.Entities;
-using Melody.Infrastructure.Data.Records;
+using Melody.Infrastructure.Data.DbEntites;
 
 namespace Melody.Infrastructure.Data.Migrations;
 

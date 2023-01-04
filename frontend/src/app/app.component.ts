@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { SpinnerService } from '@core/services/spinner.service';
+import { NavigationStart, Router } from '@angular/router';
 
 @Component({
     selector: 'app-root',
@@ -7,6 +7,13 @@ import { SpinnerService } from '@core/services/spinner.service';
     styleUrls: ['./app.component.sass'],
 })
 export class AppComponent {
-    // eslint-disable-next-line no-empty-function
-    constructor(private spinner: SpinnerService) {}
+    showPlayer = true;
+
+    constructor(router: Router) {
+        router.events.forEach((event) => {
+            if (event instanceof NavigationStart) {
+                this.showPlayer = event.url !== '/auth';
+            }
+        });
+    }
 }

@@ -1,15 +1,14 @@
-﻿using Melody.SharedKernel.Interfaces;
+﻿using Ardalis.GuardClauses;
+using Melody.SharedKernel.Interfaces;
 
 namespace Melody.Core.Entities;
 
-public class Genre : IEntityBase<long>
+public class Genre : EntityBase<long>
 {
-    public Genre(long id, string name)
+    public Genre(string name)
     {
-        Id = id;
-        Name = name;
+        Name = Guard.Against.NullOrWhiteSpace(name, nameof(Name));
     }
 
-    public long Id { get; }
     public string Name { get; }
 }

@@ -7,18 +7,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Remove="ValueObjects\**"/>
-        <EmbeddedResource Remove="ValueObjects\**"/>
-        <None Remove="ValueObjects\**"/>
+        <Folder Include="Services\" />
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="ProjectAggregate\"/>
-        <Folder Include="Services\"/>
+        <ProjectReference Include="..\Melody.SharedKernel\Melody.SharedKernel.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Melody.SharedKernel\Melody.SharedKernel.csproj"/>
+        <PackageReference Include="Ardalis.GuardClauses" Version="4.0.1" />
+        <PackageReference Include="LanguageExt.Core" Version="4.4.0" />
     </ItemGroup>
 
 </Project>

@@ -1,0 +1,49 @@
+<app-header></app-header>
+<app-back-button></app-back-button>
+<h1>Вподобання для рекомендацій</h1>
+<div class="wrapper">
+    <form [formGroup]="uploadForm">
+        <mat-form-field appearance="outline">
+            <input matInput id="author" type="text" formControlName="author" placeholder="Автор" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <input matInput id="startYear" type="number" pattern="\d*" formControlName="startYear" placeholder="Початковий рік" [errorStateMatcher]="matcher" />
+            <mat-error
+                *ngIf="uploadForm.hasError('incorrectYears') ||
+                       uploadForm.controls['startYear'].hasError('pattern') ||
+                       uploadForm.controls['startYear'].hasError('min')"
+            >
+                Invalid start year
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <input matInput id="endYear" type="number" pattern="\d*" formControlName="endYear" placeholder="Кінцевий рік" [errorStateMatcher]="matcher"/>
+            <mat-error
+                *ngIf="uploadForm.hasError('incorrectYears') ||
+                       uploadForm.controls['endYear'].hasError('pattern') ||
+                       uploadForm.controls['endYear'].hasError('min')"
+            >
+                Invalid end year
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <input matInput id="averageLengthInMinutes" pattern="\d*" type="number" formControlName="averageDurationInMinutes" placeholder="Середня тривалість у хв" />
+            <mat-error
+                *ngIf="uploadForm.controls['averageDurationInMinutes'].hasError('min') ||
+                       uploadForm.controls['averageDurationInMinutes'].hasError('pattern')"
+            >
+                Invalid duration in minutes
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field class="genre" appearance="fill">
+            <mat-label>Жанр</mat-label>
+            <mat-select [(value)]="selectedGenre">
+                <mat-option *ngFor="let genre of genres" [value]="genre">
+                    {{genre.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </form>
+</div>
+<button mat-raised-button (click)="savePreferences()" [disabled]="!uploadForm.valid">Зберегти</button>
+

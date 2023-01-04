@@ -10,4 +10,4 @@
        Users.IsDeleted
 FROM Users
          INNER JOIN Roles ON Users.RoleId = Roles.Id
-WHERE Roles.NormalizedName = @NormalizedName;
+WHERE Roles.NormalizedName = @NormalizedName AND Users.IsDeleted = 0;

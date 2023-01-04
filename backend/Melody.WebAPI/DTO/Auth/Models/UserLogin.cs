@@ -1,4 +1,4 @@
-﻿namespace Melody.Infrastructure.Auth.Models;
+﻿namespace Melody.WebAPI.DTO.Auth.Models;
 
 public class UserLogin
 {

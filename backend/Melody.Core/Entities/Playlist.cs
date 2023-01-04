@@ -1,27 +1,17 @@
-﻿using Melody.Core.Exceptions;
+﻿using Ardalis.GuardClauses;
 using Melody.SharedKernel.Interfaces;
 
 namespace Melody.Core.Entities;
 
-public class Playlist : IEntityBase<long>
+public class Playlist : EntityBase<long>
 {
-    public Playlist(string name, string link, long authorId, long id = -1)
+    public Playlist(string name, long authorId)
     {
-        Id = id;
-        Name = name;
-        Link = link;
-        AuthorId = authorId;
+        Name = Guard.Against.NullOrWhiteSpace(name, nameof(Name));
+        AuthorId = Guard.Against.Negative(authorId, nameof(AuthorId));
     }
 
-    private long _id;
-
-    public long Id
-    {
-        get => _id < 0 ? throw new WrongIdException() : _id;
-        private set => _id = value;
-    }
-
+    public List<FavouriteSong> Songs { get; set; } = new();
     public string Name { get; }
-    public string Link { get; }
     public long AuthorId { get; }
 }

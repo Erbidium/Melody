@@ -1,50 +1,60 @@
 <div class="wrapper">
   <mat-card class="auth-card">
     <div class="card-header">
-      <div class="application-name">Melody</div>
+      <div class="application-name"><img src="assets/header/logo.svg" alt="header-logo" /> Melody</div>
     </div>
     <mat-card-content>
       <mat-tab-group>
-        <mat-tab label="Login">
-          <form [formGroup]="signInForm" (ngSubmit)="onSignIn()">
+        <mat-tab label="Логін">
+          <form [formGroup]="signInForm">
             <div class="form-inputs">
               <mat-label>Email</mat-label>
               <mat-form-field appearance="outline">
                 <input matInput id="email" type="email" formControlName="emailRegistered" placeholder="email@email.com" />
+                  <mat-error *ngIf="signInForm.controls['emailRegistered'].hasError('email')">Email format is invalid</mat-error>
+                  <mat-error *ngIf="signInForm.controls['emailRegistered'].hasError('required')">Email is required field</mat-error>
+                  <mat-error *ngIf="signInForm.controls['emailRegistered'].hasError('userInNotExist')">User with entered email address doesn't exist</mat-error>
               </mat-form-field>
               <mat-label>Пароль</mat-label>
               <mat-form-field appearance="outline">
                 <input matInput id="password" type="password" formControlName="passwordRegistered" placeholder="●●●●●●●●●●" />
+                  <mat-error *ngIf="signInForm.controls['passwordRegistered'].hasError('required')">Password is required field</mat-error>
               </mat-form-field>
             </div>
             <div class="form-buttons">
-              <button mat-flat-button color="primary" type="submit">Sign In</button>
+              <button mat-flat-button color="primary" type="button" (click)="onSignIn()">Увійти</button>
             </div>
           </form>
         </mat-tab>
-        <mat-tab label="Registration">
-          <form [formGroup]="signUpForm" (ngSubmit)="onSignUp()">
+        <mat-tab label="Реєстрація">
+          <form [formGroup]="signUpForm">
             <div class="form-inputs">
               <mat-label>Юзернейм</mat-label>
               <mat-form-field appearance="outline">
                 <input matInput id="username-new" type="text" formControlName="username" placeholder="Username" />
+                  <mat-error *ngIf="signUpForm.controls['username'].hasError('required')">Username is required field</mat-error>
+                  <mat-error *ngIf="signUpForm.controls['username'].hasError('userAlreadyExists')">User with entered username already exists</mat-error>
               </mat-form-field>
               <mat-label>Email</mat-label>
               <mat-form-field appearance="outline">
                 <input matInput id="email-new" type="email" formControlName="email" placeholder="email@email.com" />
-                <mat-error *ngIf="signUpForm.controls['email'].invalid">{{ "Email is invalid" }}</mat-error>
+                  <mat-error *ngIf="signUpForm.controls['email'].hasError('email')">Email format is invalid</mat-error>
+                  <mat-error *ngIf="signUpForm.controls['email'].hasError('required')">Email is required field</mat-error>
+                  <mat-error *ngIf="signUpForm.controls['email'].hasError('userAlreadyExists')">User with entered email already exists</mat-error>
               </mat-form-field>
               <mat-label>Номер телефону</mat-label>
               <mat-form-field appearance="outline">
                 <input matInput id="phone-new" type="text" formControlName="phone" placeholder="+380000000000" />
+                  <mat-error *ngIf="signUpForm.controls['phone'].hasError('required')">Phone is required field</mat-error>
               </mat-form-field>
               <mat-label>Пароль</mat-label>
               <mat-form-field appearance="outline">
                 <input matInput id="password-new" type="password" formControlName="password" placeholder="●●●●●●●●●●" />
+                  <mat-error *ngIf="signUpForm.controls['password'].hasError('required')">Password is required field</mat-error>
               </mat-form-field>
             </div>
             <div class="form-buttons">
-              <button mat-flat-button color="primary" type="submit">Sign up</button>
+              <button mat-flat-button color="primary" type="button" (click)="onSignUp()">Зареєструватися</button>
             </div>
           </form>
         </mat-tab>

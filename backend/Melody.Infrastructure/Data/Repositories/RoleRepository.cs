@@ -1,7 +1,7 @@
 ﻿using Dapper;
 using Melody.Infrastructure.Data.Context;
+using Melody.Infrastructure.Data.DbEntites;
 using Melody.Infrastructure.Data.Interfaces;
-using Melody.Infrastructure.Data.Records;
 
 namespace Melody.Infrastructure.Data.Repositories;
 
@@ -20,7 +20,7 @@ public class RoleRepository : IRoleRepository
         var rowsInserted = await connection.ExecuteAsync(SqlScriptsResource.CreateRole, new
         {
             role.Name,
-            role.NormalizedName,
+            role.NormalizedName
         });
         return rowsInserted == 1;
     }

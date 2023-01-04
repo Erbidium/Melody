@@ -1,10 +1,11 @@
-export interface ISong {
+import { IBaseSong } from '@core/models/IBaseSong';
+import { IGenre } from '@core/models/IGenre';
+
+export interface ISong extends IBaseSong {
     userId: number;
-    name: string;
-    path: string;
     authorName: string;
     year: number;
-    sizeBytes: number;
     uploadedAt: Date;
     genreId: number;
+    genre?: IGenre;
 }

@@ -1,0 +1,16 @@
+<app-header>
+</app-header>
+<h1>{{currentUser?.userName}}</h1>
+<button mat-raised-button (click)="logOut()">Log out</button>
+<button mat-raised-button (click)="deleteAccount()">Delete account</button>
+<p>Сторінка твого профілю</p>
+<p>Твій email: {{currentUser?.email}}</p>
+<p>Твій номер телефону: {{currentUser?.phoneNumber}}</p>
+<h1>
+    Створені плейлисти
+</h1>
+<app-horizontal-playlists-scroll
+    [userPlaylists]="userPlaylists"
+    (heartButtonClickEvent)="changePlaylistStatus($event.id, $event.event)"
+    [heartButtonForLikes]="true"
+></app-horizontal-playlists-scroll>

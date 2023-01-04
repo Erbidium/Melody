@@ -1,2 +1,3 @@
-﻿DELETE FROM UserRefreshTokens
+﻿DELETE
+FROM UserRefreshTokens
 WHERE RefreshToken = @Token;

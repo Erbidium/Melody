@@ -10,7 +10,7 @@ export class AuthService {
     // eslint-disable-next-line no-empty-function
     constructor(private httpService: HttpInternalService, private notificationService: NotificationService) {}
 
-    public signUp(email: string, password: string, name: string, phone: string) {
+    signUp(email: string, password: string, name: string, phone: string) {
         return this.httpService.postRequest<null>('/api/user/register', { UserName: name, email, password, PhoneNumber: phone }).pipe(
             tap({
                 next: () => this.notificationService.showSuccessMessage('Registration successful'),
@@ -20,7 +20,7 @@ export class AuthService {
         );
     }
 
-    public signIn(email: string, password: string) {
+    signIn(email: string, password: string) {
         return this.httpService.postRequest<{ accessToken: string }>('/api/login', { email, password }).pipe(
             tap({
                 next: (accessToken: { accessToken: string }) => {
@@ -34,26 +34,23 @@ export class AuthService {
         );
     }
 
-    public getAccessToken() {
+    getAccessToken() {
         return localStorage.getItem('access-token');
     }
 
-    public isLoggedIn(): boolean {
+    isLoggedIn(): boolean {
         return !!localStorage.getItem('access-token');
     }
 
-    public signOut(): Observable<void> {
+    signOut(): Observable<void> {
         return this.httpService.postRequest<void>('/api/logout', {}).pipe(
             tap({
-                next: () => {
-                    localStorage.removeItem('access-token');
-                },
                 error: (e) => this.notificationService.showErrorMessage(e.message),
             }),
         );
     }
 
-    public refreshToken() {
+    refreshToken() {
         return this.httpService.postRequest<{ accessToken: string }>('/api/login/refresh', {}).pipe(
             tap({
                 next: (token) => {

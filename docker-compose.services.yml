@@ -1,0 +1,42 @@
+services:
+    grafana:
+        image: grafana/grafana-enterprise
+        ports:
+            - 3000:3000
+        networks:
+            - localnet
+        restart: unless-stopped
+        volumes:
+            - grafana-storage:/var/lib/grafana
+        environment:
+            GF_SECURITY_ALLOW_EMBEDDING: true
+            GF_FEATURE_TOGGLES_ENABLE: publicDashboards
+    sql_server:
+        build:
+            context: ./mssql
+            dockerfile: ./Dockerfile
+        container_name: melody_sql_server
+        ports:
+            - 1433:1433
+        networks:
+            - localnet
+        environment:
+            SA_PASSWORD: TestPassword!
+            ACCEPT_EULA: "Y"
+            MSSQL_AGENT_ENABLED: true
+    elasticsearch:
+        container_name: es-container
+        image: docker.elastic.co/elasticsearch/elasticsearch:8.5.3
+        environment:
+        - xpack.security.enabled=false
+        - discovery.type=single-node
+        - "ES_JAVA_OPTS=-Xmx512m -Xms512m"
+        networks:
+        - localnet
+        ports:
+        - 9200:9200
+volumes:
+    grafana-storage:
+networks:
+    localnet:
+        driver: bridge

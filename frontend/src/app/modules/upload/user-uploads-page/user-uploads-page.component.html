@@ -1,0 +1,16 @@
+<app-header></app-header>
+<app-back-button></app-back-button>
+<h1>На цій сторінці ти можеш побачити список всіх твоїх заватажених на платформу пісень</h1>
+<div *ngIf="uploadedSongs.length === 0; else songs">
+    Ти ще не завантажив жодної пісні. Спробуй завантажити пісню, щоб побачити її на цій сторінці
+</div>
+<ng-template #songs>
+    <app-songs-table
+        [dataSource]="uploadedSongs"
+        (removeButtonClickEvent)="deleteSong($event.id, $event.event)"
+        (rowClickEvent)="selectSong($event)"
+        [columnsToDisplay]="columnsToDisplay"
+        [currentSongSelected]="currentSongIdForMusicPlayer"
+    >
+    </app-songs-table>
+</ng-template>

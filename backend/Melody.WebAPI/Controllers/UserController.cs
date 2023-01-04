@@ -1,10 +1,17 @@
-﻿using Melody.Infrastructure.Auth.Models;
-using Melody.Infrastructure.Data.Records;
-using Melody.WebAPI.Services;
+﻿using AutoMapper;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using Melody.Core.Entities;
+using Melody.Core.Interfaces;
+using Melody.Infrastructure.Data.DbEntites;
+using Melody.Infrastructure.Data.Interfaces;
+using Melody.WebAPI.DTO.Auth.Models;
+using Melody.WebAPI.DTO.RecommendationsPreferences;
+using Melody.WebAPI.DTO.User;
+using Melody.WebAPI.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace Melody.WebAPI.Controllers;
 
@@ -13,66 +20,181 @@ namespace Melody.WebAPI.Controllers;
 public class UserController : ControllerBase
 {
     private readonly UserManager<UserIdentity> _userManager;
+    private readonly Core.Interfaces.IUserRepository _userRepository;
+    private readonly IRefreshTokenRepository _refreshTokenRepository;
+    private readonly IMapper _mapper;
     private readonly ITokenService _tokenService;
+    private readonly IValidator<CreateRecommendationsPreferencesDto> _createRecommendationsPreferencesDtoValidator;
+    private readonly IValidator<UserRegister> _userRegisterValidator;
 
-    public UserController(UserManager<UserIdentity> userManager, ITokenService tokenService)
+    public UserController(
+        UserManager<UserIdentity> userManager,
+        Core.Interfaces.IUserRepository userRepository,
+        IMapper mapper,
+        IRefreshTokenRepository refreshTokenRepository,
+        IValidator<CreateRecommendationsPreferencesDto> createRecommendationsPreferencesDtoValidator,
+        IValidator<UserRegister> userRegisterValidator,
+        ITokenService tokenService)
     {
         _userManager = userManager;
+        _userRepository = userRepository;
+        _refreshTokenRepository = refreshTokenRepository;
+        _mapper = mapper;
         _tokenService = tokenService;
+        _createRecommendationsPreferencesDtoValidator = createRecommendationsPreferencesDtoValidator;
+        _userRegisterValidator = userRegisterValidator;
     }
 
     [AllowAnonymous]
     [HttpPost("Register")]
     public async Task<IActionResult> Register([FromBody] UserRegister userRegister)
     {
+        var validationResult = await _userRegisterValidator.ValidateAsync(userRegister);
+        if (!validationResult.IsValid)
+        {
+            validationResult.AddToModelState(ModelState);
+            return BadRequest(ModelState);
+        }
+
         var user = new UserIdentity
         {
             UserName = userRegister.UserName,
             Email = userRegister.Email,
-            PhoneNumber = userRegister.PhoneNumber,
-            IsBanned = false,
-            IsDeleted = false,
-            EmailConfirmed = false
+            PhoneNumber = userRegister.PhoneNumber
         };
 
         var result = await _userManager.CreateAsync(user, userRegister.Password);
 
-        if (!result.Succeeded)
-        {
-            return Ok(result.Errors);
-        }
+        if (!result.Succeeded) return BadRequest(result.Errors);
 
         await _userManager.AddToRoleAsync(user, "User");
         return StatusCode(201);
     }
 
-    [HttpGet("Admins")]
+    [Authorize]
+    [HttpGet("{id:long}")]
+    public async Task<ActionResult<UserDto>> GetUserById(long id)
+    {
+        var userRoles = HttpContext.User.GetUserRoles();
+        var userIdentity = await _userManager.FindByIdAsync(id.ToString());
+
+        if (userIdentity is null || (!userRoles.Contains("Admin") && userIdentity.IsBanned))
+        {
+            return NotFound("User is not found");
+        }
+        var roles = await _userManager.GetRolesAsync(userIdentity);
+        return Ok(new UserDto(userIdentity) { Roles = roles });
+    }
+
+    [Authorize]
+    [HttpGet]
+    public async Task<ActionResult<UserDto>> GetCurrentUser()
+    {
+        var userId = HttpContext.User.GetId();
+        var userIdentity = await _userManager.FindByIdAsync(userId.ToString());
+        var roles = await _userManager.GetRolesAsync(userIdentity);
+        return Ok(new UserDto(userIdentity) { Roles = roles });
+    }
+
+    [AllowAnonymous]
+    [HttpGet("check-email")]
+    public async Task<ActionResult<bool>> CheckExistingEmail(string email)
+    {
+        return Ok(await _userManager.FindByEmailAsync(email) != null);
+    }
+
+    [AllowAnonymous]
+    [HttpGet("check-username")]
+    public async Task<ActionResult<bool>> CheckExistingUsername(string username)
+    {
+        return Ok(await _userManager.FindByNameAsync(username) != null);
+    }
+
+    [Authorize]
+    [HttpGet("check-preferences")]
+    public async Task<ActionResult<bool>> CheckUserRecommendationsPreferences()
+    {
+        var userId = HttpContext.User.GetId();
+        return Ok(await _userRepository.GetUserRecommendationsPreferences(userId) != null);
+    }
+
+    [HttpGet("all")]
     [Authorize(Roles = "Admin")]
-    public IActionResult AdminsEndpoint()
+    public async Task<ActionResult<IEnumerable<UserForAdminDto>>> GetUsersForAdministrator(string? searchText, int page = 1, int pageSize = 10)
     {
-        var identity = HttpContext.User.Identity as ClaimsIdentity;
-        var currentUser = _tokenService.GetCurrentUser(identity);
-        return Ok($"Hi {currentUser.UserId}, you are an {currentUser.Roles.FirstOrDefault()}");
+        return Ok(_mapper.Map<List<UserForAdminDto>>(await _userRepository.GetUsersWithoutAdministratorRole(searchText ?? "", page, pageSize)));
     }
 
-    [HttpGet("AdminsAndUsers")]
-    [Authorize(Roles = "Admin,User")]
-    public IActionResult AdminsAndUsersEndpoint()
+    [Authorize]
+    [HttpGet("recommendations-preferences")]
+    public async Task<ActionResult<RecommendationsPreferences>> GetUserRecommendationsPreferences()
     {
-        var identity = HttpContext.User.Identity as ClaimsIdentity;
-        var currentUser = _tokenService.GetCurrentUser(identity);
-        return Ok($"Hi {currentUser.UserId}, you are an {currentUser.Roles.FirstOrDefault()}");
+        var userId = HttpContext.User.GetId();
+        return Ok(_mapper.Map<RecommendationsPreferencesDto>(await _userRepository.GetUserRecommendationsPreferences(userId)));
     }
 
-    [HttpGet("Public")]
-    public IActionResult Public()
+    [Authorize]
+    [HttpPut("recommendations-preferences")]
+    public async Task<IActionResult> SaveUserRecommendationsPreferences(CreateRecommendationsPreferencesDto createRecommendationsPreferences)
     {
-        return Ok("Hi, you're on public property");
+        var validationResult = await _createRecommendationsPreferencesDtoValidator.ValidateAsync(createRecommendationsPreferences);
+        if (!validationResult.IsValid)
+        {
+            validationResult.AddToModelState(ModelState);
+            return BadRequest(ModelState);
+        }
+        
+        var userId = HttpContext.User.GetId();
+        var preferences = new RecommendationsPreferences(
+            userId,
+            createRecommendationsPreferences.GenreId,
+            createRecommendationsPreferences.AuthorName,
+            createRecommendationsPreferences.StartYear,
+            createRecommendationsPreferences.EndYear,
+            createRecommendationsPreferences.AverageDurationInMinutes);
+        return await _userRepository.CreateOrUpdateUserRecommendationsPreferences(preferences)
+            ? Ok()
+            : BadRequest();
     }
 
-    [HttpGet("CreateUser")]
-    public IActionResult CreateUser()
+    [HttpPatch("{id:long}/ban")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> BanUser(BannedStatusDto bannedStatusDto, long id)
     {
-        return Ok("Hi, you're on public property");
+        if (bannedStatusDto.IsBanned)
+        {
+            await _refreshTokenRepository.DeleteByUserIdAsync(id);
+        }
+        await _userRepository.SetUserBannedStatus(bannedStatusDto.IsBanned, id);
+        return Ok();
+    }
+
+    [Authorize]
+    [HttpDelete]
+    public async Task<IActionResult> DeleteUser()
+    {
+        var userId = HttpContext.User.GetId();
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+        var refreshToken = await _tokenService.GenerateRefreshToken(user.Email, true);
+        Response.Cookies.Append("X-Refresh-Token", refreshToken,
+            new CookieOptions
+            {
+                HttpOnly = true, SameSite = SameSiteMode.None, Secure = true,
+                Expires = DateTimeOffset.Now.AddDays(-1)
+            });
+        await _refreshTokenRepository.DeleteByUserIdAsync(userId);
+        return await _userRepository.DeleteAsync(userId)
+            ? NoContent()
+            : NotFound();
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpDelete("{id:long}")]
+    public async Task<IActionResult> DeleteUser(long id)
+    {
+        await _refreshTokenRepository.DeleteByUserIdAsync(id);
+        return await _userRepository.DeleteAsync(id)
+            ? NoContent()
+            : NotFound();
     }
 }

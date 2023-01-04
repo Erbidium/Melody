@@ -1,4 +1,18 @@
-﻿namespace Melody.Infrastructure.Data.Records;
+﻿namespace Melody.Infrastructure.Data.DbEntites;
 
-public record SongDb(long Id, long UserId, DateTime UploadedAt, long SizeBytes, string Name, string Path,
-    string AuthorName, int Year, long GenreId, bool IsDeleted);
+public class SongDb
+{
+    public long Id { get; init; }
+    public long UserId { get; init; }
+    public DateTime UploadedAt { get; init; }
+    public long SizeBytes { get; init; }
+    public string Name { get; init; }
+    public string Path { get; init; }
+    public string AuthorName { get; init; }
+    public int Year { get; init; }
+    public long GenreId { get; init; }
+    public TimeSpan Duration { get; init; }
+    public bool IsDeleted { get; init; }
+
+    public GenreDb Genre { get; set; }
+}

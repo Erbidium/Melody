@@ -1,0 +1,38 @@
+<app-header></app-header>
+<div *ngIf="playlist && currentUser">
+    <div class="wrapper">
+        <app-back-button></app-back-button>
+        <h1>{{playlist.name}}</h1>
+        <div class="actions">
+            <mat-icon (click)="changePlaylistStatus()">
+                {{playlist.isFavourite ? 'remove': 'add'}}
+            </mat-icon>
+            <mat-icon (click)="copyPlaylistLink()">share</mat-icon>
+            <mat-icon (click)="deletePlaylist()">delete_forever</mat-icon>
+        </div>
+    </div>
+    <div *ngIf="playlist.songs.length === 0; else songs">
+        Цей плейліст пустий
+    </div>
+    <ng-template #songs>
+        <app-songs-table *ngIf="currentUser"
+            [dataSource]="playlist.songs"
+            (heartButtonClickEvent)="heartButtonClickHandler($event)"
+            (rowClickEvent)="selectSong($event)"
+            [columnsToDisplay]="columnsToDisplay"
+            [heartButtonForLikes]="currentUser.id !== playlist.authorId"
+            [currentSongSelected]="currentSongIdForMusicPlayer"
+        ></app-songs-table>
+    </ng-template>
+    <form [formGroup]="addSongsPlaylistForm" *ngIf="playlist.authorId === currentUser.id">
+        <mat-form-field appearance="fill">
+            <mat-label>Пісні</mat-label>
+            <mat-select formControlName="songs" multiple>
+                <mat-option *ngFor="let song of newSongsToAdd" [value]="song.id">{{song.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <button mat-raised-button type="button" [disabled]="!addSongsPlaylistForm.valid || addSongsPlaylistForm.value.songs?.length === 0" (click)="addSongs()">Додати пісні</button>
+    </form>
+</div>
+

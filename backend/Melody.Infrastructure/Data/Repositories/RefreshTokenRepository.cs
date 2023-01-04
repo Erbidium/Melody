@@ -1,57 +1,71 @@
-﻿using Dapper;
-using Melody.Core.Entities;
+﻿using System.Data;
+using Dapper;
 using Melody.Infrastructure.Data.Context;
 using Melody.Infrastructure.Data.DbEntites;
 using Melody.Infrastructure.Data.Interfaces;
-using Melody.Infrastructure.Data.Records;
-using System.Data;
 
-namespace Melody.Infrastructure.Data.Repositories
+namespace Melody.Infrastructure.Data.Repositories;
+
+public class RefreshTokenRepository : IRefreshTokenRepository
 {
-    public class RefreshTokenRepository : IRefreshTokenRepository
+    private readonly DapperContext _context;
+
+    public RefreshTokenRepository(DapperContext context)
     {
-        private readonly DapperContext _context;
+        _context = context;
+    }
 
-        public RefreshTokenRepository(DapperContext context)
+    public async Task<bool> CreateOrUpdateAsync(string token, long userId)
+    {
+        var entry = await FindByUserIdAsync(userId);
+
+        using var connection = _context.CreateConnection();
+        if (entry is null)
         {
-            _context = context;
+            var parameters = new DynamicParameters();
+            parameters.Add("UserId", userId, DbType.Int64);
+            parameters.Add("Token", token, DbType.String);
+
+            await connection.ExecuteAsync(SqlScriptsResource.CreateRefreshToken, parameters);
+        }
+        else
+        {
+            await connection.ExecuteAsync(SqlScriptsResource.UpdateRefreshToken,
+                new { Token = token, Id = userId });
         }
 
-        public async Task<bool> CreateOrUpdateAsync(string token, long userId)
-        {
-            var entry = await FindAsync(token);
+        return true;
+    }
 
-            using var connection = _context.CreateConnection();
-            if (entry == null)
-            {
-                var parameters = new DynamicParameters();
-                parameters.Add("UserId", userId, DbType.Int64);
-                parameters.Add("Token", token, DbType.String);
+    public async Task<bool> DeleteByUserIdAsync(long userId)
+    {
+        using var connection = _context.CreateConnection();
+        var rowsDeleted =
+            await connection.ExecuteAsync(SqlScriptsResource.DeleteRefreshTokenByUserId,
+                new { userId });
+        return rowsDeleted == 1;
+    }
 
-                await connection.ExecuteAsync(SqlScriptsResource.CreateRefreshToken, parameters);
-            }
-            else
-            {
-                await connection.ExecuteAsync(SqlScriptsResource.UpdateRefreshToken,
-                    new { Token = token, Id = userId });
-            }
+    public async Task<bool> DeleteByValueAsync(string token)
+    {
+        using var connection = _context.CreateConnection();
+        var rowsDeleted =
+            await connection.ExecuteAsync(SqlScriptsResource.DeleteRefreshToken,
+                new { token });
+        return rowsDeleted == 1;
+    }
 
-            return true;
-        }
+    public async Task<RefreshTokenDb?> FindByTokenValueAsync(string token)
+    {
+        using var connection = _context.CreateConnection();
+        return await connection.QuerySingleOrDefaultAsync<RefreshTokenDb>(SqlScriptsResource.FindRefreshTokenByValue,
+            new { Token = token });
+    }
 
-        public async Task<bool> DeleteAsync(string Token)
-        {
-            using var connection = _context.CreateConnection();
-            var rowsDeleted =
-                await connection.ExecuteAsync(SqlScriptsResource.DeleteRefreshToken,
-                    new { Token });
-            return rowsDeleted == 1;
-        }
-
-        public async Task<RefreshTokenDb> FindAsync(string token)
-        {
-            using var connection = _context.CreateConnection();
-            return await connection.QuerySingleOrDefaultAsync<RefreshTokenDb>(SqlScriptsResource.FindRefreshToken, new { Token = token });
-        }
+    public async Task<RefreshTokenDb?> FindByUserIdAsync(long userId)
+    {
+        using var connection = _context.CreateConnection();
+        return await connection.QuerySingleOrDefaultAsync<RefreshTokenDb>(SqlScriptsResource.FindRefreshTokenByUserId,
+            new { UserId = userId });
     }
 }

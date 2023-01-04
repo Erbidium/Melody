@@ -1,8 +1,11 @@
-﻿using Dapper;
+﻿using System.Data;
+using Ardalis.GuardClauses;
+using Dapper;
+using Melody.Core.Entities;
 using Melody.Infrastructure.Data.Context;
+using Melody.Infrastructure.Data.DbEntites;
 using Melody.Infrastructure.Data.Interfaces;
-using Melody.Infrastructure.Data.Records;
-using System.Data;
+using Nest;
 
 namespace Melody.Infrastructure.Data.Repositories;
 
@@ -19,9 +22,9 @@ public class UserRepository : IUserRepository
     {
         var parameters = new DynamicParameters();
         parameters.Add("UserName", user.UserName, DbType.String);
-        parameters.Add("NormalizedUserName", "default", DbType.String);
+        parameters.Add("NormalizedUserName", user.NormalizedUserName, DbType.String);
         parameters.Add("Email", user.Email, DbType.String);
-        parameters.Add("NormalizedEmail", "default", DbType.String);
+        parameters.Add("NormalizedEmail", user.NormalizedEmail, DbType.String);
         parameters.Add("EmailConfirmed", user.EmailConfirmed, DbType.Boolean);
         parameters.Add("PasswordHash", user.PasswordHash, DbType.String);
         parameters.Add("PhoneNumber", user.PhoneNumber, DbType.String);
@@ -37,6 +40,58 @@ public class UserRepository : IUserRepository
         using var connection = _context.CreateConnection();
         var rowsDeleted = await connection.ExecuteAsync(SqlScriptsResource.DeleteUser, new { Id = userId });
         return rowsDeleted == 1;
+    }
+
+    public async Task<bool> CreateOrUpdateUserRecommendationsPreferences(RecommendationsPreferences recommendationsPreferences)
+    {
+        var entry = await GetUserRecommendationsPreferences(recommendationsPreferences.UserId);
+
+        using var connection = _context.CreateConnection();
+        if (entry is null)
+        {
+            var parameters = new DynamicParameters();
+            parameters.Add("UserId", recommendationsPreferences.UserId, DbType.Int64);
+
+            await connection.ExecuteAsync(SqlScriptsResource.CreateRecommendationsPreferences, new
+            {
+                recommendationsPreferences.UserId,
+                recommendationsPreferences.AuthorName,
+                recommendationsPreferences.StartYear,
+                recommendationsPreferences.EndYear,
+                recommendationsPreferences.GenreId,
+                recommendationsPreferences.AverageDurationInMinutes,
+            });
+        }
+        else
+        {
+            await connection.ExecuteAsync(SqlScriptsResource.UpdateRecommendationsPreferences, new
+            {
+                recommendationsPreferences.UserId,
+                recommendationsPreferences.AuthorName,
+                recommendationsPreferences.StartYear,
+                recommendationsPreferences.EndYear,
+                recommendationsPreferences.GenreId,
+                recommendationsPreferences.AverageDurationInMinutes,
+            });
+        }
+
+        return true;
+    }
+
+    public async Task<RecommendationsPreferences?> GetUserRecommendationsPreferences(long userId)
+    {
+        using var connection = _context.CreateConnection();
+        var dbEntry = await connection.QuerySingleOrDefaultAsync<RecommendationsPreferencesDb>(SqlScriptsResource.GetRecommendationsPreferences, new { userId });
+        return dbEntry is null
+            ? null
+            : new RecommendationsPreferences(
+                dbEntry.UserId,
+                dbEntry.GenreId,
+                dbEntry.AuthorName,
+                dbEntry.StartYear,
+                dbEntry.EndYear,
+                dbEntry.AverageDurationInMinutes
+              );
     }
 
     public async Task<UserIdentity> FindByEmailAsync(string normalizedEmail)
@@ -82,6 +137,14 @@ public class UserRepository : IUserRepository
         using var connection = _context.CreateConnection();
         return await connection.QueryAsync<UserIdentity>(SqlScriptsResource.GetUsersInRole,
             new { NormalizedName = roleName });
+    }
+
+    public async Task<bool> SetUserBannedStatus(bool isBanned, long userId)
+    {
+        using var connection = _context.CreateConnection();
+
+        var rowsAffected = await connection.ExecuteAsync(SqlScriptsResource.SetUserBanStatus, new { userId, isBanned });
+        return rowsAffected == 1;
     }
 
     public async Task<bool> UpdateAsync(UserIdentity user)
@@ -141,5 +204,17 @@ public class UserRepository : IUserRepository
         }
 
         return true;
+    }
+
+    public async Task<IReadOnlyCollection<User>> GetUsersWithoutAdministratorRole(string searchText, int page = 1, int pageSize = 10)
+    {
+        Guard.Against.NegativeOrZero(page, nameof(page));
+        Guard.Against.NegativeOrZero(pageSize, nameof(pageSize));
+
+        using var connection = _context.CreateConnection();
+
+        var users = await connection.QueryAsync<UserIdentity>(SqlScriptsResource.GetUsersWithoutAdminRole, new { Offset = (page - 1) * pageSize, pageSize, SearchText = searchText.Trim().ToLower() });
+        return users.Select(record => new User(record.UserName, record.Email, record.PhoneNumber, record.IsBanned) { Id = record.Id }).ToList()
+            .AsReadOnly();
     }
 }

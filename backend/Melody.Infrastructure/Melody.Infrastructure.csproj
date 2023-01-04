@@ -28,7 +28,6 @@
         <EmbeddedResource Include="Data\SqlScripts\Playlists\DeletePlaylist.sql" />
         <EmbeddedResource Include="Data\SqlScripts\Playlists\GetAllPlaylists.sql" />
         <EmbeddedResource Include="Data\SqlScripts\Playlists\GetPlaylistById.sql" />
-        <EmbeddedResource Include="Data\SqlScripts\Playlists\UpdatePlaylist.sql" />
         <EmbeddedResource Include="Data\SqlScripts\Songs\CreateSong.sql" />
         <EmbeddedResource Include="Data\SqlScripts\Songs\DeleteSong.sql" />
         <EmbeddedResource Include="Data\SqlScripts\Songs\GetSongById.sql" />
@@ -38,9 +37,12 @@
 
     <ItemGroup>
         <PackageReference Include="Dapper" Version="2.0.123" />
+        <PackageReference Include="Elastic.Clients.Elasticsearch" Version="8.0.4" />
         <PackageReference Include="FluentMigrator.Runner" Version="3.3.2" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.11" />
         <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.25.0" />
+        <PackageReference Include="NAudio" Version="2.1.0" />
+        <PackageReference Include="NEST" Version="7.17.5" />
         <PackageReference Include="System.Data.SqlClient" Version="4.8.4" />
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.0" />
     </ItemGroup>

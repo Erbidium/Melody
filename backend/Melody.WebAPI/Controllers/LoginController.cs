@@ -1,108 +1,97 @@
-﻿using Melody.Infrastructure.Auth.Models;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
+using Melody.Core.Interfaces;
+using Melody.Infrastructure.Data.DbEntites;
 using Melody.Infrastructure.Data.Interfaces;
-using Melody.Infrastructure.Data.Records;
-using Melody.WebAPI.Services;
+using Melody.WebAPI.DTO.Auth.Models;
+using Melody.WebAPI.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 
-namespace Melody.WebAPI.Controllers
+namespace Melody.WebAPI.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class LoginController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class LoginController : ControllerBase
+    private readonly IRefreshTokenRepository _refreshTokenRepository;
+    private readonly ITokenService _tokenService;
+    private readonly UserManager<UserIdentity> _userManager;
+    private readonly IValidator<UserLogin> _userLoginValidator;
+
+    public LoginController(UserManager<UserIdentity> userManager,
+        IRefreshTokenRepository refreshTokenRepository, ITokenService tokenService, IValidator<UserLogin> userLoginValidator)
     {
-        private readonly IConfiguration _configuration;
-        private readonly UserManager<UserIdentity> _userManager;
-        private readonly IRefreshTokenRepository _refreshTokenRepository;
-        private readonly ITokenService _tokenService;
+        _userManager = userManager;
+        _refreshTokenRepository = refreshTokenRepository;
+        _tokenService = tokenService;
+        _userLoginValidator = userLoginValidator;
+    }
 
-        public LoginController(IConfiguration configuration, UserManager<UserIdentity> userManager,
-            IRefreshTokenRepository refreshTokenRepository, ITokenService tokenService)
+    [AllowAnonymous]
+    [HttpPost]
+    public async Task<IActionResult> Login([FromBody] UserLogin userLogin)
+    {
+        var validationResult = await _userLoginValidator.ValidateAsync(userLogin);
+        if (!validationResult.IsValid)
         {
-            _configuration = configuration;
-            _userManager = userManager;
-            _refreshTokenRepository = refreshTokenRepository;
-            _tokenService = tokenService;
+            validationResult.AddToModelState(ModelState);
+            return BadRequest(ModelState);
         }
 
-        [AllowAnonymous]
-        [HttpPost]
-        public async Task<IActionResult> Login([FromBody] UserLogin userLogin)
-        {
-            var user = await Authenticate(userLogin);
-
-            if (user != null)
+        var result = await _tokenService.CreateAccessTokenAndRefreshToken(userLogin.Email, userLogin.Password);
+        return result.Match(tokens =>
             {
-                var roles = await _userManager.GetRolesAsync(user);
-                var accessToken = _tokenService.GenerateAccessToken(user, roles);
-                var refreshToken = _tokenService.GenerateRefreshToken(user);
-                await _refreshTokenRepository.CreateOrUpdateAsync(refreshToken, user.Id);
-                Response.Cookies.Append("X-Refresh-Token", refreshToken, new CookieOptions { HttpOnly = true, SameSite = SameSiteMode.Strict });
-                return Ok(new {accessToken});
-            }
+                Response.Cookies.Append("X-Refresh-Token", tokens.refreshToken,
+                    new CookieOptions
+                    {
+                        HttpOnly = true, SameSite = SameSiteMode.None, Secure = true,
+                        Expires = DateTimeOffset.Now.AddDays(60)
+                    });
+                return Ok(new { tokens.accessToken });
+            },
+            exception => exception.ToActionResult());
+    }
 
-            return NotFound("User not found");
-        }
-
-        [AllowAnonymous]
-        [HttpPost("refresh")]
-        public async Task<IActionResult> GetAccessToken()
-        {
-            if (!Request.Cookies.TryGetValue("X-Refresh-Token", out var refreshTokenString))
-                return BadRequest();
-            
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var validationParameters = _tokenService.GetValidationParameters();
-            try
-            {
-                SecurityToken validatedToken;
-                var principal =
-                    tokenHandler.ValidateToken(refreshTokenString, validationParameters, out validatedToken);
-                var dbEntry = await _refreshTokenRepository.FindAsync(refreshTokenString);
-                if (dbEntry != null)
-                {
-                    var email = principal.FindFirst(c => c.Type == ClaimTypes.Email).Value;
-                    var user = await _userManager.FindByEmailAsync(email);
-                    var roles = await _userManager.GetRolesAsync(user);
-                    return Ok(_tokenService.GenerateAccessToken(user, roles));
-                }
-
-                return Unauthorized();
-            }
-            catch (Exception)
-            {
-                await _refreshTokenRepository.DeleteAsync(refreshTokenString);
-                return Unauthorized();
-            }
-        }
+    [AllowAnonymous]
+    [HttpPost("refresh")]
+    public async Task<IActionResult> GetAccessToken()
+    {
+        if (!Request.Cookies.TryGetValue("X-Refresh-Token", out var refreshTokenString))
+            return BadRequest();
         
-        [Authorize]
-        [HttpPost("/api/logout")]
-        public async Task<IActionResult> Logout()
+        var result = await _tokenService.GetAccessTokenAndUpdatedRefreshToken(refreshTokenString);
+        if (result.IsFaulted)
         {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            var currentUser = _tokenService.GetCurrentUser(identity);
-            var user = await _userManager.FindByIdAsync(currentUser.UserId.ToString());
-            var refreshToken = _tokenService.GenerateRefreshToken(user, true);
-            Response.Cookies.Append("X-Refresh-Token", refreshToken, new CookieOptions { HttpOnly = true, SameSite = SameSiteMode.Strict });
-            return Ok();
+            await _refreshTokenRepository.DeleteByValueAsync(refreshTokenString);
         }
-        
-
-        private async Task<UserIdentity?> Authenticate(UserLogin userLogin)
-        {
-            var currentUser = await _userManager.FindByEmailAsync(userLogin.Email);
-
-            if (currentUser != null && await _userManager.CheckPasswordAsync(currentUser, userLogin.Password))
+        return result.Match<IActionResult>(tokens =>
             {
-                return currentUser;
-            }
+                Response.Cookies.Append("X-Refresh-Token", tokens.refreshToken,
+                    new CookieOptions
+                    {
+                        HttpOnly = true, SameSite = SameSiteMode.None, Secure = true,
+                        Expires = DateTimeOffset.Now.AddDays(60)
+                    });
+                return Ok(new { AccessToken = tokens.accessToken });
+            },
+            _ => Unauthorized());
+    }
 
-            return null;
-        }
+    [Authorize]
+    [HttpPost("/api/logout")]
+    public async Task<IActionResult> Logout()
+    {
+        var userId = HttpContext.User.GetId();
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+        var refreshToken = await _tokenService.GenerateRefreshToken(user.Email, true);
+        Response.Cookies.Append("X-Refresh-Token", refreshToken,
+            new CookieOptions
+            {
+                HttpOnly = true, SameSite = SameSiteMode.None, Secure = true,
+                Expires = DateTimeOffset.Now.AddDays(-1)
+            });
+        return Ok();
     }
 }

@@ -1,31 +1,19 @@
-﻿using Melody.Core.Exceptions;
+﻿using Ardalis.GuardClauses;
 using Melody.SharedKernel.Interfaces;
 
 namespace Melody.Core.Entities;
 
-public class User : IEntityBase<long>
+public class User : EntityBase<long>
 {
-    public User(string name, string email, string phoneNumber, long roleId, bool isBanned = false, long id = -1)
+    public User(string userName, string email, string phoneNumber, bool isBanned)
     {
-        Id = id;
-        Name = name;
-        Email = email;
-        PhoneNumber = phoneNumber;
-        RoleId = roleId;
+        UserName = Guard.Against.NullOrWhiteSpace(userName, nameof(UserName));
+        Email = Guard.Against.NullOrWhiteSpace(email, nameof(Email));
+        PhoneNumber = Guard.Against.NullOrWhiteSpace(phoneNumber, nameof(PhoneNumber));
         IsBanned = isBanned;
     }
-
-    private long _id;
-
-    public long Id
-    {
-        get => _id < 0 ? throw new WrongIdException() : _id;
-        private set => _id = value;
-    }
-
-    public string Name { get; }
+    public string UserName { get; }
     public string Email { get; }
     public string PhoneNumber { get; }
-    public long RoleId { get; }
     public bool IsBanned { get; }
 }

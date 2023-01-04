@@ -1,17 +1,20 @@
-﻿using FluentValidation;
+﻿using System.Reflection;
+using System.Text;
+using FluentValidation;
 using Melody.Core.Interfaces;
+using Melody.Core.Services;
+using Melody.Infrastructure;
+using Melody.Infrastructure.Auth.Services;
 using Melody.Infrastructure.Auth.Stores;
+using Melody.Infrastructure.Data.DbEntites;
 using Melody.Infrastructure.Data.Interfaces;
-using Melody.Infrastructure.Data.Records;
 using Melody.Infrastructure.Data.Repositories;
+using Melody.Infrastructure.ElasticSearch;
 using Melody.WebAPI.MappingProfiles;
-using Melody.WebAPI.Services;
-using Melody.WebAPI.Validators.User;
+using Melody.WebAPI.Validation.Validators.User;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using System.Reflection;
-using System.Text;
 
 namespace Melody.WebAPI.Extensions;
 
@@ -20,6 +23,9 @@ public static class ServiceCollectionExtensions
     public static void RegisterCustomServices(this IServiceCollection services)
     {
         services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<ISongService, SongService>();
+        services.AddScoped<ISongFileStorage, SongFileStorage>();
+        services.AddScoped<IRecommender, Recommender>();
     }
 
     public static void RegisterCustomRepositories(this IServiceCollection services)
@@ -27,19 +33,20 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ISongRepository, SongRepository>();
         services.AddScoped<IPlaylistRepository, PlaylistRepository>();
         services.AddScoped<IGenreRepository, GenreRepository>();
-        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<Infrastructure.Data.Interfaces.IUserRepository, UserRepository>();
+        services.AddScoped<Core.Interfaces.IUserRepository, UserRepository>();
         services.AddScoped<IRoleRepository, RoleRepository>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
     }
 
     public static void AddAutoMapper(this IServiceCollection services)
     {
-        services.AddAutoMapper(Assembly.GetAssembly(typeof(UserProfile)));
+        services.AddAutoMapper(Assembly.GetAssembly(typeof(SongProfile)));
     }
 
     public static void AddValidation(this IServiceCollection services)
     {
-        services.AddValidatorsFromAssemblyContaining<NewUserDtoValidator>();
+        services.AddValidatorsFromAssemblyContaining<UserRegisterValidator>();
     }
 
     public static void AddIdentityStores(this IServiceCollection services)
@@ -64,12 +71,13 @@ public static class ServiceCollectionExtensions
                 {
                     ValidateIssuer = true,
                     ValidateAudience = true,
+                    ClockSkew = TimeSpan.Zero,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = configuration["Jwt:Issuer"],
                     ValidAudience = configuration["Jwt:Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration
-                        ["Jwt:Key"]))
+                        ["Jwt:Key"])),
                 };
             });
     }

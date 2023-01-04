@@ -7,6 +7,7 @@ public class InitialTables_202211031808 : Migration
 {
     public override void Down()
     {
+        Delete.Table("ListeningStatistics");
         Delete.Table("PlaylistSongs");
         Delete.Table("UserPlaylists");
         Delete.Table("Playlists");
@@ -62,6 +63,7 @@ public class InitialTables_202211031808 : Migration
             .WithColumn("AuthorName").AsString(50).NotNullable()
             .WithColumn("Year").AsInt32().NotNullable()
             .WithColumn("GenreId").AsInt64().NotNullable().ForeignKey("Genres", "Id")
+            .WithColumn("Duration").AsTime().NotNullable()
             .WithColumn("IsDeleted").AsBoolean().NotNullable().WithDefaultValue(0);
 
         Create.Table("FavouriteSongs")
@@ -73,7 +75,6 @@ public class InitialTables_202211031808 : Migration
         Create.Table("Playlists")
             .WithColumn("Id").AsInt64().PrimaryKey().Identity()
             .WithColumn("Name").AsString(50).NotNullable()
-            .WithColumn("Link").AsString(50).NotNullable().Unique()
             .WithColumn("AuthorId").AsInt64().NotNullable().ForeignKey("Users", "Id")
             .WithColumn("IsDeleted").AsBoolean().NotNullable().WithDefaultValue(0);
 
@@ -88,5 +89,10 @@ public class InitialTables_202211031808 : Migration
             .WithColumn("SongId").AsInt64().NotNullable().ForeignKey("Songs", "Id");
 
         Create.PrimaryKey().OnTable("PlaylistSongs").Columns("PlaylistId", "SongId");
+
+        Create.Table("ListeningStatistics")
+            .WithColumn("SongId").AsInt64().NotNullable().ForeignKey("Songs", "Id")
+            .WithColumn("UserId").AsInt64().NotNullable().ForeignKey("Users", "Id")
+            .WithColumn("Date").AsDateTime().NotNullable();
     }
 }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { BaseComponent } from '@core/base/base.component';
 import { IGenre } from '@core/models/IGenre';
 import { NotificationService } from '@core/services/notification.service';
@@ -17,13 +18,17 @@ export class UploadPageComponent extends BaseComponent implements OnInit {
 
     fileToUpload?: File;
 
-    constructor(private songService: SongService, private notificationService: NotificationService) {
+    constructor(
+        private songService: SongService,
+        private notificationService: NotificationService,
+        private router: Router,
+    ) {
         super();
     }
 
-    ngOnInit(): void {
+    ngOnInit() {
         this.songService
-            .getAll()
+            .getAllGenres()
             .pipe(this.untilThis)
             .subscribe((resp) => {
                 this.genres = resp;
@@ -67,10 +72,19 @@ export class UploadPageComponent extends BaseComponent implements OnInit {
             formData.append('GenreId', this.selectedGenre.id.toString());
             formData.append('uploadedSoundFile', this.fileToUpload);
             this.songService.createSong(formData)
+                .pipe(this.untilThis)
                 .subscribe({
-                    next: () => this.notificationService.showSuccessMessage('Song was successfully uploaded'),
+                    next: () => {
+                        this.notificationService.showSuccessMessage('Song was successfully uploaded');
+                        this.uploadForm.reset();
+                        this.selectedGenre = undefined;
+                    },
                     error: (e) => this.notificationService.showErrorMessage(e),
                 });
         }
+    }
+
+    reset() {
+        this.router.navigateByUrl('melody');
     }
 }

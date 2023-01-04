@@ -61,9 +61,29 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на INSERT INTO Playlists (Name, Link, AuthorId)
-        ///    OUTPUT Inserted.Id
-        ///VALUES (@Name, @Link, @AuthorId).
+        ///   Ищет локализованную строку, похожую на INSERT INTO UserPlaylists (UserId, PlaylistId)
+        ///VALUES (@UserId, @Id).
+        /// </summary>
+        internal static string CreateFavouritePlaylist {
+            get {
+                return ResourceManager.GetString("CreateFavouritePlaylist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на INSERT INTO FavouriteSongs (UserId, SongId)
+        ///VALUES (@UserId, @Id).
+        /// </summary>
+        internal static string CreateFavouriteSong {
+            get {
+                return ResourceManager.GetString("CreateFavouriteSong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на INSERT INTO Playlists (Name, AuthorId)
+        ///OUTPUT Inserted.Id
+        ///VALUES (@Name, @AuthorId).
         /// </summary>
         internal static string CreatePlaylist {
             get {
@@ -72,8 +92,17 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на INSERT INTO
-        ///UserRefreshTokens(UserId, RefreshToken)
+        ///   Ищет локализованную строку, похожую на INSERT INTO RecommendationsPreferences(UserId, AuthorName, StartYear, EndYear, GenreId, AverageDurationInMinutes)
+        ///VALUES (@UserId, @AuthorName, @StartYear, @EndYear, @GenreId, @AverageDurationInMinutes);.
+        /// </summary>
+        internal static string CreateRecommendationsPreferences {
+            get {
+                return ResourceManager.GetString("CreateRecommendationsPreferences", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на INSERT INTO UserRefreshTokens(UserId, RefreshToken)
         ///VALUES (@UserId, @Token);.
         /// </summary>
         internal static string CreateRefreshToken {
@@ -93,9 +122,9 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на INSERT INTO Songs (UserId, Name, Path, AuthorName, Year, SizeBytes, UploadedAt, GenreId)
-        ///    OUTPUT Inserted.Id
-        ///VALUES (@UserId, @Name, @Path, @AuthorName, @Year, @SizeBytes, @UploadedAt, @GenreId).
+        ///   Ищет локализованную строку, похожую на INSERT INTO Songs (UserId, Name, Path, AuthorName, Year, SizeBytes, UploadedAt, GenreId, Duration)
+        ///OUTPUT Inserted.Id
+        ///VALUES (@UserId, @Name, @Path, @AuthorName, @Year, @SizeBytes, @UploadedAt, @GenreId, @Duration).
         /// </summary>
         internal static string CreateSong {
             get {
@@ -105,13 +134,37 @@ namespace Melody.Infrastructure.Data {
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на INSERT INTO Users (UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, PhoneNumber)
-        ///    OUTPUT Inserted.Id
+        ///OUTPUT Inserted.Id
         ///VALUES (@UserName, @NormalizedUserName, @Email, @NormalizedEmail, @EmailConfirmed, @PasswordHash, @PhoneNumber)
         ///.
         /// </summary>
         internal static string CreateUser {
             get {
                 return ResourceManager.GetString("CreateUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на DELETE
+        ///From UserPlaylists
+        ///WHERE UserId = @UserId
+        ///  AND PlaylistId = @Id.
+        /// </summary>
+        internal static string DeleteFavouritePlaylist {
+            get {
+                return ResourceManager.GetString("DeleteFavouritePlaylist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на DELETE
+        ///From FavouriteSongs
+        ///WHERE UserId = @UserId
+        ///  AND SongId = @Id.
+        /// </summary>
+        internal static string DeleteFavouriteSong {
+            get {
+                return ResourceManager.GetString("DeleteFavouriteSong", resourceCulture);
             }
         }
         
@@ -128,12 +181,36 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на DELETE FROM UserRefreshTokens
+        ///   Ищет локализованную строку, похожую на DELETE
+        ///From PlaylistSongs
+        ///WHERE PlaylistId = @Id
+        ///  AND SongId = @SongId.
+        /// </summary>
+        internal static string DeletePlaylistSong {
+            get {
+                return ResourceManager.GetString("DeletePlaylistSong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на DELETE
+        ///FROM UserRefreshTokens
         ///WHERE RefreshToken = @Token;.
         /// </summary>
         internal static string DeleteRefreshToken {
             get {
                 return ResourceManager.GetString("DeleteRefreshToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на DELETE
+        ///FROM UserRefreshTokens
+        ///WHERE UserId = @UserId;.
+        /// </summary>
+        internal static string DeleteRefreshTokenByUserId {
+            get {
+                return ResourceManager.GetString("DeleteRefreshTokenByUserId", resourceCulture);
             }
         }
         
@@ -172,9 +249,23 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на DELETE
-        ///FROM Users
-        ///WHERE Id = @Id;.
+        ///   Ищет локализованную строку, похожую на UPDATE Songs
+        ///SET IsDeleted = 1
+        ///WHERE Id = @Id
+        ///  AND UserId = @UserId
+        ///  AND IsDeleted = 0.
+        /// </summary>
+        internal static string DeleteUploadedSong {
+            get {
+                return ResourceManager.GetString("DeleteUploadedSong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на UPDATE Users
+        ///SET IsDeleted = 1
+        ///WHERE Id = @Id
+        ///  AND IsDeleted = 0;.
         /// </summary>
         internal static string DeleteUser {
             get {
@@ -185,11 +276,22 @@ namespace Melody.Infrastructure.Data {
         /// <summary>
         ///   Ищет локализованную строку, похожую на SELECT Id, UserId, RefreshToken
         ///FROM UserRefreshTokens
+        ///WHERE UserId = @UserId;.
+        /// </summary>
+        internal static string FindRefreshTokenByUserId {
+            get {
+                return ResourceManager.GetString("FindRefreshTokenByUserId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на SELECT Id, UserId, RefreshToken
+        ///FROM UserRefreshTokens
         ///WHERE RefreshToken = @Token;.
         /// </summary>
-        internal static string FindRefreshToken {
+        internal static string FindRefreshTokenByValue {
             get {
-                return ResourceManager.GetString("FindRefreshToken", resourceCulture);
+                return ResourceManager.GetString("FindRefreshTokenByValue", resourceCulture);
             }
         }
         
@@ -204,9 +306,12 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на SELECT Id, Name, Link, AuthorId, IsDeleted
-        ///FROM Playlists
-        ///WHERE IsDeleted = 0.
+        ///   Ищет локализованную строку, похожую на SELECT Id, Name, AuthorId, IsDeleted
+        ///FROM Playlists p
+        ///INNER JOIN Users u ON u.Id = p.AuthorId
+        ///WHERE u.IsDeleted = 0
+        ///  AND u.IsBanned = 0
+        ///  AND p.IsDeleted = 0.
         /// </summary>
         internal static string GetAllPlaylists {
             get {
@@ -215,14 +320,125 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на SELECT Id, UserId, UploadedAt, SizeBytes, Name, Path, AuthorName, Year, GenreId, IsDeleted
+        ///   Ищет локализованную строку, похожую на IF ISNULL(@SearchText,&apos;&apos;) = &apos;&apos; SET @SearchText = &apos;&quot;&quot;&apos;;
+        ///
+        ///SELECT Songs.Id,
+        ///       UserId,
+        ///       UploadedAt,
+        ///       SizeBytes,
+        ///       Songs.Name,
+        ///       Songs.Path,
+        ///       Songs.AuthorName,
+        ///       Songs.Year,
+        ///       Songs.GenreId,
+        ///       Songs.Duration,
+        ///       Songs.IsDeleted,
+        ///       Genres.Id,
+        ///       Genres.Name
         ///FROM Songs
-        ///WHERE IsDeleted = 0
-        ///.
+        ///INNER JOIN Genres ON Songs.GenreId = Genres.Id
+        ///INNER JOIN Users u ON u.Id = Songs.UserId
+        ///WHERE u.IsDeleted = 0
+        ///  AND Songs.IsDeleted = 0 AND (@SearchText = &apos;&quot;&quot;&apos; OR CONTA [остаток строки не уместился]&quot;;.
         /// </summary>
         internal static string GetAllSongs {
             get {
                 return ResourceManager.GetString("GetAllSongs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на SELECT s.Id,
+        ///       s.UserId,
+        ///       UploadedAt,
+        ///       SizeBytes,
+        ///       s.Name,
+        ///       Path,
+        ///       AuthorName,
+        ///       Year,
+        ///       GenreId,
+        ///       Duration,
+        ///       IsDeleted,
+        ///       g.Id,
+        ///       g.Name
+        ///FROM Songs s
+        ///         INNER JOIN Genres g ON s.GenreId = g.Id
+        ///         INNER JOIN FavouriteSongs fs ON fs.SongId = s.Id
+        ///WHERE s.IsDeleted = 0
+        ///  AND fs.UserId = @UserId
+        ///UNION
+        ///SELECT s.Id,
+        ///       s.UserId,
+        ///       s.UploadedAt,
+        ///       s.SizeBytes,
+        ///       s.Name,
+        ///       s.Path,
+        ///        [остаток строки не уместился]&quot;;.
+        /// </summary>
+        internal static string GetFavouriteAndUploadedUserSongs {
+            get {
+                return ResourceManager.GetString("GetFavouriteAndUploadedUserSongs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на SELECT p.Id,
+        ///       p.Name,
+        ///       p.AuthorId,
+        ///       p.IsDeleted,
+        ///       ps.Id,
+        ///       ps.UploadedAt,
+        ///       ps.Name,
+        ///       ps.AuthorName,
+        ///       ps.GenreId,
+        ///       ps.Duration,
+        ///       ps.IsDeleted,
+        ///       ps.IsFavourite
+        ///FROM Playlists p
+        ///         LEFT JOIN
+        ///     (SELECT s.Id,
+        ///             s.UploadedAt,
+        ///             s.Name,
+        ///             s.AuthorName,
+        ///             s.GenreId,
+        ///             s.Duration,
+        ///             s.IsDeleted,
+        ///             ps.PlaylistId,
+        ///             CONVERT(BIT, IIF(fs.S [остаток строки не уместился]&quot;;.
+        /// </summary>
+        internal static string GetFavouritePlaylists {
+            get {
+                return ResourceManager.GetString("GetFavouritePlaylists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на SELECT s.Id,
+        ///       s.UserId,
+        ///       s.UploadedAt,
+        ///       s.SizeBytes,
+        ///       s.Name,
+        ///       s.Path,
+        ///       s.AuthorName,
+        ///       s.Year,
+        ///       s.GenreId,
+        ///       s.Duration,
+        ///       s.IsDeleted,
+        ///       g.Id,
+        ///       g.Name
+        ///FROM Songs s
+        ///         INNER JOIN Genres g ON s.GenreId = g.Id
+        ///         INNER JOIN FavouriteSongs fs ON fs.SongId = s.Id
+        ///         INNER JOIN Users u ON u.Id = fs.UserId
+        ///WHERE s.IsDeleted = 0
+        ///  AND fs.UserId = @UserId
+        ///  AND u.IsDeleted = 0
+        ///  AND u.IsBanned = 0
+        ///ORDER BY s. [остаток строки не уместился]&quot;;.
+        /// </summary>
+        internal static string GetFavouriteSongs {
+            get {
+                return ResourceManager.GetString("GetFavouriteSongs", resourceCulture);
             }
         }
         
@@ -238,14 +454,76 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на SELECT Id, Name, Link, AuthorId, IsDeleted
-        ///FROM Playlists
-        ///WHERE Id = @Id
-        ///  AND IsDeleted = 0.
+        ///   Ищет локализованную строку, похожую на SELECT p.Id,
+        ///       p.Name,
+        ///       p.AuthorId,
+        ///       CONVERT(BIT, IIF(up.PlaylistId IS NULL, 0, 1)) as IsFavourite,
+        ///       p.IsDeleted,
+        ///       ps.Id,
+        ///       ps.UploadedAt,
+        ///       ps.Name,
+        ///       ps.AuthorName,
+        ///       ps.GenreId,
+        ///       ps.Duration,
+        ///       ps.IsDeleted,
+        ///       ps.IsFavourite,
+        ///       ps.GenreId                                     as Id,
+        ///       ps.GenreName                                   as Name
+        ///FROM Playlists p
+        ///         LEFT JOIN
+        ///     (SELECT s.Id,
+        ///             s.Uploade [остаток строки не уместился]&quot;;.
         /// </summary>
         internal static string GetPlaylistById {
             get {
                 return ResourceManager.GetString("GetPlaylistById", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на SELECT p.Id,
+        ///       p.Name,
+        ///       p.AuthorId,
+        ///       CONVERT(BIT, IIF(up.PlaylistId IS NULL, 0, 1)) as IsFavourite,
+        ///       p.IsDeleted,
+        ///       ps.Id,
+        ///       ps.UploadedAt,
+        ///       ps.Name,
+        ///       ps.AuthorName,
+        ///       ps.GenreId,
+        ///       ps.Duration,
+        ///       ps.IsDeleted,
+        ///       ps.IsFavourite
+        ///FROM Playlists p
+        ///         LEFT JOIN
+        ///     (SELECT s.Id,
+        ///             s.UploadedAt,
+        ///             s.Name,
+        ///             s.AuthorName,
+        ///             s.GenreId,
+        ///             s.Duration,
+        ///             s.IsDe [остаток строки не уместился]&quot;;.
+        /// </summary>
+        internal static string GetPlaylistsCreatedByUserId {
+            get {
+                return ResourceManager.GetString("GetPlaylistsCreatedByUserId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на SELECT
+        ///    UserId,
+        ///    AuthorName,
+        ///    StartYear,
+        ///    EndYear,
+        ///    GenreId,
+        ///    AverageDurationInMinutes
+        ///FROM RecommendationsPreferences
+        ///WHERE UserId = @UserId;.
+        /// </summary>
+        internal static string GetRecommendationsPreferences {
+            get {
+                return ResourceManager.GetString("GetRecommendationsPreferences", resourceCulture);
             }
         }
         
@@ -285,9 +563,24 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на SELECT Id, UserId, UploadedAt, SizeBytes, Name, Path, AuthorName, Year, GenreId, IsDeleted
-        ///FROM Songs
-        ///WHERE Id = @Id AND IsDeleted = 0
+        ///   Ищет локализованную строку, похожую на SELECT s.Id,
+        ///       s.UserId,
+        ///       s.UploadedAt,
+        ///       s.SizeBytes,
+        ///       s.Name,
+        ///       s.Path,
+        ///       s.AuthorName,
+        ///       s.Year,
+        ///       s.GenreId,
+        ///       s.Duration,
+        ///       s.IsDeleted
+        ///FROM Songs s
+        ///INNER JOIN Users u ON u.Id = s.UserId
+        ///WHERE s.Id = @Id
+        ///  AND s.IsDeleted = 0
+        ///  AND u.IsDeleted = 0
+        ///  AND u.IsBanned = 0
+        ///
         ///.
         /// </summary>
         internal static string GetSongById {
@@ -297,11 +590,86 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на .
+        ///   Ищет локализованную строку, похожую на SELECT s.Id,
+        ///       s.UserId,
+        ///       s.UploadedAt,
+        ///       s.SizeBytes,
+        ///       s.Name,
+        ///       s.Path,
+        ///       s.AuthorName,
+        ///       s.Year,
+        ///       s.GenreId,
+        ///       s.Duration,
+        ///       s.IsDeleted,
+        ///       CONVERT(BIT, IIF(fs.SongId IS NULL, 0, 1)) as IsFavourite,
+        ///       g.Id,
+        ///       g.Name
+        ///FROM Songs s
+        ///         INNER JOIN Genres g ON s.GenreId = g.Id
+        ///         INNER JOIN Users u ON u.Id = s.UserId
+        ///         LEFT JOIN
+        ///           (SELECT SongId
+        ///            FROM FavouriteSongs fs
+        ///            WHER [остаток строки не уместился]&quot;;.
         /// </summary>
-        internal static string GetSongs {
+        internal static string GetSongsByIds {
             get {
-                return ResourceManager.GetString("GetSongs", resourceCulture);
+                return ResourceManager.GetString("GetSongsByIds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на WITH PlaylistSongsIds AS
+        ///         (SELECT s.Id
+        ///          FROM Songs s
+        ///                   INNER JOIN PlaylistSongs ps ON ps.SongId = s.Id
+        ///                   INNER JOIN Playlists p ON ps.PlaylistId = p.Id
+        ///          WHERE s.IsDeleted = 0
+        ///            AND p.IsDeleted = 0
+        ///            AND p.Id = @PlaylistId)
+        ///SELECT s.Id,
+        ///       s.UserId,
+        ///       s.UploadedAt,
+        ///       s.SizeBytes,
+        ///       s.Name,
+        ///       s.Path,
+        ///       s.AuthorName,
+        ///       s.Year,
+        ///       s.GenreId,
+        ///       s.Duration,
+        ///       s.IsDelete [остаток строки не уместился]&quot;;.
+        /// </summary>
+        internal static string GetSongsToAddToPlaylist {
+            get {
+                return ResourceManager.GetString("GetSongsToAddToPlaylist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на SELECT s.Id,
+        ///       s.UserId,
+        ///       s.UploadedAt,
+        ///       s.SizeBytes,
+        ///       s.Name,
+        ///       s.Path,
+        ///       s.AuthorName,
+        ///       s.Year,
+        ///       s.GenreId,
+        ///       s.Duration,
+        ///       s.IsDeleted,
+        ///       Genres.Id,
+        ///       Genres.Name
+        ///FROM Songs s
+        ///INNER JOIN Genres ON s.GenreId = Genres.Id
+        ///WHERE s.IsDeleted = 0
+        ///  AND s.UserId = @UserId
+        ///ORDER BY s.UploadedAt DESC
+        ///OFFSET @Offset ROWS
+        ///FETCH NEXT @PageSize ROWS ONLY.
+        /// </summary>
+        internal static string GetSongsUploadedByUserId {
+            get {
+                return ResourceManager.GetString("GetSongsUploadedByUserId", resourceCulture);
             }
         }
         
@@ -390,7 +758,7 @@ namespace Melody.Infrastructure.Data {
         ///       Users.IsDeleted
         ///FROM Users
         ///         INNER JOIN Roles ON Users.RoleId = Roles.Id
-        ///WHERE Roles.NormalizedName = @NormalizedName;.
+        ///WHERE Roles.NormalizedName = @NormalizedName AND Users.IsDeleted = 0;.
         /// </summary>
         internal static string GetUsersInRole {
             get {
@@ -399,13 +767,51 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на IF ISNULL(@SearchText,&apos;&apos;) = &apos;&apos; SET @SearchText = &apos;&quot;&quot;&apos;;
+        ///
+        ///SELECT Users.Id,
+        ///       Users.UserName,
+        ///       Users.NormalizedUserName,
+        ///       Users.Email,
+        ///       Users.NormalizedEmail,
+        ///       Users.EmailConfirmed,
+        ///       Users.PasswordHash,
+        ///       Users.PhoneNumber,
+        ///       Users.IsBanned,
+        ///       Users.IsDeleted
+        ///FROM Users
+        ///WHERE NOT EXISTS (
+        ///    SELECT u.Id
+        ///    FROM Users u
+        ///    INNER JOIN UserRoles ur ON ur.UserId = u.Id
+        ///    WHERE ur.RoleId = 1 AND ur.UserId = Users.Id
+        ///) AND IsDeleted = 0 AND (@S [остаток строки не уместился]&quot;;.
+        /// </summary>
+        internal static string GetUsersWithoutAdminRole {
+            get {
+                return ResourceManager.GetString("GetUsersWithoutAdminRole", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на SELECT SUM(SizeBytes)
         ///FROM Songs
-        ///WHERE UserId = @UserId AND IsDeleted = 0.
+        ///WHERE UserId = @UserId
+        ///  AND IsDeleted = 0.
         /// </summary>
         internal static string GetUserTotalUploadsSize {
             get {
                 return ResourceManager.GetString("GetUserTotalUploadsSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на INSERT INTO PlaylistSongs (PlaylistId, SongId)
+        ///VALUES (@PlaylistId, @SongId).
+        /// </summary>
+        internal static string InsertPlaylistSong {
+            get {
+                return ResourceManager.GetString("InsertPlaylistSong", resourceCulture);
             }
         }
         
@@ -420,16 +826,39 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на UPDATE Playlists
-        ///SET Name     = @Name,
-        ///    Link     = @Link,
-        ///    AuthorId = @AuthorId
-        ///WHERE Id = @Id
-        ///  AND IsDeleted = 0.
+        ///   Ищет локализованную строку, похожую на INSERT INTO ListeningStatistics (SongId, UserId, Date)
+        ///VALUES (@Id, @UserId, @Date).
         /// </summary>
-        internal static string UpdatePlaylist {
+        internal static string SaveNewSongListening {
             get {
-                return ResourceManager.GetString("UpdatePlaylist", resourceCulture);
+                return ResourceManager.GetString("SaveNewSongListening", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на UPDATE Users
+        ///SET IsBanned = @IsBanned
+        ///WHERE Id = @UserId AND IsDeleted = 0;.
+        /// </summary>
+        internal static string SetUserBanStatus {
+            get {
+                return ResourceManager.GetString("SetUserBanStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на UPDATE RecommendationsPreferences
+        ///SET
+        ///	AuthorName = @AuthorName,
+        ///	StartYear = @StartYear,
+        ///	EndYear = @EndYear,
+        ///	GenreId = @GenreId,
+        ///	AverageDurationInMinutes = @AverageDurationInMinutes
+        ///WHERE UserId = @UserId;.
+        /// </summary>
+        internal static string UpdateRecommendationsPreferences {
+            get {
+                return ResourceManager.GetString("UpdateRecommendationsPreferences", resourceCulture);
             }
         }
         
@@ -465,9 +894,10 @@ namespace Melody.Infrastructure.Data {
         ///    Year       = @Year,
         ///    SizeBytes  = @SizeBytes,
         ///    UploadedAt = @UploadedAt,
-        ///    GenreId    = @GenreId
-        ///WHERE Id = @Id
-        ///  AND IsDeleted = 0.
+        ///    GenreId    = @GenreId,
+        ///    Duration   = @Duration
+        ///    WHERE Id = @Id
+        ///        AND IsDeleted = 0.
         /// </summary>
         internal static string UpdateSong {
             get {
@@ -486,7 +916,7 @@ namespace Melody.Infrastructure.Data {
         ///    PhoneNumber        = @PhoneNumber,
         ///    IsBanned           = @IsBanned,
         ///    IsDeleted          = @IsDeleted
-        ///WHERE Id = @Id;.
+        ///WHERE Id = @Id AND Users.IsDeleted = 0;.
         /// </summary>
         internal static string UpdateUser {
             get {

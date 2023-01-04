@@ -1,13 +1,13 @@
-﻿using Melody.Infrastructure.Data.Interfaces;
-using Melody.Infrastructure.Data.Records;
+﻿using Melody.Infrastructure.Data.DbEntites;
+using Melody.Infrastructure.Data.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
 namespace Melody.Infrastructure.Auth.Stores;
 
 public class RoleStore : IRoleStore<RoleIdentity>
 {
-    private bool disposedValue;
     private readonly IRoleRepository _roleRepository;
+    private bool disposedValue;
 
     public RoleStore(IRoleRepository roleRepository)
     {
@@ -107,6 +107,12 @@ public class RoleStore : IRoleStore<RoleIdentity>
             });
     }
 
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
     protected virtual void Dispose(bool disposing)
     {
         if (!disposedValue)
@@ -120,11 +126,5 @@ public class RoleStore : IRoleStore<RoleIdentity>
             // TODO: set large fields to null
             disposedValue = true;
         }
-    }
-
-    public void Dispose()
-    {
-        Dispose(disposing: true);
-        GC.SuppressFinalize(this);
     }
 }
