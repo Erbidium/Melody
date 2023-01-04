@@ -7,6 +7,7 @@ import { PlayerService } from '@core/services/player.service';
 import { UserService } from '@core/services/user.service';
 import { EmailValidator } from '@modules/auth/validators/email-validator';
 import { UsernameValidator } from '@modules/auth/validators/username-validator';
+import {passwordRegex, phoneNumberRegex} from "@shared/constants/model-validation";
 
 @Component({
     selector: 'app-auth-page',
@@ -18,16 +19,38 @@ export class AuthPageComponent extends BaseComponent {
         {
             username: new FormControl(
                 '',
-                [Validators.required, Validators.minLength(8), Validators.maxLength(30)],
+                [
+                    Validators.required,
+                    Validators.minLength(3),
+                    Validators.maxLength(30),
+                ],
                 [UsernameValidator.signUpUsernameValidator(this.userService)],
             ),
             email: new FormControl(
                 '',
-                [Validators.required, Validators.email],
+                [
+                    Validators.required,
+                    Validators.email,
+                    Validators.maxLength(50),
+                ],
                 [EmailValidator.signUpEmailValidator(this.userService)],
             ),
-            password: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(30)]),
-            phone: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(30)]),
+            password: new FormControl(
+                '',
+                [
+                    Validators.required,
+                    Validators.minLength(8),
+                    Validators.maxLength(30),
+                    Validators.pattern(passwordRegex),
+                ],
+            ),
+            phone: new FormControl(
+                '',
+                [
+                    Validators.required,
+                    Validators.pattern(phoneNumberRegex),
+                ],
+            ),
         },
         {
             updateOn: 'blur',
@@ -38,13 +61,18 @@ export class AuthPageComponent extends BaseComponent {
         {
             emailRegistered: new FormControl(
                 '',
-                [Validators.required, Validators.email],
+                [
+                    Validators.required,
+                    Validators.email,
+                    Validators.maxLength(50),
+                ],
                 [EmailValidator.loginEmailValidator(this.userService)],
             ),
             passwordRegistered: new FormControl('', [
                 Validators.required,
                 Validators.minLength(8),
                 Validators.maxLength(30),
+                Validators.pattern(passwordRegex),
             ]),
         },
         {

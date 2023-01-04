@@ -9,7 +9,8 @@ public class UserRegisterValidator : AbstractValidator<UserRegister>
     {
         RuleFor(u => u.UserName)
             .NotEmpty()
-            .MaximumLength(50);
+            .MinimumLength(3)
+            .MaximumLength(30);
 
         RuleFor(u => u.Email)
             .NotEmpty()
@@ -18,12 +19,12 @@ public class UserRegisterValidator : AbstractValidator<UserRegister>
 
         RuleFor(u => u.PhoneNumber)
             .NotEmpty()
-            .MaximumLength(50)
             .Must(e => e.IsValidPhoneNumber());
 
         RuleFor(u => u.Password)
             .NotEmpty()
-            .MaximumLength(50)
+            .MinimumLength(8)
+            .MaximumLength(30)
             .Must(p => p.IsValidPassword());
     }
 }

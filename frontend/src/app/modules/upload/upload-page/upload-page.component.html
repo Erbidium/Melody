@@ -9,7 +9,7 @@
             <input matInput id="author" type="text" formControlName="author" placeholder="Автор" />
         </mat-form-field>
         <mat-form-field appearance="outline">
-            <input matInput id="year" type="number" formControlName="year" placeholder="Рік" />
+            <input matInput id="year" type="number" pattern="\d*" formControlName="year" placeholder="Рік" />
         </mat-form-field>
         <mat-form-field class="genre" appearance="fill">
             <mat-label>Жанр</mat-label>

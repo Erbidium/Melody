@@ -37,15 +37,15 @@ export class UploadPageComponent extends BaseComponent implements OnInit {
 
     public uploadForm = new FormGroup({
         name: new FormControl('', {
-            validators: [Validators.required, Validators.minLength(8), Validators.maxLength(30)],
+            validators: [Validators.required, Validators.minLength(2), Validators.maxLength(30)],
             updateOn: 'blur',
         }),
         author: new FormControl('', {
-            validators: [Validators.required, Validators.minLength(8), Validators.maxLength(30)],
+            validators: [Validators.required, Validators.minLength(2), Validators.maxLength(30)],
             updateOn: 'blur',
         }),
         year: new FormControl('', {
-            validators: [Validators.required, Validators.minLength(8), Validators.maxLength(30)],
+            validators: [Validators.required],
             updateOn: 'blur',
         }),
     });

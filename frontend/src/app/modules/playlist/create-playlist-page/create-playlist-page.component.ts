@@ -16,7 +16,7 @@ export class CreatePlaylistPageComponent extends BaseComponent implements OnInit
 
     public createPlaylistForm = new FormGroup({
         name: new FormControl('', {
-            validators: [Validators.required, Validators.minLength(8), Validators.maxLength(30)],
+            validators: [Validators.required, Validators.minLength(3), Validators.maxLength(30)],
             updateOn: 'blur',
         }),
         songs: new FormControl([] as number[], {

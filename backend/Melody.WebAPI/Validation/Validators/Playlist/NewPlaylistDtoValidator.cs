@@ -9,6 +9,7 @@ public class NewPlaylistDtoValidator : AbstractValidator<NewPlaylistDto>
     {
         RuleFor(p => p.Name)
             .NotEmpty()
-            .MaximumLength(50);
+            .MinimumLength(3)
+            .MaximumLength(30);
     }
 }

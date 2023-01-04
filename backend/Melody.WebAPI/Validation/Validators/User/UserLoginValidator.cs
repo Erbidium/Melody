@@ -14,7 +14,8 @@ public class UserLoginValidator : AbstractValidator<UserLogin>
 
         RuleFor(u => u.Password)
             .NotEmpty()
-            .MaximumLength(50)
+            .MinimumLength(8)
+            .MaximumLength(30)
             .Must(p => p.IsValidPassword());
     }
 }
