@@ -1,5 +1,5 @@
-﻿using LanguageExt;
-using LanguageExt.SomeHelp;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
 using Melody.Core.Interfaces;
 using Melody.Infrastructure.Data.DbEntites;
 using Melody.Infrastructure.Data.Interfaces;
@@ -18,19 +18,28 @@ public class LoginController : ControllerBase
     private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly ITokenService _tokenService;
     private readonly UserManager<UserIdentity> _userManager;
+    private readonly IValidator<UserLogin> _userLoginValidator;
 
     public LoginController(UserManager<UserIdentity> userManager,
-        IRefreshTokenRepository refreshTokenRepository, ITokenService tokenService)
+        IRefreshTokenRepository refreshTokenRepository, ITokenService tokenService, IValidator<UserLogin> userLoginValidator)
     {
         _userManager = userManager;
         _refreshTokenRepository = refreshTokenRepository;
         _tokenService = tokenService;
+        _userLoginValidator = userLoginValidator;
     }
 
     [AllowAnonymous]
     [HttpPost]
     public async Task<IActionResult> Login([FromBody] UserLogin userLogin)
     {
+        var validationResult = await _userLoginValidator.ValidateAsync(userLogin);
+        if (!validationResult.IsValid)
+        {
+            validationResult.AddToModelState(ModelState);
+            return BadRequest(ModelState);
+        }
+
         var result = await _tokenService.CreateAccessTokenAndRefreshToken(userLogin.Email, userLogin.Password);
         return result.Match(tokens =>
             {

@@ -11,7 +11,7 @@ using Melody.Infrastructure.Data.Interfaces;
 using Melody.Infrastructure.Data.Repositories;
 using Melody.Infrastructure.ElasticSearch;
 using Melody.WebAPI.MappingProfiles;
-using Melody.WebAPI.Validators.User;
+using Melody.WebAPI.Validation.Validators.User;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;

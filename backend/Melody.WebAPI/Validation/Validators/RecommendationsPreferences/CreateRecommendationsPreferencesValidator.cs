@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Melody.WebAPI.DTO.RecommendationsPreferences;
 
-namespace Melody.WebAPI.Validators.RecommendationsPreferences;
+namespace Melody.WebAPI.Validation.Validators.RecommendationsPreferences;
 
 public class CreateRecommendationsPreferencesValidator : AbstractValidator<CreateRecommendationsPreferencesDto>
 {

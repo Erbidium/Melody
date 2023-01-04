@@ -25,6 +25,7 @@ public class UserController : ControllerBase
     private readonly IMapper _mapper;
     private readonly ITokenService _tokenService;
     private readonly IValidator<CreateRecommendationsPreferencesDto> _createRecommendationsPreferencesDtoValidator;
+    private readonly IValidator<UserRegister> _userRegisterValidator;
 
     public UserController(
         UserManager<UserIdentity> userManager,
@@ -32,6 +33,7 @@ public class UserController : ControllerBase
         IMapper mapper,
         IRefreshTokenRepository refreshTokenRepository,
         IValidator<CreateRecommendationsPreferencesDto> createRecommendationsPreferencesDtoValidator,
+        IValidator<UserRegister> userRegisterValidator,
         ITokenService tokenService)
     {
         _userManager = userManager;
@@ -40,12 +42,20 @@ public class UserController : ControllerBase
         _mapper = mapper;
         _tokenService = tokenService;
         _createRecommendationsPreferencesDtoValidator = createRecommendationsPreferencesDtoValidator;
+        _userRegisterValidator = userRegisterValidator;
     }
 
     [AllowAnonymous]
     [HttpPost("Register")]
     public async Task<IActionResult> Register([FromBody] UserRegister userRegister)
     {
+        var validationResult = await _userRegisterValidator.ValidateAsync(userRegister);
+        if (!validationResult.IsValid)
+        {
+            validationResult.AddToModelState(ModelState);
+            return BadRequest(ModelState);
+        }
+
         var user = new UserIdentity
         {
             UserName = userRegister.UserName,
@@ -149,13 +159,13 @@ public class UserController : ControllerBase
 
     [HttpPatch("{id:long}/ban")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> BanUser(BannedStatusDto bannnedStatusDto, long id)
+    public async Task<IActionResult> BanUser(BannedStatusDto bannedStatusDto, long id)
     {
-        if (bannnedStatusDto.IsBanned)
+        if (bannedStatusDto.IsBanned)
         {
             await _refreshTokenRepository.DeleteByUserIdAsync(id);
         }
-        await _userRepository.SetUserBannedStatus(bannnedStatusDto.IsBanned, id);
+        await _userRepository.SetUserBannedStatus(bannedStatusDto.IsBanned, id);
         return Ok();
     }
 

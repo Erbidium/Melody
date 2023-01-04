@@ -3,13 +3,11 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Melody.Core.Interfaces;
 using Melody.Core.ValueObjects;
-using Melody.Infrastructure.ElasticSearch;
 using Melody.WebAPI.DTO.Genre;
 using Melody.WebAPI.DTO.Song;
 using Melody.WebAPI.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Nest;
 
 namespace Melody.WebAPI.Controllers;
 

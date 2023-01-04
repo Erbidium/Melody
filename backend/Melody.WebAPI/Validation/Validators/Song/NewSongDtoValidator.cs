@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Melody.WebAPI.DTO.Song;
 
-namespace Melody.WebAPI.Validators.Song;
+namespace Melody.WebAPI.Validation.Validators.Song;
 
 public class NewSongDtoValidator : AbstractValidator<NewSongDto>
 {

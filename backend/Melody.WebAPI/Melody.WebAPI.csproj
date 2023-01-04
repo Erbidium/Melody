@@ -18,6 +18,7 @@
 
     <ItemGroup>
         <Folder Include="DTO\Auth\" />
+        <Folder Include="Validation\Validators" />
     </ItemGroup>
 
 </Project>

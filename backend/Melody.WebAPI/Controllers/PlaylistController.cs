@@ -73,7 +73,6 @@ public class PlaylistController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreatePlaylist(NewPlaylistDto playlist)
     {
-        var userId = HttpContext.User.GetId();
         var result = await _newPlaylistDtoValidator.ValidateAsync(playlist);
         if (!result.IsValid)
         {
@@ -81,6 +80,7 @@ public class PlaylistController : ControllerBase
             return BadRequest(ModelState);
         }
 
+        var userId = HttpContext.User.GetId();
         await _playlistRepository.Create(new CreatePlaylist(playlist.Name, userId,
             playlist.SongIds));
         return Ok();
