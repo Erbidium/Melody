@@ -4,12 +4,31 @@
     <form [formGroup]="uploadForm">
         <mat-form-field appearance="outline">
             <input matInput id="name" type="text" formControlName="name" placeholder="Назва пісні" />
+            <mat-error
+                *ngIf="
+                    uploadForm.controls['name'].hasError('required') ||
+                    uploadForm.controls['name'].hasError('minlength') ||
+                    uploadForm.controls['name'].hasError('maxlength')
+                "
+            >Name is invalid</mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline">
             <input matInput id="author" type="text" formControlName="author" placeholder="Автор" />
+            <mat-error
+                *ngIf="
+                    uploadForm.controls['author'].hasError('required') ||
+                    uploadForm.controls['author'].hasError('minlength') ||
+                    uploadForm.controls['author'].hasError('maxlength')
+                "
+            >Author is invalid</mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline">
             <input matInput id="year" type="number" pattern="\d*" formControlName="year" placeholder="Рік" />
+            <mat-error
+                *ngIf="
+                    uploadForm.controls['year'].hasError('required')
+                "
+            >Year is required</mat-error>
         </mat-form-field>
         <mat-form-field class="genre" appearance="fill">
             <mat-label>Жанр</mat-label>
