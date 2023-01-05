@@ -50,7 +50,8 @@ public class SongController : ControllerBase
 
     [Authorize(Roles = "Admin")]
     [HttpGet("all")]
-    public async Task<ActionResult<IEnumerable<SongDto>>> GetAllSongs(string? searchText, int page = 1, int pageSize = 10)
+    public async Task<ActionResult<IEnumerable<SongDto>>> GetAllSongs(string? searchText, int page = 1,
+        int pageSize = 10)
     {
         return Ok(_mapper.Map<List<SongDto>>(await _songRepository.GetAll(searchText ?? "", page, pageSize)));
     }
@@ -144,7 +145,6 @@ public class SongController : ControllerBase
         return await _songRepository.DeleteFavouriteSong(id, userId)
             ? Ok()
             : NotFound();
-        
     }
 
     [Authorize]

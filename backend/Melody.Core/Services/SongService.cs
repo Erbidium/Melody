@@ -14,7 +14,8 @@ public class SongService : ISongService
     private readonly IUserRepository _userRepository;
     private readonly IRecommender _recommender;
 
-    public SongService(ISongRepository songRepository, ISongFileStorage songFileStorage, IUserRepository userRepository, IRecommender recommender)
+    public SongService(ISongRepository songRepository, ISongFileStorage songFileStorage, IUserRepository userRepository,
+        IRecommender recommender)
     {
         _songRepository = songRepository;
         _songFileStorage = songFileStorage;
@@ -43,17 +44,18 @@ public class SongService : ISongService
         return await _songRepository.Create(song);
     }
 
-    public async Task<Result<IReadOnlyCollection<FavouriteSong>>> GetRecommendedSongs(long userId, int page = 1, int pageSize = 10)
+    public async Task<Result<IReadOnlyCollection<FavouriteSong>>> GetRecommendedSongs(long userId, int page = 1,
+        int pageSize = 10)
     {
         var recommendationsPreferences = await _userRepository.GetUserRecommendationsPreferences(userId);
         if (recommendationsPreferences is null)
-        {
             return new Result<IReadOnlyCollection<FavouriteSong>>(new KeyNotFoundException());
-        }
 
         var recommendedSongsIds = await _recommender.GetRecommendedSongsIds(recommendationsPreferences, page, pageSize);
         return await recommendedSongsIds.Match<Task<Result<IReadOnlyCollection<FavouriteSong>>>>(
-            async recommendations => new Result<IReadOnlyCollection<FavouriteSong>>(await _songRepository.GetSongsByIds(recommendations, userId)),
+            async recommendations =>
+                new Result<IReadOnlyCollection<FavouriteSong>>(
+                    await _songRepository.GetSongsByIds(recommendations, userId)),
             error => Task.FromResult(new Result<IReadOnlyCollection<FavouriteSong>>(error)));
     }
 }

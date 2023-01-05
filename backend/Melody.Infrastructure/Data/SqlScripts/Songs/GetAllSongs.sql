@@ -1,4 +1,4 @@
-﻿IF ISNULL(@SearchText,'') = '' SET @SearchText = '""';
+﻿IF ISNULL(@SearchText, '') = '' SET @SearchText = '""';
 
 SELECT Songs.Id,
        UserId,
@@ -14,10 +14,10 @@ SELECT Songs.Id,
        Genres.Id,
        Genres.Name
 FROM Songs
-INNER JOIN Genres ON Songs.GenreId = Genres.Id
-INNER JOIN Users u ON u.Id = Songs.UserId
+         INNER JOIN Genres ON Songs.GenreId = Genres.Id
+         INNER JOIN Users u ON u.Id = Songs.UserId
 WHERE u.IsDeleted = 0
-  AND Songs.IsDeleted = 0 AND (@SearchText = '""' OR CONTAINS(Songs.Name, @SearchText))
+  AND Songs.IsDeleted = 0
+  AND (@SearchText = '""' OR CONTAINS (Songs.Name, @SearchText))
 ORDER BY Songs.UploadedAt DESC
-OFFSET @Offset ROWS
-FETCH NEXT @PageSize ROWS ONLY;
+OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;

@@ -12,7 +12,7 @@ public static class ControllerExtensions
         return result.Match(
             obj => new OkObjectResult(mapper(obj)),
             ToActionResult
-            );
+        );
     }
 
     public static IActionResult ToActionResult(this Exception exception)

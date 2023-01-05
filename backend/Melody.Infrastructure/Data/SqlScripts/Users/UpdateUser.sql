@@ -8,4 +8,5 @@ SET UserName           = @UserName,
     PhoneNumber        = @PhoneNumber,
     IsBanned           = @IsBanned,
     IsDeleted          = @IsDeleted
-WHERE Id = @Id AND Users.IsDeleted = 0;
+WHERE Id = @Id
+  AND Users.IsDeleted = 0;

@@ -16,9 +16,9 @@ FROM Songs s
          INNER JOIN Genres g ON s.GenreId = g.Id
          INNER JOIN Users u ON u.Id = s.UserId
          LEFT JOIN
-           (SELECT SongId
-            FROM FavouriteSongs fs
-            WHERE fs.UserId = @UserId) fs ON fs.SongId = s.Id
+     (SELECT SongId
+      FROM FavouriteSongs fs
+      WHERE fs.UserId = @UserId) fs ON fs.SongId = s.Id
 WHERE s.IsDeleted = 0
   AND u.IsDeleted = 0
   AND u.IsBanned = 0

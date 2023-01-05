@@ -79,9 +79,7 @@ public class UserController : ControllerBase
         var userIdentity = await _userManager.FindByIdAsync(id.ToString());
 
         if (userIdentity is null || (!userRoles.Contains("Admin") && userIdentity.IsBanned))
-        {
             return NotFound("User is not found");
-        }
         var roles = await _userManager.GetRolesAsync(userIdentity);
         return Ok(new UserDto(userIdentity) { Roles = roles });
     }
@@ -120,9 +118,11 @@ public class UserController : ControllerBase
 
     [HttpGet("all")]
     [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<IEnumerable<UserForAdminDto>>> GetUsersForAdministrator(string? searchText, int page = 1, int pageSize = 10)
+    public async Task<ActionResult<IEnumerable<UserForAdminDto>>> GetUsersForAdministrator(string? searchText,
+        int page = 1, int pageSize = 10)
     {
-        return Ok(_mapper.Map<List<UserForAdminDto>>(await _userRepository.GetUsersWithoutAdministratorRole(searchText ?? "", page, pageSize)));
+        return Ok(_mapper.Map<List<UserForAdminDto>>(
+            await _userRepository.GetUsersWithoutAdministratorRole(searchText ?? "", page, pageSize)));
     }
 
     [Authorize]
@@ -130,20 +130,23 @@ public class UserController : ControllerBase
     public async Task<ActionResult<RecommendationsPreferences>> GetUserRecommendationsPreferences()
     {
         var userId = HttpContext.User.GetId();
-        return Ok(_mapper.Map<RecommendationsPreferencesDto>(await _userRepository.GetUserRecommendationsPreferences(userId)));
+        return Ok(_mapper.Map<RecommendationsPreferencesDto>(
+            await _userRepository.GetUserRecommendationsPreferences(userId)));
     }
 
     [Authorize]
     [HttpPut("recommendations-preferences")]
-    public async Task<IActionResult> SaveUserRecommendationsPreferences(CreateRecommendationsPreferencesDto createRecommendationsPreferences)
+    public async Task<IActionResult> SaveUserRecommendationsPreferences(
+        CreateRecommendationsPreferencesDto createRecommendationsPreferences)
     {
-        var validationResult = await _createRecommendationsPreferencesDtoValidator.ValidateAsync(createRecommendationsPreferences);
+        var validationResult =
+            await _createRecommendationsPreferencesDtoValidator.ValidateAsync(createRecommendationsPreferences);
         if (!validationResult.IsValid)
         {
             validationResult.AddToModelState(ModelState);
             return BadRequest(ModelState);
         }
-        
+
         var userId = HttpContext.User.GetId();
         var preferences = new RecommendationsPreferences(
             userId,
@@ -161,10 +164,7 @@ public class UserController : ControllerBase
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> BanUser(BannedStatusDto bannedStatusDto, long id)
     {
-        if (bannedStatusDto.IsBanned)
-        {
-            await _refreshTokenRepository.DeleteByUserIdAsync(id);
-        }
+        if (bannedStatusDto.IsBanned) await _refreshTokenRepository.DeleteByUserIdAsync(id);
         await _userRepository.SetUserBannedStatus(bannedStatusDto.IsBanned, id);
         return Ok();
     }

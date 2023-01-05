@@ -12,6 +12,7 @@ public class User : EntityBase<long>
         PhoneNumber = Guard.Against.NullOrWhiteSpace(phoneNumber, nameof(PhoneNumber));
         IsBanned = isBanned;
     }
+
     public string UserName { get; }
     public string Email { get; }
     public string PhoneNumber { get; }

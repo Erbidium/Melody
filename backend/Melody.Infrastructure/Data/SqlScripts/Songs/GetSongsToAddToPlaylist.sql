@@ -18,7 +18,7 @@ SELECT s.Id,
        s.Duration,
        s.IsDeleted
 FROM Songs s
-INNER JOIN Users u ON u.Id = s.UserId
+         INNER JOIN Users u ON u.Id = s.UserId
 WHERE s.IsDeleted = 0
   AND s.UserId = @UserId
   AND s.Id NOT IN (Select Id FROM PlaylistSongsIds)

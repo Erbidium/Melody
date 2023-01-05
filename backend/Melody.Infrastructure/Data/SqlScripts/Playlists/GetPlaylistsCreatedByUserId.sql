@@ -33,7 +33,7 @@ FROM Playlists p
      (SELECT PlaylistId
       FROM UserPlaylists up
       WHERE up.UserId = @UserId) up ON up.PlaylistId = p.Id
-      INNER JOIN Users u ON u.Id = p.AuthorId
+         INNER JOIN Users u ON u.Id = p.AuthorId
 WHERE p.IsDeleted = 0
   AND p.AuthorId = @UserId
   AND u.IsDeleted = 0

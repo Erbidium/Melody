@@ -77,7 +77,7 @@ public static class ServiceCollectionExtensions
                     ValidIssuer = configuration["Jwt:Issuer"],
                     ValidAudience = configuration["Jwt:Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration
-                        ["Jwt:Key"])),
+                        ["Jwt:Key"]))
                 };
             });
     }

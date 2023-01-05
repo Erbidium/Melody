@@ -10,7 +10,7 @@
        s.Duration,
        s.IsDeleted
 FROM Songs s
-INNER JOIN Users u ON u.Id = s.UserId
+         INNER JOIN Users u ON u.Id = s.UserId
 WHERE s.Id = @Id
   AND s.IsDeleted = 0
   AND u.IsDeleted = 0

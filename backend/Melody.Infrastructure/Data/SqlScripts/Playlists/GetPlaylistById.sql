@@ -34,13 +34,12 @@ FROM Playlists p
             WHERE fs.UserId = @UserId) fs ON fs.SongId = s.Id
       WHERE s.IsDeleted = 0
       ORDER BY s.UploadedAt DESC
-      OFFSET @Offset ROWS
-      FETCH NEXT @PageSize ROWS ONLY) ps ON ps.PlaylistId = p.Id
+      OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY) ps ON ps.PlaylistId = p.Id
          LEFT JOIN
      (SELECT PlaylistId
       FROM UserPlaylists up
       WHERE up.UserId = @UserId) up ON up.PlaylistId = p.Id
-      INNER JOIN Users u ON u.Id = p.AuthorId
+         INNER JOIN Users u ON u.Id = p.AuthorId
 WHERE p.Id = @Id
   AND p.IsDeleted = 0
   AND u.IsDeleted = 0

@@ -42,7 +42,8 @@ public class UserRepository : IUserRepository
         return rowsDeleted == 1;
     }
 
-    public async Task<bool> CreateOrUpdateUserRecommendationsPreferences(RecommendationsPreferences recommendationsPreferences)
+    public async Task<bool> CreateOrUpdateUserRecommendationsPreferences(
+        RecommendationsPreferences recommendationsPreferences)
     {
         var entry = await GetUserRecommendationsPreferences(recommendationsPreferences.UserId);
 
@@ -59,7 +60,7 @@ public class UserRepository : IUserRepository
                 recommendationsPreferences.StartYear,
                 recommendationsPreferences.EndYear,
                 recommendationsPreferences.GenreId,
-                recommendationsPreferences.AverageDurationInMinutes,
+                recommendationsPreferences.AverageDurationInMinutes
             });
         }
         else
@@ -71,7 +72,7 @@ public class UserRepository : IUserRepository
                 recommendationsPreferences.StartYear,
                 recommendationsPreferences.EndYear,
                 recommendationsPreferences.GenreId,
-                recommendationsPreferences.AverageDurationInMinutes,
+                recommendationsPreferences.AverageDurationInMinutes
             });
         }
 
@@ -81,7 +82,9 @@ public class UserRepository : IUserRepository
     public async Task<RecommendationsPreferences?> GetUserRecommendationsPreferences(long userId)
     {
         using var connection = _context.CreateConnection();
-        var dbEntry = await connection.QuerySingleOrDefaultAsync<RecommendationsPreferencesDb>(SqlScriptsResource.GetRecommendationsPreferences, new { userId });
+        var dbEntry =
+            await connection.QuerySingleOrDefaultAsync<RecommendationsPreferencesDb>(
+                SqlScriptsResource.GetRecommendationsPreferences, new { userId });
         return dbEntry is null
             ? null
             : new RecommendationsPreferences(
@@ -91,7 +94,7 @@ public class UserRepository : IUserRepository
                 dbEntry.StartYear,
                 dbEntry.EndYear,
                 dbEntry.AverageDurationInMinutes
-              );
+            );
     }
 
     public async Task<UserIdentity> FindByEmailAsync(string normalizedEmail)
@@ -206,15 +209,18 @@ public class UserRepository : IUserRepository
         return true;
     }
 
-    public async Task<IReadOnlyCollection<User>> GetUsersWithoutAdministratorRole(string searchText, int page = 1, int pageSize = 10)
+    public async Task<IReadOnlyCollection<User>> GetUsersWithoutAdministratorRole(string searchText, int page = 1,
+        int pageSize = 10)
     {
         Guard.Against.NegativeOrZero(page, nameof(page));
         Guard.Against.NegativeOrZero(pageSize, nameof(pageSize));
 
         using var connection = _context.CreateConnection();
 
-        var users = await connection.QueryAsync<UserIdentity>(SqlScriptsResource.GetUsersWithoutAdminRole, new { Offset = (page - 1) * pageSize, pageSize, SearchText = searchText.Trim().ToLower() });
-        return users.Select(record => new User(record.UserName, record.Email, record.PhoneNumber, record.IsBanned) { Id = record.Id }).ToList()
+        var users = await connection.QueryAsync<UserIdentity>(SqlScriptsResource.GetUsersWithoutAdminRole,
+            new { Offset = (page - 1) * pageSize, pageSize, SearchText = searchText.Trim().ToLower() });
+        return users.Select(record => new User(record.UserName, record.Email, record.PhoneNumber, record.IsBanned)
+                { Id = record.Id }).ToList()
             .AsReadOnly();
     }
 }

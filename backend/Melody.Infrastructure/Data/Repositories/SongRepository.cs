@@ -26,7 +26,7 @@ public class SongRepository : ISongRepository
     {
         Guard.Against.NegativeOrZero(page, nameof(page));
         Guard.Against.NegativeOrZero(pageSize, nameof(pageSize));
-        
+
         using var connection = _context.CreateConnection();
         var songs = await connection.QueryAsync<SongDb, GenreDb, Song>(SqlScriptsResource.GetAllSongs,
             (songDb, genreDb) =>
@@ -70,7 +70,8 @@ public class SongRepository : ISongRepository
 
         var id = await connection.ExecuteScalarAsync<long>(SqlScriptsResource.CreateSong, parameters);
 
-        var createdSong = new Song(song.UserId, song.Name, song.Path, song.AuthorName, song.Year, song.GenreId, song.SizeBytes,
+        var createdSong = new Song(song.UserId, song.Name, song.Path, song.AuthorName, song.Year, song.GenreId,
+            song.SizeBytes,
             song.UploadedAt, song.Duration) { Id = id };
 
         var songElastic = new SongElastic
@@ -235,7 +236,8 @@ public class SongRepository : ISongRepository
             SqlScriptsResource.GetSongsByIds,
             (songDb, genreDb) =>
             {
-                var song = new FavouriteSong(songDb.Name, songDb.AuthorName, songDb.GenreId, songDb.UploadedAt, songDb.Duration, songDb.IsFavourite)
+                var song = new FavouriteSong(songDb.Name, songDb.AuthorName, songDb.GenreId, songDb.UploadedAt,
+                    songDb.Duration, songDb.IsFavourite)
                 {
                     Id = songDb.Id,
                     Genre = new Genre(genreDb.Name) { Id = genreDb.Id }

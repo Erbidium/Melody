@@ -21,7 +21,8 @@ public class LoginController : ControllerBase
     private readonly IValidator<UserLogin> _userLoginValidator;
 
     public LoginController(UserManager<UserIdentity> userManager,
-        IRefreshTokenRepository refreshTokenRepository, ITokenService tokenService, IValidator<UserLogin> userLoginValidator)
+        IRefreshTokenRepository refreshTokenRepository, ITokenService tokenService,
+        IValidator<UserLogin> userLoginValidator)
     {
         _userManager = userManager;
         _refreshTokenRepository = refreshTokenRepository;
@@ -60,12 +61,9 @@ public class LoginController : ControllerBase
     {
         if (!Request.Cookies.TryGetValue("X-Refresh-Token", out var refreshTokenString))
             return BadRequest();
-        
+
         var result = await _tokenService.GetAccessTokenAndUpdatedRefreshToken(refreshTokenString);
-        if (result.IsFaulted)
-        {
-            await _refreshTokenRepository.DeleteByValueAsync(refreshTokenString);
-        }
+        if (result.IsFaulted) await _refreshTokenRepository.DeleteByValueAsync(refreshTokenString);
         return result.Match<IActionResult>(tokens =>
             {
                 Response.Cookies.Append("X-Refresh-Token", tokens.refreshToken,

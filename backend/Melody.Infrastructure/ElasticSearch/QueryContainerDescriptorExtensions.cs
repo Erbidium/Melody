@@ -4,21 +4,24 @@ namespace Melody.Infrastructure.ElasticSearch;
 
 public static class QueryContainerDescriptorExtensions
 {
-    public static QueryContainer SearchSongsReleasedLaterThanYear(this QueryContainerDescriptor<SongElastic> descriptor, int startYear)
+    public static QueryContainer SearchSongsReleasedLaterThanYear(this QueryContainerDescriptor<SongElastic> descriptor,
+        int startYear)
     {
         return descriptor.Range(selector => selector
             .Field(song => song.Year)
             .GreaterThanOrEquals(startYear));
     }
-    
-    public static QueryContainer SearchSongsReleasedEarlierThanYear(this QueryContainerDescriptor<SongElastic> descriptor, int endYear)
+
+    public static QueryContainer SearchSongsReleasedEarlierThanYear(
+        this QueryContainerDescriptor<SongElastic> descriptor, int endYear)
     {
         return descriptor.Range(selector => selector
             .Field(song => song.Year)
             .LessThanOrEquals(endYear));
     }
-    
-    public static QueryContainer SearchSongsWithDurationInRange(this QueryContainerDescriptor<SongElastic> descriptor, int durationInMinutes, int deltaSeconds)
+
+    public static QueryContainer SearchSongsWithDurationInRange(this QueryContainerDescriptor<SongElastic> descriptor,
+        int durationInMinutes, int deltaSeconds)
     {
         var startDuration = durationInMinutes * 60 - deltaSeconds > 0
             ? durationInMinutes * 60 - deltaSeconds
@@ -30,8 +33,9 @@ public static class QueryContainerDescriptorExtensions
             .GreaterThanOrEquals(startDuration)
             .LessThanOrEquals(endDuration));
     }
-    
-    public static QueryContainer SearchSongsWithAuthorName(this QueryContainerDescriptor<SongElastic> descriptor, string author)
+
+    public static QueryContainer SearchSongsWithAuthorName(this QueryContainerDescriptor<SongElastic> descriptor,
+        string author)
     {
         return descriptor.Match(selector => selector
             .Field(song => song.AuthorName)
@@ -39,7 +43,8 @@ public static class QueryContainerDescriptorExtensions
             .Fuzziness(Fuzziness.Auto));
     }
 
-    public static QueryContainer SearchSongsWithGenreId(this QueryContainerDescriptor<SongElastic> descriptor, long genreId)
+    public static QueryContainer SearchSongsWithGenreId(this QueryContainerDescriptor<SongElastic> descriptor,
+        long genreId)
     {
         return descriptor.Term(selector => selector
             .Field(song => song.GenreId)

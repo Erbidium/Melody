@@ -30,8 +30,9 @@ SELECT s.Id,
        s.IsDeleted,
        Genres.Id,
        Genres.Name
-FROM Songs s INNER JOIN Genres ON s.GenreId = Genres.Id
-INNER JOIN Users u ON u.Id = s.UserId
+FROM Songs s
+         INNER JOIN Genres ON s.GenreId = Genres.Id
+         INNER JOIN Users u ON u.Id = s.UserId
 WHERE s.IsDeleted = 0
   AND s.UserId = @UserId
   AND u.IsDeleted = 0
