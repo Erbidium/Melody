@@ -41,8 +41,11 @@ export class CreatePlaylistPageComponent extends BaseComponent implements OnInit
         this.songService
             .getFavouriteAndUploadedUserSongs()
             .pipe(this.untilThis)
-            .subscribe((resp) => {
-                this.uploadedSongs = resp;
+            .subscribe({
+                next: (resp) => {
+                    this.uploadedSongs = resp;
+                },
+                error: () => this.notificationService.showErrorMessage('Трапилася помилка'),
             });
     }
 

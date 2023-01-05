@@ -4,6 +4,7 @@ import { BaseComponent } from '@core/base/base.component';
 import { headerNavLinksAdministrator } from '@core/helpers/header-helpers';
 import { ISong } from '@core/models/ISong';
 import { InfiniteScrollingService } from '@core/services/infinite-scrolling.service';
+import { NotificationService } from '@core/services/notification.service';
 import { PlayerService } from '@core/services/player.service';
 import { SongService } from '@core/services/song.service';
 import { SpinnerOverlayService } from '@core/services/spinner-overlay.service';
@@ -19,16 +20,7 @@ export class AdminSongsPageComponent extends BaseComponent implements OnInit {
 
     songs: ISong[] = [];
 
-    columnsToDisplay = [
-        'position',
-        'name',
-        'author',
-        'genre',
-        'date',
-        'profile',
-        'duration',
-        'remove',
-    ];
+    columnsToDisplay = ['position', 'name', 'author', 'genre', 'date', 'profile', 'duration', 'remove'];
 
     currentSongIdForMusicPlayer?: number;
 
@@ -44,23 +36,21 @@ export class AdminSongsPageComponent extends BaseComponent implements OnInit {
         private router: Router,
         private spinnerOverlayService: SpinnerOverlayService,
         private scrollService: InfiniteScrollingService,
+        private notificationService: NotificationService,
     ) {
         super();
     }
 
     ngOnInit() {
         this.loadSongs(this.page, this.pageSize);
-        this.playerService
-            .playerStateEmitted$
-            .pipe(this.untilThis)
-            .subscribe(state => {
-                this.currentSongIdForMusicPlayer = state.id;
-            });
+        this.playerService.playerStateEmitted$.pipe(this.untilThis).subscribe((state) => {
+            this.currentSongIdForMusicPlayer = state.id;
+        });
 
         this.scrollService
             .getObservable()
             .pipe(this.untilThis)
-            .subscribe((status: { isIntersecting: boolean, id: string }) => {
+            .subscribe((status: { isIntersecting: boolean; id: string }) => {
                 if (status.isIntersecting && status.id === `target${this.page * this.pageSize - 1}`) {
                     this.loadSongs(++this.page, this.pageSize, false, this.searchText);
                 }
@@ -72,19 +62,22 @@ export class AdminSongsPageComponent extends BaseComponent implements OnInit {
         this.songService
             .getAllSongs(page, pageSize, searchText)
             .pipe(this.untilThis)
-            .subscribe((resp) => {
-                this.spinnerOverlayService.hide();
+            .subscribe({
+                next: (resp) => {
+                    this.spinnerOverlayService.hide();
 
-                this.songs = updateAllData ? resp : this.songs.concat(resp);
+                    this.songs = updateAllData ? resp : this.songs.concat(resp);
 
-                const clear = setInterval(() => {
-                    const target = document.querySelector(`#target${page * pageSize - 1}`);
+                    const clear = setInterval(() => {
+                        const target = document.querySelector(`#target${page * pageSize - 1}`);
 
-                    if (target) {
-                        clearInterval(clear);
-                        this.scrollService.setObserver().observe(target);
-                    }
-                }, 100);
+                        if (target) {
+                            clearInterval(clear);
+                            this.scrollService.setObserver().observe(target);
+                        }
+                    }, 100);
+                },
+                error: () => this.notificationService.showErrorMessage('Трапилася помилка'),
             });
     }
 
@@ -96,23 +89,26 @@ export class AdminSongsPageComponent extends BaseComponent implements OnInit {
         event.stopPropagation();
         this.songService
             .deleteSongByAdministrator(id)
-            .pipe(switchMap(async () => {
-                const page = Math.ceil((this.songs.length - 1) / this.pageSize);
+            .pipe(
+                switchMap(async () => {
+                    const page = Math.ceil((this.songs.length - 1) / this.pageSize);
 
-                this.loadSongs(1, page * this.pageSize, true);
-            }))
-            .subscribe(() => {
-                this.page = Math.ceil((this.songs.length - 1) / this.pageSize);
-                this.currentSongIdForMusicPlayer = undefined;
-                this.playerService.emitPlayerStateChange(undefined, []);
+                    this.loadSongs(1, page * this.pageSize, true);
+                }),
+            )
+            .subscribe({
+                next: () => {
+                    this.page = Math.ceil((this.songs.length - 1) / this.pageSize);
+                    this.currentSongIdForMusicPlayer = undefined;
+                    this.playerService.emitPlayerStateChange(undefined, []);
+                },
+                error: () => this.notificationService.showErrorMessage('Трапилася помилка'),
             });
     }
 
     navigateToUserProfilePage(id: number, event: MouseEvent) {
         event.stopPropagation();
-        this.router.navigateByUrl(
-            `/profile/${id}`,
-        );
+        this.router.navigateByUrl(`/profile/${id}`);
     }
 
     search() {

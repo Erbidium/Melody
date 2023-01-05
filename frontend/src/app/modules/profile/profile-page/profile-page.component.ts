@@ -50,7 +50,8 @@ export class ProfilePageComponent extends BaseComponent implements OnInit {
                         error: () => {
                             this.spinnerService.hide();
                             this.notificationService.showErrorMessage('Не вдалося завантажити профіль користувача');
-                        } });
+                        },
+                    });
             }
         });
     }
@@ -65,9 +66,12 @@ export class ProfilePageComponent extends BaseComponent implements OnInit {
                 .setPlaylistStatus(id, !playlist.isFavourite)
                 .pipe(switchMap(() => this.playlistService.getPlaylistsCreatedByUser()))
                 .pipe(this.untilThis)
-                .subscribe((userPlaylists) => {
-                    this.userPlaylists = userPlaylists;
-                    this.spinnerService.hide();
+                .subscribe({
+                    next: (userPlaylists) => {
+                        this.userPlaylists = userPlaylists;
+                        this.spinnerService.hide();
+                    },
+                    error: () => this.notificationService.showErrorMessage('Трапилася помилка'),
                 });
         }
     }

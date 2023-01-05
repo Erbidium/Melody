@@ -42,7 +42,7 @@ export class AuthService {
         return !!localStorage.getItem('access-token');
     }
 
-    signOut(): Observable<void> {
+    signOut() {
         return this.httpService.postRequest<void>('/api/logout', {}).pipe(
             tap({
                 error: (e) => this.notificationService.showErrorMessage(e.message),

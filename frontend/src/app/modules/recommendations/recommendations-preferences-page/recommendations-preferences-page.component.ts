@@ -52,22 +52,22 @@ export class RecommendationsPreferencesPageComponent extends BaseComponent imple
     }
 
     ngOnInit(): void {
-        forkJoin([
-            this.songService.getAllGenres(),
-            this.userService.getUserRecommendationPreferences(),
-        ])
+        forkJoin([this.songService.getAllGenres(), this.userService.getUserRecommendationPreferences()])
             .pipe(this.untilThis)
-            .subscribe((resp) => {
-                [this.genres] = resp;
-                const preferences = resp[1];
+            .subscribe({
+                next: (resp) => {
+                    [this.genres] = resp;
+                    const preferences = resp[1];
 
-                this.uploadForm.patchValue({
-                    author: preferences.authorName,
-                    startYear: preferences.startYear?.toString(),
-                    endYear: preferences.endYear?.toString(),
-                    averageDurationInMinutes: preferences.averageDurationInMinutes?.toString(),
-                });
-                this.selectedGenre = this.genres.find(g => g.id === preferences.genreId);
+                    this.uploadForm.patchValue({
+                        author: preferences.authorName,
+                        startYear: preferences.startYear?.toString(),
+                        endYear: preferences.endYear?.toString(),
+                        averageDurationInMinutes: preferences.averageDurationInMinutes?.toString(),
+                    });
+                    this.selectedGenre = this.genres.find((g) => g.id === preferences.genreId);
+                },
+                error: () => this.notificationService.showErrorMessage('Трапилася помилка'),
             });
     }
 
@@ -78,10 +78,12 @@ export class RecommendationsPreferencesPageComponent extends BaseComponent imple
                 startYear: (this.uploadForm.value.startYear as unknown as number) ?? undefined,
                 endYear: (this.uploadForm.value.endYear as unknown as number) ?? undefined,
                 genreId: this.selectedGenre.id,
-                averageDurationInMinutes: (this.uploadForm.value.averageDurationInMinutes as unknown as number) ?? undefined,
+                averageDurationInMinutes:
+                    (this.uploadForm.value.averageDurationInMinutes as unknown as number) ?? undefined,
             };
 
-            this.userService.saveUserRecommendationPreferences(preferences)
+            this.userService
+                .saveUserRecommendationPreferences(preferences)
                 .pipe(this.untilThis)
                 .subscribe({
                     next: () => {

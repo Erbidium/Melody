@@ -41,9 +41,12 @@ export class CurrentUserProfilePageComponent extends BaseComponent implements On
 
         forkJoin([user, playlists])
             .pipe(this.untilThis)
-            .subscribe((results) => {
-                [this.currentUser, this.userPlaylists] = results;
-                this.spinnerOverlayService.hide();
+            .subscribe({
+                next: (results) => {
+                    [this.currentUser, this.userPlaylists] = results;
+                    this.spinnerOverlayService.hide();
+                },
+                error: () => this.notificationService.showErrorMessage('Трапилася помилка'),
             });
     }
 
@@ -70,9 +73,12 @@ export class CurrentUserProfilePageComponent extends BaseComponent implements On
                 .setPlaylistStatus(id, !playlist.isFavourite)
                 .pipe(switchMap(() => this.playlistService.getPlaylistsCreatedByUser()))
                 .pipe(this.untilThis)
-                .subscribe((userPlaylists) => {
-                    this.userPlaylists = userPlaylists;
-                    this.spinnerOverlayService.hide();
+                .subscribe({
+                    next: (userPlaylists) => {
+                        this.userPlaylists = userPlaylists;
+                        this.spinnerOverlayService.hide();
+                    },
+                    error: () => this.notificationService.showErrorMessage('Трапилася помилка'),
                 });
         }
     }
@@ -81,11 +87,14 @@ export class CurrentUserProfilePageComponent extends BaseComponent implements On
         this.userService
             .deleteAccount()
             .pipe(this.untilThis)
-            .subscribe(() => {
-                this.notificationService.showSuccessMessage('Ти успішно видалив свій акаунт');
-                localStorage.removeItem('access-token');
-                sessionStorage.clear();
-                this.router.navigateByUrl('auth');
+            .subscribe({
+                next: () => {
+                    this.notificationService.showSuccessMessage('Ти успішно видалив свій акаунт');
+                    localStorage.removeItem('access-token');
+                    sessionStorage.clear();
+                    this.router.navigateByUrl('auth');
+                },
+                error: () => this.notificationService.showErrorMessage('Трапилася помилка'),
             });
     }
 }

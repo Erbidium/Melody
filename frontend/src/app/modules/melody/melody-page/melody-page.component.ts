@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BaseComponent } from '@core/base/base.component';
 import { IFavouritePlaylistWithPerformers } from '@core/models/IFavouritePlaylistWithPerformers';
+import { NotificationService } from '@core/services/notification.service';
 import { PlaylistService } from '@core/services/playlist.service';
 import { SpinnerOverlayService } from '@core/services/spinner-overlay.service';
 import { forkJoin } from 'rxjs';
@@ -20,19 +21,20 @@ export class MelodyPageComponent extends BaseComponent implements OnInit {
     constructor(
         private playlistService: PlaylistService,
         private spinnerOverlayService: SpinnerOverlayService,
+        private notificationService: NotificationService,
         private router: Router,
     ) {
         super();
     }
 
     ngOnInit() {
-        forkJoin([
-            this.playlistService.getPlaylistsCreatedByUser(),
-            this.playlistService.getFavouritePlaylists(),
-        ])
+        forkJoin([this.playlistService.getPlaylistsCreatedByUser(), this.playlistService.getFavouritePlaylists()])
             .pipe(this.untilThis)
-            .subscribe((results) => {
-                [this.userPlaylists, this.favouritePlaylists] = results;
+            .subscribe({
+                next: (results) => {
+                    [this.userPlaylists, this.favouritePlaylists] = results;
+                },
+                error: () => this.notificationService.showErrorMessage('Трапилася помилка'),
             });
     }
 
@@ -43,15 +45,17 @@ export class MelodyPageComponent extends BaseComponent implements OnInit {
     changePlaylistStatus(id: number, event: MouseEvent) {
         event.stopPropagation();
         this.spinnerOverlayService.show();
-        const playlist = this.userPlaylists.find(p => p.id === id);
+        const playlist = this.userPlaylists.find((p) => p.id === id);
 
         if (playlist) {
-            this.playlistService.setPlaylistStatus(id, !playlist.isFavourite)
+            this.playlistService
+                .setPlaylistStatus(id, !playlist.isFavourite)
                 .pipe(
-                    switchMap(() => forkJoin([
-                        this.playlistService.getPlaylistsCreatedByUser(),
-                        this.playlistService.getFavouritePlaylists(),
-                    ])),
+                    switchMap(() =>
+                        forkJoin([
+                            this.playlistService.getPlaylistsCreatedByUser(),
+                            this.playlistService.getFavouritePlaylists(),
+                        ])),
                 )
                 .pipe(this.untilThis)
                 .subscribe((results) => {
@@ -64,17 +68,22 @@ export class MelodyPageComponent extends BaseComponent implements OnInit {
     deletePlaylistFromFavourites(id: number, event: MouseEvent) {
         event.stopPropagation();
         this.spinnerOverlayService.show();
-        this.playlistService.removePlaylistFromUserFavourites(id)
+        this.playlistService
+            .removePlaylistFromUserFavourites(id)
             .pipe(
-                switchMap(() => forkJoin([
-                    this.playlistService.getPlaylistsCreatedByUser(),
-                    this.playlistService.getFavouritePlaylists(),
-                ])),
+                switchMap(() =>
+                    forkJoin([
+                        this.playlistService.getPlaylistsCreatedByUser(),
+                        this.playlistService.getFavouritePlaylists(),
+                    ])),
             )
             .pipe(this.untilThis)
-            .subscribe((results) => {
-                [this.userPlaylists, this.favouritePlaylists] = results;
-                this.spinnerOverlayService.hide();
+            .subscribe({
+                next: (results) => {
+                    [this.userPlaylists, this.favouritePlaylists] = results;
+                    this.spinnerOverlayService.hide();
+                },
+                error: () => this.notificationService.showErrorMessage('Трапилася помилка'),
             });
     }
 }

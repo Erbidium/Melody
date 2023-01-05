@@ -3,6 +3,7 @@ import { BaseComponent } from '@core/base/base.component';
 import { columnsToDisplayWithRemoveColumn } from '@core/helpers/columns-to-display-helper';
 import { ISong } from '@core/models/ISong';
 import { InfiniteScrollingService } from '@core/services/infinite-scrolling.service';
+import { NotificationService } from '@core/services/notification.service';
 import { PlayerService } from '@core/services/player.service';
 import { SongService } from '@core/services/song.service';
 import { SpinnerOverlayService } from '@core/services/spinner-overlay.service';
@@ -29,23 +30,21 @@ export class UserUploadsPageComponent extends BaseComponent implements OnInit {
         private playerService: PlayerService,
         private spinnerOverlayService: SpinnerOverlayService,
         private scrollService: InfiniteScrollingService,
+        private notificationService: NotificationService,
     ) {
         super();
     }
 
     ngOnInit() {
         this.loadSongsUploadedByUser(this.page, this.pageSize);
-        this.playerService
-            .playerStateEmitted$
-            .pipe(this.untilThis)
-            .subscribe(state => {
-                this.currentSongIdForMusicPlayer = state.id;
-            });
+        this.playerService.playerStateEmitted$.pipe(this.untilThis).subscribe((state) => {
+            this.currentSongIdForMusicPlayer = state.id;
+        });
 
         this.scrollService
             .getObservable()
             .pipe(this.untilThis)
-            .subscribe((status: { isIntersecting: boolean, id: string }) => {
+            .subscribe((status: { isIntersecting: boolean; id: string }) => {
                 if (status.isIntersecting && status.id === `target${this.page * this.pageSize - 1}`) {
                     this.loadSongsUploadedByUser(++this.page, this.pageSize);
                 }
@@ -57,19 +56,22 @@ export class UserUploadsPageComponent extends BaseComponent implements OnInit {
         this.songService
             .getSongsUploadedByUser(page, pageSize)
             .pipe(this.untilThis)
-            .subscribe((response) => {
-                this.spinnerOverlayService.hide();
+            .subscribe({
+                next: (response) => {
+                    this.spinnerOverlayService.hide();
 
-                this.uploadedSongs = updateAllData ? response : this.uploadedSongs.concat(response);
+                    this.uploadedSongs = updateAllData ? response : this.uploadedSongs.concat(response);
 
-                const clear = setInterval(() => {
-                    const target = document.querySelector(`#target${page * pageSize - 1}`);
+                    const clear = setInterval(() => {
+                        const target = document.querySelector(`#target${page * pageSize - 1}`);
 
-                    if (target) {
-                        clearInterval(clear);
-                        this.scrollService.setObserver().observe(target);
-                    }
-                }, 100);
+                        if (target) {
+                            clearInterval(clear);
+                            this.scrollService.setObserver().observe(target);
+                        }
+                    }, 100);
+                },
+                error: () => this.notificationService.showErrorMessage('Трапилася помилка'),
             });
     }
 
@@ -81,11 +83,13 @@ export class UserUploadsPageComponent extends BaseComponent implements OnInit {
         event.stopPropagation();
         this.songService
             .deleteSong(id)
-            .pipe(switchMap(async () => {
-                const page = Math.ceil((this.uploadedSongs.length - 1) / this.pageSize);
+            .pipe(
+                switchMap(async () => {
+                    const page = Math.ceil((this.uploadedSongs.length - 1) / this.pageSize);
 
-                this.loadSongsUploadedByUser(1, page * this.pageSize, true);
-            }))
+                    this.loadSongsUploadedByUser(1, page * this.pageSize, true);
+                }),
+            )
             .subscribe(() => {
                 this.currentSongIdForMusicPlayer = undefined;
                 this.page = Math.ceil((this.uploadedSongs.length - 1) / this.pageSize);

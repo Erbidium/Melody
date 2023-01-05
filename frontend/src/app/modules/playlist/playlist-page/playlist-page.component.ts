@@ -83,21 +83,19 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
                     });
             }
         });
-        this.playerService
-            .playerStateEmitted$
-            .pipe(this.untilThis)
-            .subscribe(state => {
-                this.currentSongIdForMusicPlayer = state.id;
-            });
+        this.playerService.playerStateEmitted$.pipe(this.untilThis).subscribe((state) => {
+            this.currentSongIdForMusicPlayer = state.id;
+        });
         this.scrollService
             .getObservable()
             .pipe(this.untilThis)
-            .subscribe((status: { isIntersecting: boolean, id: string }) => {
+            .subscribe((status: { isIntersecting: boolean; id: string }) => {
                 if (status.isIntersecting && status.id === `target${this.page * this.pageSize - 1}`) {
                     this.spinnerService.show();
-                    this.playlistService.getPlaylistById(this.playlist!.id, ++this.page, this.pageSize)
+                    this.playlistService
+                        .getPlaylistById(this.playlist!.id, ++this.page, this.pageSize)
                         .pipe(this.untilThis)
-                        .subscribe(playlist => {
+                        .subscribe((playlist) => {
                             this.spinnerService.hide();
                             this.playlist!.songs = this.playlist!.songs.concat(playlist.songs);
                             this.setObservableLastItem();
@@ -139,13 +137,16 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
                     }),
                 )
                 .pipe(this.untilThis)
-                .subscribe((results) => {
-                    [this.playlist, this.newSongsToAdd] = results;
-                    this.page = Math.ceil((this.playlist!.songs.length - 1) / this.pageSize);
-                    this.spinnerService.hide();
-                    this.playerService.emitPlayerStateChange(undefined, []);
+                .subscribe({
+                    next: (results) => {
+                        [this.playlist, this.newSongsToAdd] = results;
+                        this.page = Math.ceil((this.playlist!.songs.length - 1) / this.pageSize);
+                        this.spinnerService.hide();
+                        this.playerService.emitPlayerStateChange(undefined, []);
 
-                    this.setObservableLastItem();
+                        this.setObservableLastItem();
+                    },
+                    error: () => this.notificationService.showErrorMessage('Трапилася помилка'),
                 });
         }
     }
@@ -154,24 +155,28 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
         if (this.playlist && this.currentUser) {
             event.stopPropagation();
             this.spinnerService.show();
-            const song = this.playlist.songs.find(s => s.id === id);
+            const song = this.playlist.songs.find((s) => s.id === id);
 
             if (song) {
                 this.songService
                     .setSongStatus(id, !song.isFavourite)
                     .pipe(
-                        switchMap(() => forkJoin([
-                            this.playlistService.getPlaylistById(this.playlist!.id, 1, this.page * this.pageSize),
-                            this.playlistService.getSongsToAddToPlaylist(this.playlist!.id),
-                        ])),
+                        switchMap(() =>
+                            forkJoin([
+                                this.playlistService.getPlaylistById(this.playlist!.id, 1, this.page * this.pageSize),
+                                this.playlistService.getSongsToAddToPlaylist(this.playlist!.id),
+                            ])),
                     )
                     .pipe(this.untilThis)
-                    .subscribe((results) => {
-                        [this.playlist, this.newSongsToAdd] = results;
-                        this.spinnerService.hide();
-                        this.playerService.emitPlayerStateChange(undefined, []);
+                    .subscribe({
+                        next: (results) => {
+                            [this.playlist, this.newSongsToAdd] = results;
+                            this.spinnerService.hide();
+                            this.playerService.emitPlayerStateChange(undefined, []);
 
-                        this.setObservableLastItem();
+                            this.setObservableLastItem();
+                        },
+                        error: () => this.notificationService.showErrorMessage('Трапилася помилка'),
                     });
             }
         }
@@ -182,9 +187,12 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
             this.playlistService
                 .deletePlaylist(this.playlist.id)
                 .pipe(this.untilThis)
-                .subscribe(() => {
-                    this.playerService.emitPlayerStateChange(undefined, []);
-                    this.router.navigateByUrl('melody');
+                .subscribe({
+                    next: () => {
+                        this.playerService.emitPlayerStateChange(undefined, []);
+                        this.router.navigateByUrl('melody');
+                    },
+                    error: () => this.notificationService.showErrorMessage('Трапилася помилка'),
                 });
         }
     }
@@ -194,10 +202,13 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
             this.spinnerService.show();
             this.playlistService
                 .addSongs(this.playlist.id, this.addSongsPlaylistForm.value.songs as unknown as number[])
-                .pipe(switchMap(() => forkJoin([
-                    this.playlistService.getPlaylistById(this.playlist!.id, 1, this.page * this.pageSize),
-                    this.playlistService.getSongsToAddToPlaylist(this.playlist!.id),
-                ])))
+                .pipe(
+                    switchMap(() =>
+                        forkJoin([
+                            this.playlistService.getPlaylistById(this.playlist!.id, 1, this.page * this.pageSize),
+                            this.playlistService.getSongsToAddToPlaylist(this.playlist!.id),
+                        ])),
+                )
                 .pipe(this.untilThis)
                 .subscribe({
                     next: (results) => {
@@ -207,7 +218,8 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
                         this.playerService.emitPlayerStateChange(undefined, []);
                         this.notificationService.showSuccessMessage('Нові пісні успішно додано!');
                     },
-                    error: () => this.notificationService.showErrorMessage('Сталася помилка під час спроби додати нові пісні'),
+                    error: () =>
+                        this.notificationService.showErrorMessage('Сталася помилка під час спроби додати нові пісні'),
                 });
         }
     }
@@ -229,15 +241,19 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
             this.playlistService
                 .setPlaylistStatus(this.playlist.id, !this.playlist.isFavourite)
                 .pipe(
-                    switchMap(() => forkJoin([
-                        this.playlistService.getPlaylistById(this.playlist!.id, 1, this.page * this.pageSize),
-                        this.playlistService.getSongsToAddToPlaylist(this.playlist!.id),
-                    ])),
+                    switchMap(() =>
+                        forkJoin([
+                            this.playlistService.getPlaylistById(this.playlist!.id, 1, this.page * this.pageSize),
+                            this.playlistService.getSongsToAddToPlaylist(this.playlist!.id),
+                        ])),
                 )
                 .pipe(this.untilThis)
-                .subscribe((results) => {
-                    [this.playlist, this.newSongsToAdd] = results;
-                    this.spinnerService.hide();
+                .subscribe({
+                    next: (results) => {
+                        [this.playlist, this.newSongsToAdd] = results;
+                        this.spinnerService.hide();
+                    },
+                    error: () => this.notificationService.showErrorMessage('Трапилася помилка'),
                 });
         }
     }

@@ -7,6 +7,7 @@ import { PlayerService } from '@core/services/player.service';
 import { SongService } from '@core/services/song.service';
 import { SpinnerOverlayService } from '@core/services/spinner-overlay.service';
 import { switchMap } from 'rxjs/operators';
+import { NotificationService } from '@core/services/notification.service';
 
 @Component({
     selector: 'app-favourite-songs-page',
@@ -29,23 +30,21 @@ export class FavouriteSongsPageComponent extends BaseComponent implements OnInit
         private spinnerOverlayService: SpinnerOverlayService,
         private playerService: PlayerService,
         private scrollService: InfiniteScrollingService,
+        private notificationService: NotificationService,
     ) {
         super();
     }
 
     ngOnInit() {
         this.loadFavouriteUserSongs(this.page, this.pageSize);
-        this.playerService
-            .playerStateEmitted$
-            .pipe(this.untilThis)
-            .subscribe(state => {
-                this.currentSongIdForMusicPlayer = state.id;
-            });
+        this.playerService.playerStateEmitted$.pipe(this.untilThis).subscribe((state) => {
+            this.currentSongIdForMusicPlayer = state.id;
+        });
 
         this.scrollService
             .getObservable()
             .pipe(this.untilThis)
-            .subscribe((status: { isIntersecting: boolean, id: string }) => {
+            .subscribe((status: { isIntersecting: boolean; id: string }) => {
                 if (status.isIntersecting && status.id === `target${this.page * this.pageSize - 1}`) {
                     this.loadFavouriteUserSongs(++this.page, this.pageSize);
                 }
@@ -57,19 +56,22 @@ export class FavouriteSongsPageComponent extends BaseComponent implements OnInit
         this.songService
             .getFavouriteUserSongs(page, pageSize)
             .pipe(this.untilThis)
-            .subscribe((resp) => {
-                this.spinnerOverlayService.hide();
+            .subscribe({
+                next: (resp) => {
+                    this.spinnerOverlayService.hide();
 
-                this.favouriteSongs = updateAllData ? resp : this.favouriteSongs.concat(resp);
+                    this.favouriteSongs = updateAllData ? resp : this.favouriteSongs.concat(resp);
 
-                const clear = setInterval(() => {
-                    const target = document.querySelector(`#target${page * pageSize - 1}`);
+                    const clear = setInterval(() => {
+                        const target = document.querySelector(`#target${page * pageSize - 1}`);
 
-                    if (target) {
-                        clearInterval(clear);
-                        this.scrollService.setObserver().observe(target);
-                    }
-                }, 100);
+                        if (target) {
+                            clearInterval(clear);
+                            this.scrollService.setObserver().observe(target);
+                        }
+                    }, 100);
+                },
+                error: () => this.notificationService.showErrorMessage('Трапилася помилка'),
             });
     }
 
@@ -81,15 +83,20 @@ export class FavouriteSongsPageComponent extends BaseComponent implements OnInit
         event.stopPropagation();
         this.songService
             .removeSongFromUserFavourites(id)
-            .pipe(switchMap(async () => {
-                const page = Math.ceil((this.favouriteSongs.length - 1) / this.pageSize);
+            .pipe(
+                switchMap(async () => {
+                    const page = Math.ceil((this.favouriteSongs.length - 1) / this.pageSize);
 
-                this.loadFavouriteUserSongs(1, page * this.pageSize, true);
-            }))
-            .subscribe(() => {
-                this.page = Math.ceil((this.favouriteSongs.length - 1) / this.pageSize);
-                this.currentSongIdForMusicPlayer = undefined;
-                this.playerService.emitPlayerStateChange(undefined, []);
+                    this.loadFavouriteUserSongs(1, page * this.pageSize, true);
+                }),
+            )
+            .subscribe({
+                next: () => {
+                    this.page = Math.ceil((this.favouriteSongs.length - 1) / this.pageSize);
+                    this.currentSongIdForMusicPlayer = undefined;
+                    this.playerService.emitPlayerStateChange(undefined, []);
+                },
+                error: () => this.notificationService.showErrorMessage('Трапилася помилка'),
             });
     }
 }
