@@ -7,7 +7,7 @@ import { PlayerService } from '@core/services/player.service';
 import { UserService } from '@core/services/user.service';
 import { EmailValidator } from '@modules/auth/validators/email-validator';
 import { UsernameValidator } from '@modules/auth/validators/username-validator';
-import {passwordRegex, phoneNumberRegex} from "@shared/constants/model-validation";
+import { passwordRegex, phoneNumberRegex } from '@shared/constants/model-validation';
 
 @Component({
     selector: 'app-auth-page',

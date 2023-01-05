@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { BaseComponent } from '@core/base/base.component';
 import { IGenre } from '@core/models/IGenre';
 import { IPreferences } from '@core/models/IPreferences';
