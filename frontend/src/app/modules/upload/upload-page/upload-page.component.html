@@ -20,7 +20,7 @@
                     uploadForm.controls['author'].hasError('minlength') ||
                     uploadForm.controls['author'].hasError('maxlength')
                 "
-            >Author is invalid</mat-error>
+            >Автор некоректний</mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline">
             <input matInput id="year" type="number" pattern="\d*" formControlName="year" placeholder="Рік" />
@@ -28,7 +28,7 @@
                 *ngIf="
                     uploadForm.controls['year'].hasError('required')
                 "
-            >Year is required</mat-error>
+            >Рік обов'язковий</mat-error>
         </mat-form-field>
         <mat-form-field class="genre" appearance="fill">
             <mat-label>Жанр</mat-label>

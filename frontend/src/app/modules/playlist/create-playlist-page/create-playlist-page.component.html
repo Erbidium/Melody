@@ -14,7 +14,7 @@
                     createPlaylistForm.controls['name'].hasError('minlength') ||
                     createPlaylistForm.controls['name'].hasError('maxlength')
                 "
-                >Playlist name is invalid</mat-error>
+                >Назва плейлисту некоректна</mat-error>
             </mat-form-field>
             <mat-form-field appearance="fill">
                 <mat-label>Пісні</mat-label>
@@ -24,7 +24,7 @@
                 <mat-error
                     *ngIf="
                     createPlaylistForm.controls['songs'].hasError('required')">
-                    Songs are required
+                    Пісні є обов'язковими
                 </mat-error>
             </mat-form-field>
             <button mat-raised-button type="button" (click)="create()" [disabled]="!createPlaylistForm.valid || createPlaylistForm.value.songs?.length === 0">Створити</button>

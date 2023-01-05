@@ -15,21 +15,21 @@
                       *ngIf="
                     signInForm.controls['emailRegistered'].hasError('email') ||
                     signInForm.controls['emailRegistered'].hasError('maxlength')">
-                      Email is invalid
+                      Email некоректний
                   </mat-error>
-                  <mat-error *ngIf="signInForm.controls['emailRegistered'].hasError('required')">Email is required field</mat-error>
-                  <mat-error *ngIf="signInForm.controls['emailRegistered'].hasError('userInNotExist')">User with entered email address doesn't exist</mat-error>
+                  <mat-error *ngIf="signInForm.controls['emailRegistered'].hasError('required')">Email обов'язковий</mat-error>
+                  <mat-error *ngIf="signInForm.controls['emailRegistered'].hasError('userInNotExist')">Користувач з такою поштою не існує</mat-error>
               </mat-form-field>
               <mat-label>Пароль</mat-label>
               <mat-form-field appearance="outline">
                 <input matInput id="password" type="password" formControlName="passwordRegistered" placeholder="●●●●●●●●●●" />
-                  <mat-error *ngIf="signInForm.controls['passwordRegistered'].hasError('required')">Password is required field</mat-error>
+                  <mat-error *ngIf="signInForm.controls['passwordRegistered'].hasError('required')">Пароль обов'язковий</mat-error>
                   <mat-error
                       *ngIf="
                     signInForm.controls['passwordRegistered'].hasError('pattern') ||
                     signInForm.controls['passwordRegistered'].hasError('minlength') ||
                     signInForm.controls['passwordRegistered'].hasError('maxlength')">
-                      Password is invalid
+                      Пароль некоректний
                   </mat-error>
               </mat-form-field>
             </div>
@@ -50,9 +50,9 @@
                     signUpForm.controls['username'].hasError('minlength') ||
                     signUpForm.controls['username'].hasError('maxlength')"
                   >
-                      Username is invalid
+                      Юзернейм некоректний
                   </mat-error>
-                  <mat-error *ngIf="signUpForm.controls['username'].hasError('userAlreadyExists')">User with entered username already exists</mat-error>
+                  <mat-error *ngIf="signUpForm.controls['username'].hasError('userAlreadyExists')">Користувач з таким юзернеймом вже існує</mat-error>
               </mat-form-field>
               <mat-label>Email</mat-label>
               <mat-form-field appearance="outline">
@@ -63,25 +63,25 @@
                     signUpForm.controls['email'].hasError('maxlength')">
                       Email is invalid
                   </mat-error>
-                  <mat-error *ngIf="signUpForm.controls['email'].hasError('required')">Email is required field</mat-error>
-                  <mat-error *ngIf="signUpForm.controls['email'].hasError('userAlreadyExists')">User with entered email already exists</mat-error>
+                  <mat-error *ngIf="signUpForm.controls['email'].hasError('required')">Email обов'язковий</mat-error>
+                  <mat-error *ngIf="signUpForm.controls['email'].hasError('userAlreadyExists')">Користувач з такою поштою вже існує</mat-error>
               </mat-form-field>
               <mat-label>Номер телефону</mat-label>
               <mat-form-field appearance="outline">
                 <input matInput id="phone-new" type="text" formControlName="phone" placeholder="+380000000000" />
-                  <mat-error *ngIf="signUpForm.controls['phone'].hasError('required')">Phone is required field</mat-error>
-                  <mat-error *ngIf="signUpForm.controls['phone'].hasError('pattern')">Phone is invalid</mat-error>
+                  <mat-error *ngIf="signUpForm.controls['phone'].hasError('required')">Телефон обов'язковий</mat-error>
+                  <mat-error *ngIf="signUpForm.controls['phone'].hasError('pattern')">Телефон некоректний</mat-error>
               </mat-form-field>
               <mat-label>Пароль</mat-label>
               <mat-form-field appearance="outline">
                 <input matInput id="password-new" type="password" formControlName="password" placeholder="●●●●●●●●●●" />
-                  <mat-error *ngIf="signUpForm.controls['password'].hasError('required')">Password is required field</mat-error>
+                  <mat-error *ngIf="signUpForm.controls['password'].hasError('required')">Пароль обов'язковий</mat-error>
                   <mat-error
                       *ngIf="
                     signUpForm.controls['password'].hasError('pattern') ||
                     signUpForm.controls['password'].hasError('minlength') ||
                     signUpForm.controls['password'].hasError('maxlength')">
-                      Password is invalid
+                      Пароль некоректний
                   </mat-error>
               </mat-form-field>
             </div>
