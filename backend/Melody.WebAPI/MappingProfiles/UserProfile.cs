@@ -11,5 +11,6 @@ public class UserProfile : Profile
     {
         CreateMap<User, UserForAdminDto>();
         CreateMap<RecommendationsPreferences, RecommendationsPreferencesDto>();
+        CreateMap<UserWithRoles, UserDto>();
     }
 }

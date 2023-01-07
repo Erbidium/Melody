@@ -3,14 +3,12 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Melody.Core.Entities;
 using Melody.Core.Interfaces;
-using Melody.Infrastructure.Data.DbEntites;
 using Melody.Infrastructure.Data.Interfaces;
 using Melody.WebAPI.DTO.Auth.Models;
 using Melody.WebAPI.DTO.RecommendationsPreferences;
 using Melody.WebAPI.DTO.User;
 using Melody.WebAPI.Extensions;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Melody.WebAPI.Controllers;
@@ -19,7 +17,7 @@ namespace Melody.WebAPI.Controllers;
 [ApiController]
 public class UserController : ControllerBase
 {
-    private readonly UserManager<UserIdentity> _userManager;
+    private readonly IUserService _userService;
     private readonly Core.Interfaces.IUserRepository _userRepository;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly IMapper _mapper;
@@ -28,7 +26,7 @@ public class UserController : ControllerBase
     private readonly IValidator<UserRegister> _userRegisterValidator;
 
     public UserController(
-        UserManager<UserIdentity> userManager,
+        IUserService userService,
         Core.Interfaces.IUserRepository userRepository,
         IMapper mapper,
         IRefreshTokenRepository refreshTokenRepository,
@@ -36,7 +34,7 @@ public class UserController : ControllerBase
         IValidator<UserRegister> userRegisterValidator,
         ITokenService tokenService)
     {
-        _userManager = userManager;
+        _userService = userService;
         _userRepository = userRepository;
         _refreshTokenRepository = refreshTokenRepository;
         _mapper = mapper;
@@ -56,19 +54,13 @@ public class UserController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        var user = new UserIdentity
-        {
-            UserName = userRegister.UserName,
-            Email = userRegister.Email,
-            PhoneNumber = userRegister.PhoneNumber
-        };
-
-        var result = await _userManager.CreateAsync(user, userRegister.Password);
-
-        if (!result.Succeeded) return BadRequest(result.Errors);
-
-        await _userManager.AddToRoleAsync(user, "User");
-        return StatusCode(201);
+        var user = new User(
+            userRegister.UserName,
+            userRegister.Email,
+            userRegister.PhoneNumber
+            );
+        
+        return (await _userService.Register(user, userRegister.Password)).ToStatusCode(201);
     }
 
     [Authorize]
@@ -76,12 +68,12 @@ public class UserController : ControllerBase
     public async Task<ActionResult<UserDto>> GetUserById(long id)
     {
         var userRoles = HttpContext.User.GetUserRoles();
-        var userIdentity = await _userManager.FindByIdAsync(id.ToString());
+        var user = await _userService.GetUserById(id);
 
-        if (userIdentity is null || (!userRoles.Contains("Admin") && userIdentity.IsBanned))
+        if (user is null || (!userRoles.Contains("Admin") && user.IsBanned))
             return NotFound("User is not found");
-        var roles = await _userManager.GetRolesAsync(userIdentity);
-        return Ok(new UserDto(userIdentity) { Roles = roles });
+
+        return Ok(_mapper.Map<UserDto>(user));
     }
 
     [Authorize]
@@ -89,23 +81,22 @@ public class UserController : ControllerBase
     public async Task<ActionResult<UserDto>> GetCurrentUser()
     {
         var userId = HttpContext.User.GetId();
-        var userIdentity = await _userManager.FindByIdAsync(userId.ToString());
-        var roles = await _userManager.GetRolesAsync(userIdentity);
-        return Ok(new UserDto(userIdentity) { Roles = roles });
+        var user = await _userService.GetUserById(userId);
+        return Ok(_mapper.Map<UserDto>(user));
     }
 
     [AllowAnonymous]
     [HttpGet("check-email")]
     public async Task<ActionResult<bool>> CheckExistingEmail(string email)
     {
-        return Ok(await _userManager.FindByEmailAsync(email) != null);
+        return Ok(await _userService.EmailIsUsed(email));
     }
 
     [AllowAnonymous]
     [HttpGet("check-username")]
     public async Task<ActionResult<bool>> CheckExistingUsername(string username)
     {
-        return Ok(await _userManager.FindByNameAsync(username) != null);
+        return Ok(await _userService.UsernameIsUsed(username));
     }
 
     [Authorize]
@@ -174,8 +165,8 @@ public class UserController : ControllerBase
     public async Task<IActionResult> DeleteUser()
     {
         var userId = HttpContext.User.GetId();
-        var user = await _userManager.FindByIdAsync(userId.ToString());
-        var refreshToken = await _tokenService.GenerateRefreshToken(user.Email, true);
+        var email = await _userService.GetUserEmail(userId);
+        var refreshToken = await _tokenService.GenerateRefreshToken(email, true);
         Response.Cookies.Append("X-Refresh-Token", refreshToken,
             new CookieOptions
             {

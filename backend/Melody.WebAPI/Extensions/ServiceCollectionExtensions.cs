@@ -24,6 +24,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<ISongService, SongService>();
+        services.AddScoped<IUserService, UserService>();
         services.AddScoped<ISongFileStorage, SongFileStorage>();
         services.AddScoped<IRecommender, Recommender>();
     }

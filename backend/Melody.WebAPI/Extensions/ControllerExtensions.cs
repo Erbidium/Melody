@@ -15,10 +15,20 @@ public static class ControllerExtensions
         );
     }
 
+    public static IActionResult ToStatusCode<TResult>(
+        this Result<TResult> result, int statusCode)
+    {
+        return result.Match(
+            obj => new StatusCodeResult(statusCode),
+            ToActionResult
+        );
+    }
+
     public static IActionResult ToActionResult(this Exception exception)
     {
         return exception switch
         {
+            RegistrationErrorException e => new BadRequestObjectResult(e),
             KeyNotFoundException => new NotFoundResult(),
             BannedUserException => new ForbidResult(),
             WrongPasswordException => new ForbidResult(),

@@ -5,7 +5,7 @@ namespace Melody.Core.Entities;
 
 public class User : EntityBase<long>
 {
-    public User(string userName, string email, string phoneNumber, bool isBanned)
+    public User(string userName, string email, string phoneNumber, bool isBanned = false)
     {
         UserName = Guard.Against.NullOrWhiteSpace(userName, nameof(UserName));
         Email = Guard.Against.NullOrWhiteSpace(email, nameof(Email));

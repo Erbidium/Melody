@@ -6,7 +6,6 @@ using Melody.Infrastructure.Data.Interfaces;
 using Melody.WebAPI.DTO.Auth.Models;
 using Melody.WebAPI.Extensions;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Melody.WebAPI.Controllers;
@@ -17,14 +16,14 @@ public class LoginController : ControllerBase
 {
     private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly ITokenService _tokenService;
-    private readonly UserManager<UserIdentity> _userManager;
+    private readonly IUserService _userService;
     private readonly IValidator<UserLogin> _userLoginValidator;
 
-    public LoginController(UserManager<UserIdentity> userManager,
+    public LoginController(IUserService userService,
         IRefreshTokenRepository refreshTokenRepository, ITokenService tokenService,
         IValidator<UserLogin> userLoginValidator)
     {
-        _userManager = userManager;
+        _userService = userService;
         _refreshTokenRepository = refreshTokenRepository;
         _tokenService = tokenService;
         _userLoginValidator = userLoginValidator;
@@ -82,8 +81,8 @@ public class LoginController : ControllerBase
     public async Task<IActionResult> Logout()
     {
         var userId = HttpContext.User.GetId();
-        var user = await _userManager.FindByIdAsync(userId.ToString());
-        var refreshToken = await _tokenService.GenerateRefreshToken(user.Email, true);
+        var email = await _userService.GetUserEmail(userId);
+        var refreshToken = await _tokenService.GenerateRefreshToken(email, true);
         Response.Cookies.Append("X-Refresh-Token", refreshToken,
             new CookieOptions
             {
