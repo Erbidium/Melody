@@ -1,4 +1,4 @@
-name: Code Analysis
+name: Docker images
 on:
   push:
     branches: [ development ]
