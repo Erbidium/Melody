@@ -18,6 +18,7 @@ services:
         ELKConfiguration__url: "http://elasticsearch:9200"
         Jwt__Issuer: "https://localhost:5050"
         Jwt__Audience: "https://localhost:5050"
+        TZ: "Europe/Kiev"
 
   melody_client:
     depends_on:

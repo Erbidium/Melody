@@ -86,6 +86,7 @@ export class UploadPageComponent extends BaseComponent implements OnInit {
                         this.notificationService.showSuccessMessage('Song was successfully uploaded');
                         this.uploadForm.reset();
                         this.selectedGenre = undefined;
+                        this.fileToUpload = undefined;
                     },
                     error: (e) => this.notificationService.showErrorMessage(e),
                 });
