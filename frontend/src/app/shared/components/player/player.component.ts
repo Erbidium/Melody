@@ -7,6 +7,7 @@ import { IBaseSong } from '@core/models/IBaseSong';
 import { AudioService } from '@core/services/audio.service';
 import { PlayerService } from '@core/services/player.service';
 import { SongService } from '@core/services/song.service';
+import { environment } from '@env/environment';
 
 @Component({
     selector: 'app-player',
@@ -85,7 +86,7 @@ export class PlayerComponent extends BaseComponent implements OnInit {
             .saveNewListening(this.currentSongIdValue)
             .pipe(this.untilThis)
             .subscribe();
-        this.playStream(`https://localhost:7284/api/Song/file/${this.currentSongIdValue}`);
+        this.playStream(`${environment.coreUrl}/api/Song/file/${this.currentSongIdValue}`);
     }
 
     pause() {

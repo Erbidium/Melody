@@ -30,8 +30,8 @@ services:
     ports:
         - "4200:80"
     environment:
-        BACKEND_BASE_URL: http://melody_backend:5050
-        STATISTICS_BASE_URL: http://grafana:3000/public-dashboards/ce5cf4e4d9554c00ac4e9506a2e42416
+        BACKEND_BASE_URL: http://localhost:5050
+        STATISTICS_BASE_URL: http://localhost:3000/public-dashboards/ce5cf4e4d9554c00ac4e9506a2e42416
     networks:
         - localnet
         - front
