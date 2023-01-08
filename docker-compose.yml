@@ -1,11 +1,6 @@
 services:
   melody_backend:
-    build:
-      context: ./backend
-      dockerfile: ./Dockerfile
-      args:
-        - PROJECT_PORT=5050
-    container_name: 'melody_backend'
+    image: erbidium/melody_backend
     restart: on-failure
     ports:
         - "5050:5050"
@@ -20,13 +15,10 @@ services:
         Jwt__Audience: "https://localhost:5050"
         TZ: "Europe/Kiev"
 
-  melody_client:
+  melody_frontend:
     depends_on:
         - melody_backend
-    build:
-        context: ./frontend
-        dockerfile: Dockerfile
-    container_name: 'melody_frontend' 
+    image: erbidium/melody_frontend
     restart: on-failure
     ports:
         - "4200:80"

@@ -32,5 +32,7 @@ jobs:
           file: ./backend/Dockerfile
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/melody_backend:latest
           push: true
+          build-args: |
+            PROJECT_PORT=5050
 
   
