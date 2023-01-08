@@ -87,9 +87,9 @@ export class RecommendationsPreferencesPageComponent extends BaseComponent imple
                 .pipe(this.untilThis)
                 .subscribe({
                     next: () => {
-                        this.notificationService.showSuccessMessage('Preferences were successfully uploaded');
+                        this.notificationService.showSuccessMessage('Вподобання були успішно завантажені');
                     },
-                    error: () => this.notificationService.showErrorMessage('Error occurred'),
+                    error: () => this.notificationService.showErrorMessage('Трапилася помилка'),
                 });
         }
     }

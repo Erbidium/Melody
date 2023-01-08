@@ -59,6 +59,11 @@ export class UploadPageComponent extends BaseComponent implements OnInit {
         const fileList = target.files as FileList;
 
         if (fileList.length > 0) {
+            if (fileList[0].type !== 'audio/mpeg') {
+                this.notificationService.showErrorMessage('Завантажено файл з некоректним розширенням');
+
+                return;
+            }
             // eslint-disable-next-line prefer-destructuring
             this.fileToUpload = fileList[0];
             const context = new AudioContext();
@@ -83,7 +88,7 @@ export class UploadPageComponent extends BaseComponent implements OnInit {
                 .pipe(this.untilThis)
                 .subscribe({
                     next: () => {
-                        this.notificationService.showSuccessMessage('Song was successfully uploaded');
+                        this.notificationService.showSuccessMessage('Пісню було успішно завантажено');
                         this.uploadForm.reset();
                         this.selectedGenre = undefined;
                         this.fileToUpload = undefined;
