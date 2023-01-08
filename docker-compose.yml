@@ -1,0 +1,43 @@
+services:
+  melody_backend:
+    build:
+      context: ./backend
+      dockerfile: ./Dockerfile
+      args:
+        - PROJECT_PORT=5050
+    container_name: 'melody_backend'
+    restart: on-failure
+    ports:
+        - "5050:5050"
+    networks:
+        - localnet
+    environment:
+        ASPNETCORE_ENVIRONMENT: 'Development'
+        ConnectionStrings__MelodyDBConnection: "Server=sql_server;Database=MelodyDb;User=sa;Password=TestPassword!"
+        ConnectionStrings__MasterConnection: "Server=sql_server;Database=master;User=sa;Password=TestPassword!"
+        ELKConfiguration__url: "http://elasticsearch:9200"
+        Jwt__Issuer: "https://localhost:5050"
+        Jwt__Audience: "https://localhost:5050"
+
+  melody_client:
+    depends_on:
+        - melody_backend
+    build:
+        context: ./frontend
+        dockerfile: Dockerfile
+    container_name: 'melody_frontend' 
+    restart: on-failure
+    ports:
+        - "4200:80"
+    environment:
+        BACKEND_BASE_URL: http://melody_backend:5050
+        STATISTICS_BASE_URL: http://grafana:3000/public-dashboards/ce5cf4e4d9554c00ac4e9506a2e42416
+    networks:
+        - localnet
+        - front
+
+networks:
+    localnet:
+        driver: bridge
+    front:
+        driver: bridge
