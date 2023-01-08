@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpInternalService } from '@core/services/http-internal-service';
 import { NotificationService } from '@core/services/notification.service';
-import { Observable, tap } from 'rxjs';
+import { tap } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -13,9 +13,9 @@ export class AuthService {
     signUp(email: string, password: string, name: string, phone: string) {
         return this.httpService.postRequest<null>('/api/user/register', { UserName: name, email, password, PhoneNumber: phone }).pipe(
             tap({
-                next: () => this.notificationService.showSuccessMessage('Registration successful'),
+                next: () => this.notificationService.showSuccessMessage('Реєстрація успішна'),
                 error: () =>
-                    this.notificationService.showErrorMessage("You've entered invalid data! Please try again."),
+                    this.notificationService.showErrorMessage('Ти ввів некоректні дані! Спробуй знову'),
             }),
         );
     }
@@ -24,11 +24,11 @@ export class AuthService {
         return this.httpService.postRequest<{ accessToken: string }>('/api/login', { email, password }).pipe(
             tap({
                 next: (accessToken: { accessToken: string }) => {
-                    this.notificationService.showSuccessMessage('Authentication successful');
+                    this.notificationService.showSuccessMessage('Вхід успішний');
                     localStorage.setItem('access-token', accessToken.accessToken);
                 },
                 error: () => {
-                    this.notificationService.showErrorMessage("You've entered wrong password or email! Please try again.");
+                    this.notificationService.showErrorMessage('Ти ввів неправильний пароль або пошту! Спробуй знову');
                 },
             }),
         );
