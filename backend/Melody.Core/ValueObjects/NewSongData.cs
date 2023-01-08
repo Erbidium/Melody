@@ -7,7 +7,7 @@ namespace Melody.Core.ValueObjects;
 
 public class NewSongData : ValueObject
 {
-    public NewSongData(long userId, string name, string authorName, int year, long genreId, string extension)
+    public NewSongData(long userId, string name, string authorName, int year, long genreId, string extension, int durationInSeconds)
     {
         if (extension != SongConstants.SoundExtension) throw new WrongExtensionException();
 
@@ -17,6 +17,7 @@ public class NewSongData : ValueObject
         Year = Guard.Against.Negative(year, nameof(Year));
         GenreId = Guard.Against.Negative(genreId, nameof(GenreId));
         Extension = Guard.Against.NullOrWhiteSpace(extension, nameof(extension));
+        Duration = TimeSpan.FromSeconds(Guard.Against.NegativeOrZero(durationInSeconds));
     }
 
     public long UserId { get; }
@@ -25,6 +26,7 @@ public class NewSongData : ValueObject
     public int Year { get; }
     public long GenreId { get; }
     public string Extension { get; }
+    public TimeSpan Duration { get; }
 
     protected override IEnumerable<object> GetEqualityComponents()
     {
@@ -34,5 +36,6 @@ public class NewSongData : ValueObject
         yield return Year;
         yield return GenreId;
         yield return Extension;
+        yield return Duration;
     }
 }

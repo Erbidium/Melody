@@ -1,5 +1,4 @@
 ﻿using Melody.Core.Interfaces;
-using NAudio.Wave;
 
 namespace Melody.Infrastructure;
 
@@ -7,7 +6,7 @@ public class SongFileStorage : ISongFileStorage
 {
     private const string FolderName = "Sounds";
 
-    public async Task<(string path, TimeSpan duration)> UploadAsync(Stream uploadedSoundFile, string songExtension)
+    public async Task<string> UploadAsync(Stream uploadedSoundFile, string songExtension)
     {
         var currentDirectory = Directory.GetCurrentDirectory();
         var pathToSave = Path.Combine(currentDirectory, FolderName);
@@ -17,8 +16,6 @@ public class SongFileStorage : ISongFileStorage
         var fullPath = Path.Combine(pathToSave, guidFileName);
         await using var stream = new FileStream(fullPath, FileMode.Create);
         await uploadedSoundFile.CopyToAsync(stream);
-        var reader = new MediaFoundationReader(fullPath);
-
-        return (Path.Combine(FolderName, guidFileName), reader.TotalTime);
+        return Path.Combine(FolderName, guidFileName);
     }
 }

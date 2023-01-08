@@ -18,6 +18,8 @@ export class UploadPageComponent extends BaseComponent implements OnInit {
 
     fileToUpload?: File;
 
+    private songDuration: number = 0;
+
     constructor(
         private songService: SongService,
         private notificationService: NotificationService,
@@ -50,7 +52,7 @@ export class UploadPageComponent extends BaseComponent implements OnInit {
         }),
     });
 
-    loadSoundFile(event: Event) {
+    async loadSoundFile(event: Event) {
         const target = event.target as HTMLInputElement;
 
         // eslint-disable-next-line prefer-destructuring
@@ -59,17 +61,23 @@ export class UploadPageComponent extends BaseComponent implements OnInit {
         if (fileList.length > 0) {
             // eslint-disable-next-line prefer-destructuring
             this.fileToUpload = fileList[0];
+            const context = new AudioContext();
+            const arrayBuffer = await fileList[0].arrayBuffer();
+            const buffer = await context.decodeAudioData(<ArrayBuffer> arrayBuffer);
+
+            this.songDuration = Math.floor(buffer.duration);
         }
     }
 
     upload() {
-        if (this.fileToUpload && this.selectedGenre) {
+        if (this.fileToUpload && this.selectedGenre && this.songDuration > 0) {
             const formData = new FormData();
 
             formData.append('Name', this.uploadForm.value.name!);
             formData.append('AuthorName', this.uploadForm.value.author!);
             formData.append('Year', this.uploadForm.value.year!);
             formData.append('GenreId', this.selectedGenre.id.toString());
+            formData.append('DurationInSeconds', this.songDuration.toString());
             formData.append('uploadedSoundFile', this.fileToUpload);
             this.songService.createSong(formData)
                 .pipe(this.untilThis)

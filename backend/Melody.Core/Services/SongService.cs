@@ -29,7 +29,7 @@ public class SongService : ISongService
         if (userUploadsSize + uploadedSoundFile.Length > SongConstants.UserUploadsLimit)
             return new Result<Song>(new UploadLimitException());
 
-        var (path, duration) = await _songFileStorage.UploadAsync(uploadedSoundFile, newSongData.Extension);
+        var path = await _songFileStorage.UploadAsync(uploadedSoundFile, newSongData.Extension);
 
         var song = new Song(
             newSongData.UserId,
@@ -40,7 +40,7 @@ public class SongService : ISongService
             newSongData.GenreId,
             uploadedSoundFile.Length,
             DateTime.Now,
-            duration);
+            newSongData.Duration);
         return await _songRepository.Create(song);
     }
 

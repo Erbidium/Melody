@@ -6,4 +6,5 @@ public class NewSongDto
     public string AuthorName { get; set; }
     public int Year { get; set; }
     public long GenreId { get; set; }
+    public int DurationInSeconds { get; set; }
 }

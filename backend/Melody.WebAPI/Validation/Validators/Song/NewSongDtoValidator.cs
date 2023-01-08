@@ -19,5 +19,8 @@ public class NewSongDtoValidator : AbstractValidator<NewSongDto>
 
         RuleFor(s => s.Year)
             .GreaterThan(0);
+
+        RuleFor(s => s.DurationInSeconds)
+            .GreaterThan(0);
     }
 }

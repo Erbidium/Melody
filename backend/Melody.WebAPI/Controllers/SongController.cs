@@ -121,7 +121,7 @@ public class SongController : ControllerBase
         var result = await _songService.Upload(
             uploadedSoundFile.OpenReadStream(),
             new NewSongData(userId, newSong.Name, newSong.AuthorName, newSong.Year,
-                newSong.GenreId, extension));
+                newSong.GenreId, extension, newSong.DurationInSeconds));
         return result.ToOk(song => _mapper.Map<SongDto>(song));
     }
 

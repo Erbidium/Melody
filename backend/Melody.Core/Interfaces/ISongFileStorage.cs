@@ -2,5 +2,5 @@
 
 public interface ISongFileStorage
 {
-    Task<(string path, TimeSpan duration)> UploadAsync(Stream uploadedSoundFile, string songExtension);
+    Task<string> UploadAsync(Stream uploadedSoundFile, string songExtension);
 }
