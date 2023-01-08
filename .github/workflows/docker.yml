@@ -14,8 +14,8 @@ jobs:
       - name: Build frontend docker image
         uses: docker/build-push-action@v3
         with:
-          context: ./
-          file: ./frontend/Dockerfile
+          context: ./frontend
+          file: ./Dockerfile
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/melody_frontend:latest
           outputs: type=docker,dest=/tmp/melody_frontend.tar
 
@@ -28,8 +28,8 @@ jobs:
       - name: Build backend docker image
         uses: docker/build-push-action@v3
         with:
-          context: ./
-          file: ./backend/Dockerfile
+          context: ./backend
+          file: ./Dockerfile
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/melody_backend:latest
           outputs: type=docker,dest=/tmp/melody_backend.tar
 
