@@ -1,8 +1,10 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { BaseComponent } from '@core/base/base.component';
 import { columnsToDisplayWithFavouriteColumn } from '@core/helpers/columns-to-display-helper';
 import { ISongFromPlaylist } from '@core/models/ISongFromPlaylist';
 import { InfiniteScrollingService } from '@core/services/infinite-scrolling.service';
+import { NotificationService } from '@core/services/notification.service';
 import { PlayerService } from '@core/services/player.service';
 import { SongService } from '@core/services/song.service';
 import { SpinnerOverlayService } from '@core/services/spinner-overlay.service';
@@ -34,6 +36,7 @@ export class RecommendationsPageComponent extends BaseComponent implements OnIni
         private spinnerOverlayService: SpinnerOverlayService,
         private playerService: PlayerService,
         private scrollService: InfiniteScrollingService,
+        private notificationService: NotificationService,
     ) {
         super();
     }
@@ -65,20 +68,32 @@ export class RecommendationsPageComponent extends BaseComponent implements OnIni
 
         forkJoin([recommendedSongs, userPreferencesStatus])
             .pipe(this.untilThis)
-            .subscribe((resp) => {
-                this.spinnerOverlayService.hide();
+            .subscribe({
+                next: (resp) => {
+                    this.spinnerOverlayService.hide();
 
-                this.recommendedSongs = updateAllData ? resp[0] : this.recommendedSongs.concat(resp[0]);
-                [, this.userFilledPreferences] = resp;
+                    this.recommendedSongs = updateAllData ? resp[0] : this.recommendedSongs.concat(resp[0]);
+                    [, this.userFilledPreferences] = resp;
 
-                const clear = setInterval(() => {
-                    const target = document.querySelector(`#target${page * pageSize - 1}`);
+                    const clear = setInterval(() => {
+                        const target = document.querySelector(`#target${page * pageSize - 1}`);
 
-                    if (target) {
-                        clearInterval(clear);
-                        this.scrollService.setObserver().observe(target);
+                        if (target) {
+                            clearInterval(clear);
+                            this.scrollService.setObserver().observe(target);
+                        }
+                    }, 100);
+                },
+                error: (e) => {
+                    if (e instanceof HttpErrorResponse && e.status === 404) {
+                        this.notificationService.showWarningMessage(
+                            'Не вдалося отримати рекомендації. Не заповнено вподобання',
+                        );
+                        this.spinnerOverlayService.hide();
+                    } else {
+                        this.notificationService.showErrorMessage('Трапилася помилка');
                     }
-                }, 100);
+                },
             });
     }
 
@@ -95,7 +110,8 @@ export class RecommendationsPageComponent extends BaseComponent implements OnIni
                         forkJoin([
                             this.songService.getRecommendedSongs(1, this.page * this.pageSize),
                             this.userService.checkUserRecommendationPreferences(),
-                        ])),
+                        ]),
+                    ),
                 )
                 .pipe(this.untilThis)
                 .subscribe((results) => {
