@@ -1,5 +1,5 @@
 ﻿using Ardalis.GuardClauses;
-using Melody.SharedKernel.Interfaces;
+using Melody.SharedKernel;
 
 namespace Melody.Core.Entities;
 

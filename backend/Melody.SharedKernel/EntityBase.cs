@@ -1,4 +1,4 @@
-﻿namespace Melody.SharedKernel.Interfaces;
+﻿namespace Melody.SharedKernel;
 
 public abstract class EntityBase<TId>
 {

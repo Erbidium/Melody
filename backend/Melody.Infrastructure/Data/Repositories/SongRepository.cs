@@ -89,24 +89,6 @@ public class SongRepository : ISongRepository
         return createdSong;
     }
 
-    public async Task Update(Song song)
-    {
-        var parameters = new DynamicParameters();
-        parameters.Add("UserId", song.UserId, DbType.Int64);
-        parameters.Add("Name", song.Name, DbType.String);
-        parameters.Add("Path", song.Path, DbType.String);
-        parameters.Add("AuthorName", song.AuthorName, DbType.String);
-        parameters.Add("Year", song.Year, DbType.Int32);
-        parameters.Add("SizeBytes", song.SizeBytes, DbType.Int32);
-        parameters.Add("UploadedAt", song.UploadedAt, DbType.Date);
-        parameters.Add("GenreId", song.GenreId, DbType.Int64);
-        parameters.Add("Duration", song.Duration, DbType.Time);
-
-        using var connection = _context.CreateConnection();
-
-        await connection.ExecuteAsync(SqlScriptsResource.UpdateSong, parameters);
-    }
-
     public async Task<bool> Delete(long id)
     {
         using var connection = _context.CreateConnection();

@@ -62,7 +62,7 @@ public class RefreshTokenRepository : IRefreshTokenRepository
             new { Token = token });
     }
 
-    public async Task<RefreshTokenDb?> FindByUserIdAsync(long userId)
+    private async Task<RefreshTokenDb?> FindByUserIdAsync(long userId)
     {
         using var connection = _context.CreateConnection();
         return await connection.QuerySingleOrDefaultAsync<RefreshTokenDb>(SqlScriptsResource.FindRefreshTokenByUserId,

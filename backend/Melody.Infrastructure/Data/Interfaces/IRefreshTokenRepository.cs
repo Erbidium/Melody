@@ -8,5 +8,4 @@ public interface IRefreshTokenRepository
     Task<bool> DeleteByValueAsync(string token);
     Task<bool> DeleteByUserIdAsync(long userId);
     Task<RefreshTokenDb?> FindByTokenValueAsync(string token);
-    Task<RefreshTokenDb?> FindByUserIdAsync(long userId);
 }
