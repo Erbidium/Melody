@@ -8,7 +8,6 @@
 
     <ItemGroup>
         <None Remove="Data\SqlScripts\Genres\GetAllGenres.sql" />
-        <None Remove="Data\SqlScripts\Genres\GetGenreById.sql" />
         <None Remove="Data\SqlScripts\GetAllSongs.sql" />
         <None Remove="Data\SqlScripts\Playlists\CreateFavouritePlaylist.sql" />
         <None Remove="Data\SqlScripts\Playlists\CreatePlaylist.sql" />
@@ -48,7 +47,6 @@
         <None Remove="Data\SqlScripts\Songs\GetSongsUploadedByUserId.sql" />
         <None Remove="Data\SqlScripts\Songs\GetUserTotalUploadsSize.sql" />
         <None Remove="Data\SqlScripts\Songs\SaveNewSongListening.sql" />
-        <None Remove="Data\SqlScripts\Songs\UpdateSong.sql" />
         <None Remove="Data\SqlScripts\Users\CreateUser.sql" />
         <None Remove="Data\SqlScripts\Users\DeleteRoles.sql" />
         <None Remove="Data\SqlScripts\Users\DeleteUser.sql" />
@@ -66,7 +64,6 @@
 
     <ItemGroup>
         <EmbeddedResource Include="Data\SqlScripts\Genres\GetAllGenres.sql" />
-        <EmbeddedResource Include="Data\SqlScripts\Genres\GetGenreById.sql" />
         <EmbeddedResource Include="Data\SqlScripts\Playlists\CreateFavouritePlaylist.sql" />
         <EmbeddedResource Include="Data\SqlScripts\Playlists\CreatePlaylist.sql" />
         <EmbeddedResource Include="Data\SqlScripts\Playlists\DeletePlaylist.sql" />
@@ -104,7 +101,6 @@
         <EmbeddedResource Include="Data\SqlScripts\Songs\GetSongsUploadedByUserId.sql" />
         <EmbeddedResource Include="Data\SqlScripts\Songs\GetUserTotalUploadsSize.sql" />
         <EmbeddedResource Include="Data\SqlScripts\Songs\SaveNewSongListening.sql" />
-        <EmbeddedResource Include="Data\SqlScripts\Songs\UpdateSong.sql" />
         <EmbeddedResource Include="Data\SqlScripts\Users\CreateUser.sql" />
         <EmbeddedResource Include="Data\SqlScripts\Users\DeleteRoles.sql" />
         <EmbeddedResource Include="Data\SqlScripts\Users\DeleteUser.sql" />

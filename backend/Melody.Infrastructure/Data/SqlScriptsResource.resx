@@ -199,9 +199,6 @@
   <data name="GetFavouriteSongs" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>SqlScripts\Songs\GetFavouriteSongs.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="GetGenreById" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>SqlScripts\Genres\GetGenreById.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
   <data name="GetPlaylistById" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>SqlScripts\Playlists\GetPlaylistById.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
@@ -273,9 +270,6 @@
   </data>
   <data name="UpdateRole" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>SqlScripts\Roles\UpdateRole.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="UpdateSong" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>SqlScripts\Songs\UpdateSong.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="UpdateUser" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>SqlScripts\Users\UpdateUser.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>

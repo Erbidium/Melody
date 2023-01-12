@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { BaseComponent } from '@core/base/base.component';
@@ -8,7 +9,7 @@ import { SongService } from '@core/services/song.service';
 import { UserService } from '@core/services/user.service';
 import { CustomErrorStateMatcher } from '@modules/recommendations/validators/custom-error-state-matcher';
 import { CustomValidators } from '@modules/recommendations/validators/custom-validators';
-import { forkJoin } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
     selector: 'app-recommendations-preferences-page',
@@ -52,13 +53,17 @@ export class RecommendationsPreferencesPageComponent extends BaseComponent imple
     }
 
     ngOnInit(): void {
-        forkJoin([this.songService.getAllGenres(), this.userService.getUserRecommendationPreferences()])
+        this.songService.getAllGenres()
             .pipe(this.untilThis)
-            .subscribe({
-                next: (resp) => {
-                    [this.genres] = resp;
-                    const preferences = resp[1];
+            .pipe(
+                switchMap((genres: IGenre[]) => {
+                    this.genres = genres;
 
+                    return this.userService.getUserRecommendationPreferences();
+                }),
+            )
+            .subscribe({
+                next: (preferences) => {
                     this.uploadForm.patchValue({
                         author: preferences.authorName,
                         startYear: preferences.startYear?.toString(),
@@ -67,7 +72,11 @@ export class RecommendationsPreferencesPageComponent extends BaseComponent imple
                     });
                     this.selectedGenre = this.genres.find((g) => g.id === preferences.genreId);
                 },
-                error: () => this.notificationService.showErrorMessage('Трапилася помилка'),
+                error: (e) => {
+                    if (!(e instanceof HttpErrorResponse && e.status === 404)) {
+                        this.notificationService.showErrorMessage('Трапилася помилка');
+                    }
+                },
             });
     }
 

@@ -22,12 +22,4 @@ public class GenreRepository : IGenreRepository
         var genres = await connection.QueryAsync<GenreDb>(SqlScriptsResource.GetAllGenres);
         return genres.Select(record => new Genre(record.Name) { Id = record.Id }).ToList().AsReadOnly();
     }
-
-    public async Task<Genre?> GetById(long id)
-    {
-        using var connection = _context.CreateConnection();
-
-        var record = await connection.QuerySingleOrDefaultAsync<GenreDb>(SqlScriptsResource.GetGenreById, new { id });
-        return record is null ? null : new Genre(record.Name) { Id = record.Id };
-    }
 }

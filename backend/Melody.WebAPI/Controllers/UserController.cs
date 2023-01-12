@@ -121,14 +121,17 @@ public class UserController : ControllerBase
     public async Task<ActionResult<RecommendationsPreferences>> GetUserRecommendationsPreferences()
     {
         var userId = HttpContext.User.GetId();
-        return Ok(_mapper.Map<RecommendationsPreferencesDto>(
-            await _userRepository.GetUserRecommendationsPreferences(userId)));
+        var preferences = await _userRepository.GetUserRecommendationsPreferences(userId);
+
+        return preferences is null
+            ? NotFound()
+            : Ok(_mapper.Map<RecommendationsPreferencesDto>(preferences));
     }
 
     [Authorize]
     [HttpPut("recommendations-preferences")]
     public async Task<IActionResult> SaveUserRecommendationsPreferences(
-        CreateRecommendationsPreferencesDto createRecommendationsPreferences)
+        [FromBody]CreateRecommendationsPreferencesDto createRecommendationsPreferences)
     {
         var validationResult =
             await _createRecommendationsPreferencesDtoValidator.ValidateAsync(createRecommendationsPreferences);

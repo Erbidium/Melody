@@ -444,17 +444,6 @@ namespace Melody.Infrastructure.Data {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на SELECT Id, Name
-        ///FROM Genres
-        ///WHERE Id = @Id.
-        /// </summary>
-        internal static string GetGenreById {
-            get {
-                return ResourceManager.GetString("GetGenreById", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Ищет локализованную строку, похожую на SELECT p.Id,
         ///       p.Name,
         ///       p.AuthorId,
@@ -882,26 +871,6 @@ namespace Melody.Infrastructure.Data {
         internal static string UpdateRole {
             get {
                 return ResourceManager.GetString("UpdateRole", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на UPDATE Songs
-        ///SET UserId     = @UserId,
-        ///    Name       = @Name,
-        ///    Path       = @Path,
-        ///    AuthorName = @AuthorName,
-        ///    Year       = @Year,
-        ///    SizeBytes  = @SizeBytes,
-        ///    UploadedAt = @UploadedAt,
-        ///    GenreId    = @GenreId,
-        ///    Duration   = @Duration
-        ///WHERE Id = @Id
-        ///  AND IsDeleted = 0.
-        /// </summary>
-        internal static string UpdateSong {
-            get {
-                return ResourceManager.GetString("UpdateSong", resourceCulture);
             }
         }
         
