@@ -1,0 +1,54 @@
+<app-header [navLinks]="navigationLinks"></app-header>
+<h1>На цій сторінці ти можеш керувати користувачами додатку</h1>
+<form class="search-form">
+    <mat-form-field>
+        <input type="text" matInput [(ngModel)]="searchText" name="searchText">
+        <mat-placeholder>Пошук</mat-placeholder>
+        <mat-icon matSuffix class="search-icon" (click)="search()">search</mat-icon>
+    </mat-form-field>
+</form>
+<div *ngIf="users.length === 0; else usersTable">
+    Жодного юзера не знайдено
+</div>
+<ng-template #usersTable>
+    <table mat-table [dataSource]="users" class="mat-elevation-z8">
+        <ng-container matColumnDef="position">
+            <th mat-header-cell *matHeaderCellDef> # </th>
+            <td mat-cell *matCellDef="let element; let i = index">{{i + 1}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="username">
+            <th mat-header-cell *matHeaderCellDef>Юзернейм</th>
+            <td mat-cell *matCellDef="let user">{{user.userName}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef>Email</th>
+            <td mat-cell *matCellDef="let user">{{user.email}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="phoneNumber">
+            <th mat-header-cell *matHeaderCellDef>Номер телефону</th>
+            <td mat-cell *matCellDef="let user">{{user.phoneNumber}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="ban">
+            <th mat-header-cell *matHeaderCellDef> Бан </th>
+            <td mat-cell *matCellDef="let user">
+                <mat-slide-toggle
+                    checked="{{user.isBanned}}"
+                    (toggleChange)="changeUserBan(user.id)"
+                    (click)="$event.stopPropagation()"
+                ></mat-slide-toggle>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="remove">
+            <th mat-header-cell *matHeaderCellDef> </th>
+            <td mat-cell *matCellDef="let user" (click)="deleteUser(user.id, $event)"><mat-icon>delete</mat-icon></td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+        <tr mat-row *matRowDef="let row, let i=index; columns: columnsToDisplay" (click)="navigateToUserProfilePage(row.id)" id="target{{i}}"></tr>
+    </table>
+</ng-template>

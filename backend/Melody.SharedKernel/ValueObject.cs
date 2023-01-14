@@ -2,13 +2,13 @@
 
 public abstract class ValueObject : IEquatable<ValueObject>
 {
-    protected abstract IEnumerable<object> GetEqualityComponents();
-
     public bool Equals(ValueObject? valueObject)
     {
-        if (valueObject == null || GetType() != valueObject.GetType())
+        if (valueObject is null || GetType() != valueObject.GetType())
             return false;
 
         return GetEqualityComponents().SequenceEqual(valueObject.GetEqualityComponents());
     }
+
+    protected abstract IEnumerable<object> GetEqualityComponents();
 }

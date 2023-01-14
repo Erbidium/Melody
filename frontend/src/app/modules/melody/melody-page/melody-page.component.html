@@ -1,0 +1,40 @@
+<app-header>
+</app-header>
+<div class="wrapper">
+    <div>
+        <a [routerLink]="'/upload/all'">Твої завантажені пісні</a>
+    </div>
+    <div>
+        <a [routerLink]="'/melody/favourite'">Твої улюблені пісні</a>
+    </div>
+    <div style="display: flex">
+        <h1>
+            Твої плейлисти
+        </h1>
+        <button mat-raised-button (click)="createPlaylist()">
+            Створити новий
+        </button>
+    </div>
+    <div *ngIf="userPlaylists.length === 0; else userPlaylistsScroll">
+        Ти ще не створив жодного плейлисту
+    </div>
+    <ng-template #userPlaylistsScroll>
+        <app-horizontal-playlists-scroll
+            [userPlaylists]="userPlaylists"
+            (heartButtonClickEvent)="changePlaylistStatus($event.id, $event.event)"
+            [heartButtonForLikes]="true"
+        ></app-horizontal-playlists-scroll>
+    </ng-template>
+    <h1>
+        Твої улюблені плейлисти інших користувачів
+    </h1>
+    <div *ngIf="favouritePlaylists.length === 0; else favouritePlaylistsScroll">
+        У тебе ще немає улюблених плейлистів
+    </div>
+    <ng-template #favouritePlaylistsScroll>
+        <app-horizontal-playlists-scroll
+            [userPlaylists]="favouritePlaylists"
+            (heartButtonClickEvent)="deletePlaylistFromFavourites($event.id, $event.event)"
+        ></app-horizontal-playlists-scroll>
+    </ng-template>
+</div>

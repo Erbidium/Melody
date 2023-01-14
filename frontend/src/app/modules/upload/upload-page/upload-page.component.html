@@ -1,0 +1,57 @@
+<app-header>
+</app-header>
+<div class="wrapper">
+    <form [formGroup]="uploadForm">
+        <mat-form-field appearance="outline">
+            <input matInput id="name" type="text" formControlName="name" placeholder="Назва пісні" />
+            <mat-error
+                *ngIf="
+                    uploadForm.controls['name'].hasError('required') ||
+                    uploadForm.controls['name'].hasError('minlength') ||
+                    uploadForm.controls['name'].hasError('maxlength')
+                "
+            >Ім'я некоректне</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <input matInput id="author" type="text" formControlName="author" placeholder="Автор" />
+            <mat-error
+                *ngIf="
+                    uploadForm.controls['author'].hasError('required') ||
+                    uploadForm.controls['author'].hasError('minlength') ||
+                    uploadForm.controls['author'].hasError('maxlength')
+                "
+            >Автор некоректний</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <input matInput id="year" type="number" pattern="\d*" formControlName="year" placeholder="Рік" />
+            <mat-error
+                *ngIf="
+                    uploadForm.controls['year'].hasError('required')
+                "
+            >Рік обов'язковий</mat-error>
+        </mat-form-field>
+        <mat-form-field class="genre" appearance="fill">
+            <mat-label>Жанр</mat-label>
+            <mat-select [(value)]="selectedGenre">
+                <mat-option *ngFor="let genre of genres" [value]="genre">
+                    {{genre.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </form>
+    <div>
+        Ліміт завантаження музичних творів: 1 ГБ
+    </div>
+</div>
+<input
+    hidden
+    #file
+    accept=".mp3"
+    type="file"
+    (change)="loadSoundFile($event)"/>
+<div>
+    <mat-icon (click)="file.click()">cloud_upload</mat-icon>
+    <h2>Завантажити пісню з пристрою</h2>
+</div>
+<button mat-raised-button (click)="reset()">Відмінити</button>
+<button mat-raised-button (click)="upload()">Завантажити</button>

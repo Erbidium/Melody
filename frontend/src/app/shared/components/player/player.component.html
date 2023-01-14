@@ -1,0 +1,66 @@
+<div class="container">
+    <div class="media-footer">
+        <mat-toolbar color="primary">
+            <mat-toolbar-row>
+                {{ state?.readableCurrentTime }}
+                <mat-slider
+                    class="time-slider"
+                    min="0"
+                    [max]="state?.duration"
+                    step="1"
+                    [value]="state?.currentTime"
+                    (input)="onSliderChangeEnd($event)"
+                    [disabled]="state?.error || currentSongIdValue === undefined"
+                ></mat-slider>
+                {{ state?.readableDuration }}
+            </mat-toolbar-row>
+            <mat-toolbar-row class="media-action-bar">
+                <div class="right">
+                    {{ getSongName() }}
+                </div>
+                <div class="buttons-wrapper">
+                    <button
+                        mat-button
+                        (click)="setRandomMode()"
+                        [ngClass]="{'activatedMode': isRandomMode()}"
+                    >
+                        <mat-icon mat-list-icon>shuffle</mat-icon>
+                    </button>
+                    <button
+                        mat-button
+                        [disabled]="this.currentSongIdValue === undefined"
+                        (click)="previousClickHandler()"
+                    >
+                        <mat-icon mat-list-icon>skip_previous</mat-icon>
+                    </button>
+                    <button
+                        mat-button
+                        (click)="play()"
+                        [disabled]="state?.error || this.currentSongIdValue === undefined"
+                        *ngIf="!state?.playing"
+                    >
+                        <mat-icon mat-list-icon>play_circle_filled</mat-icon>
+                    </button>
+                    <button mat-button (click)="pause()" *ngIf="state?.playing">
+                        <mat-icon mat-list-icon>pause</mat-icon>
+                    </button>
+                    <button
+                        mat-button
+                        [disabled]="this.currentSongIdValue === undefined"
+                        (click)="nextClickHandler()"
+                    >
+                        <mat-icon mat-list-icon>skip_next</mat-icon>
+                    </button>
+                    <button
+                        mat-button
+                        (click)="setRepeatMode()"
+                        [ngClass]="{'activatedMode': isSameMode()}"
+                    >
+                        <mat-icon mat-list-icon>repeat_one</mat-icon>
+                    </button>
+                </div>
+                <div class="right"></div>
+            </mat-toolbar-row>
+        </mat-toolbar>
+    </div>
+</div>

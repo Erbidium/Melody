@@ -1,65 +1,154 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Data\SqlScripts\Genres\GetAllGenres.sql" />
-    <None Remove="Data\SqlScripts\Genres\GetGenreById.sql" />
-    <None Remove="Data\SqlScripts\GetAllSongs.sql" />
-    <None Remove="Data\SqlScripts\Playlists\CreatePlaylist.sql" />
-    <None Remove="Data\SqlScripts\Playlists\DeletePlaylist.sql" />
-    <None Remove="Data\SqlScripts\Playlists\GetAllPlaylists.sql" />
-    <None Remove="Data\SqlScripts\Playlists\GetPlaylistById.sql" />
-    <None Remove="Data\SqlScripts\Playlists\UpdatePlaylist.sql" />
-    <None Remove="Data\SqlScripts\Songs\CreateSong.sql" />
-    <None Remove="Data\SqlScripts\Songs\DeleteSong.sql" />
-    <None Remove="Data\SqlScripts\Songs\GetSongById.sql" />
-    <None Remove="Data\SqlScripts\Songs\UpdateSong.sql" />
-  </ItemGroup>
+    <ItemGroup>
+        <None Remove="Data\SqlScripts\Genres\GetAllGenres.sql" />
+        <None Remove="Data\SqlScripts\GetAllSongs.sql" />
+        <None Remove="Data\SqlScripts\Playlists\CreateFavouritePlaylist.sql" />
+        <None Remove="Data\SqlScripts\Playlists\CreatePlaylist.sql" />
+        <None Remove="Data\SqlScripts\Playlists\DeleteFavouritePlaylist.sql" />
+        <None Remove="Data\SqlScripts\Playlists\DeletePlaylist.sql" />
+        <None Remove="Data\SqlScripts\Playlists\DeletePlaylistSong.sql" />
+        <None Remove="Data\SqlScripts\Playlists\GetAllPlaylists.sql" />
+        <None Remove="Data\SqlScripts\Playlists\GetFavouritePlaylists.sql" />
+        <None Remove="Data\SqlScripts\Playlists\GetPlaylistById.sql" />
+        <None Remove="Data\SqlScripts\Playlists\GetPlaylistsCreatedByUserId.sql" />
+        <None Remove="Data\SqlScripts\Playlists\InsertPlaylistSong.sql" />
+        <None Remove="Data\SqlScripts\Playlists\UpdatePlaylist.sql" />
+        <None Remove="Data\SqlScripts\RecommendationsPreferences\CreateRecommendationsPreferences.sql" />
+        <None Remove="Data\SqlScripts\RecommendationsPreferences\GetRecommendationsPreferences.sql" />
+        <None Remove="Data\SqlScripts\RecommendationsPreferences\UpdateRecommendationsPreferences.sql" />
+        <None Remove="Data\SqlScripts\RefreshTokens\CreateRefreshToken.sql" />
+        <None Remove="Data\SqlScripts\RefreshTokens\DeleteRefreshToken.sql" />
+        <None Remove="Data\SqlScripts\RefreshTokens\DeleteRefreshTokenByUserId.sql" />
+        <None Remove="Data\SqlScripts\RefreshTokens\FindRefreshTokenByUserId.sql" />
+        <None Remove="Data\SqlScripts\RefreshTokens\FindRefreshTokenByValue.sql" />
+        <None Remove="Data\SqlScripts\RefreshTokens\UpdateRefreshToken.sql" />
+        <None Remove="Data\SqlScripts\Roles\CreateRole.sql" />
+        <None Remove="Data\SqlScripts\Roles\DeleteRole.sql" />
+        <None Remove="Data\SqlScripts\Roles\GetRoleById.sql" />
+        <None Remove="Data\SqlScripts\Roles\GetRoleByName.sql" />
+        <None Remove="Data\SqlScripts\Roles\UpdateRole.sql" />
+        <None Remove="Data\SqlScripts\Songs\CreateFavouriteSong.sql" />
+        <None Remove="Data\SqlScripts\Songs\CreateSong.sql" />
+        <None Remove="Data\SqlScripts\Songs\DeleteFavouriteSong.sql" />
+        <None Remove="Data\SqlScripts\Songs\DeleteSong.sql" />
+        <None Remove="Data\SqlScripts\Songs\DeleteUploadedSong.sql" />
+        <None Remove="Data\SqlScripts\Songs\GetFavouriteAndUploadedUserSongs.sql" />
+        <None Remove="Data\SqlScripts\Songs\GetFavouriteSongs.sql" />
+        <None Remove="Data\SqlScripts\Songs\GetSongById.sql" />
+        <None Remove="Data\SqlScripts\Songs\GetSongsByIds.sql" />
+        <None Remove="Data\SqlScripts\Songs\GetSongsToAddToPlaylist.sql" />
+        <None Remove="Data\SqlScripts\Songs\GetSongsUploadedByUserId.sql" />
+        <None Remove="Data\SqlScripts\Songs\GetUserTotalUploadsSize.sql" />
+        <None Remove="Data\SqlScripts\Songs\SaveNewSongListening.sql" />
+        <None Remove="Data\SqlScripts\Users\CreateUser.sql" />
+        <None Remove="Data\SqlScripts\Users\DeleteRoles.sql" />
+        <None Remove="Data\SqlScripts\Users\DeleteUser.sql" />
+        <None Remove="Data\SqlScripts\Users\GetRoles.sql" />
+        <None Remove="Data\SqlScripts\Users\GetUserByEmail.sql" />
+        <None Remove="Data\SqlScripts\Users\GetUserById.sql" />
+        <None Remove="Data\SqlScripts\Users\GetUserByName.sql" />
+        <None Remove="Data\SqlScripts\Users\GetUserRoles.sql" />
+        <None Remove="Data\SqlScripts\Users\GetUsersInRole.sql" />
+        <None Remove="Data\SqlScripts\Users\GetUsersWithoutAdminRole.sql" />
+        <None Remove="Data\SqlScripts\Users\InsertRoles.sql" />
+        <None Remove="Data\SqlScripts\Users\SetUserBanStatus.sql" />
+        <None Remove="Data\SqlScripts\Users\UpdateUser.sql" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="Data\SqlScripts\Genres\GetAllGenres.sql" />
-    <EmbeddedResource Include="Data\SqlScripts\Genres\GetGenreById.sql" />
-    <EmbeddedResource Include="Data\SqlScripts\Playlists\CreatePlaylist.sql" />
-    <EmbeddedResource Include="Data\SqlScripts\Playlists\DeletePlaylist.sql" />
-    <EmbeddedResource Include="Data\SqlScripts\Playlists\GetAllPlaylists.sql" />
-    <EmbeddedResource Include="Data\SqlScripts\Playlists\GetPlaylistById.sql" />
-    <EmbeddedResource Include="Data\SqlScripts\Playlists\UpdatePlaylist.sql" />
-    <EmbeddedResource Include="Data\SqlScripts\Songs\CreateSong.sql" />
-    <EmbeddedResource Include="Data\SqlScripts\Songs\DeleteSong.sql" />
-    <EmbeddedResource Include="Data\SqlScripts\Songs\GetSongById.sql" />
-    <EmbeddedResource Include="Data\SqlScripts\Songs\GetAllSongs.sql" />
-    <EmbeddedResource Include="Data\SqlScripts\Songs\UpdateSong.sql" />
-  </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="Data\SqlScripts\Genres\GetAllGenres.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Playlists\CreateFavouritePlaylist.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Playlists\CreatePlaylist.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Playlists\DeletePlaylist.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Playlists\DeletePlaylistSong.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Playlists\GetAllPlaylists.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Playlists\GetFavouritePlaylists.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Playlists\GetPlaylistById.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Playlists\GetPlaylistsCreatedByUserId.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Playlists\InsertPlaylistSong.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\RecommendationsPreferences\CreateRecommendationsPreferences.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\RecommendationsPreferences\GetRecommendationsPreferences.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\RecommendationsPreferences\UpdateRecommendationsPreferences.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\RefreshTokens\CreateRefreshToken.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\RefreshTokens\DeleteRefreshToken.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\RefreshTokens\DeleteRefreshTokenByUserId.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\RefreshTokens\FindRefreshTokenByUserId.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\RefreshTokens\FindRefreshTokenByValue.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\RefreshTokens\UpdateRefreshToken.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Roles\CreateRole.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Roles\DeleteRole.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Roles\GetRoleById.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Roles\GetRoleByName.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Roles\UpdateRole.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Songs\CreateFavouriteSong.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Songs\CreateSong.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Songs\DeleteFavouriteSong.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Songs\DeleteSong.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Songs\DeleteUploadedSong.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Songs\GetFavouriteAndUploadedUserSongs.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Songs\GetFavouriteSongs.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Songs\GetSongById.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Songs\GetAllSongs.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Songs\GetSongsByIds.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Songs\GetSongsToAddToPlaylist.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Songs\GetSongsUploadedByUserId.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Songs\GetUserTotalUploadsSize.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Songs\SaveNewSongListening.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Users\CreateUser.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Users\DeleteRoles.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Users\DeleteUser.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Users\GetRoles.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Users\GetUserByEmail.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Users\GetUserById.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Users\GetUserByName.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Users\GetUserRoles.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Users\GetUsersInRole.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Users\GetUsersWithoutAdminRole.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Users\InsertRoles.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Users\SetUserBanStatus.sql" />
+        <EmbeddedResource Include="Data\SqlScripts\Users\UpdateUser.sql" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Dapper" Version="2.0.123" />
-    <PackageReference Include="FluentMigrator.Runner" Version="3.3.2" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.4" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Dapper" Version="2.0.123" />
+        <PackageReference Include="Elastic.Clients.Elasticsearch" Version="8.0.4" />
+        <PackageReference Include="FluentMigrator.Runner" Version="3.3.2" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.11" />
+        <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.25.0" />
+        <PackageReference Include="NEST" Version="7.17.5" />
+        <PackageReference Include="System.Data.SqlClient" Version="4.8.4" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.0" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Melody.Core\Melody.Core.csproj" />
-    <ProjectReference Include="..\Melody.SharedKernel\Melody.SharedKernel.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Melody.Core\Melody.Core.csproj" />
+        <ProjectReference Include="..\Melody.SharedKernel\Melody.SharedKernel.csproj" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="Data\SqlScriptsResource.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SqlScriptsResource.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
+    <ItemGroup>
+      <EmbeddedResource Include="Data\SqlScripts\Playlists\DeleteFavouritePlaylist.sql" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Update="Data\SqlScriptsResource.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>SqlScriptsResource.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
+    <ItemGroup>
+        <Compile Update="Data\SqlScriptsResource.Designer.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>SqlScriptsResource.resx</DependentUpon>
+        </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Update="Data\SqlScriptsResource.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>SqlScriptsResource.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+    </ItemGroup>
 
 </Project>

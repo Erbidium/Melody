@@ -1,4 +1,4 @@
-﻿using FluentMigrator;
+using FluentMigrator;
 
 namespace Melody.Infrastructure.Data.Migrations;
 
@@ -7,12 +7,15 @@ public class InitialTables_202211031808 : Migration
 {
     public override void Down()
     {
+        Delete.Table("ListeningStatistics");
         Delete.Table("PlaylistSongs");
         Delete.Table("UserPlaylists");
         Delete.Table("Playlists");
         Delete.Table("FavouriteSongs");
         Delete.Table("Songs");
         Delete.Table("Genres");
+        Delete.Table("UserRoles");
+        Delete.Table("UserRefreshTokens");
         Delete.Table("Users");
         Delete.Table("Roles");
     }   
@@ -20,16 +23,31 @@ public class InitialTables_202211031808 : Migration
     {
         Create.Table("Roles")
            .WithColumn("Id").AsInt64().PrimaryKey().Identity()
-           .WithColumn("Name").AsString(50).NotNullable();
+           .WithColumn("Name").AsString(50).Nullable()
+           .WithColumn("NormalizedName").AsString(50).Nullable();
 
         Create.Table("Users")
             .WithColumn("Id").AsInt64().PrimaryKey().Identity()
-            .WithColumn("Name").AsString(50).NotNullable()
-            .WithColumn("Email").AsString(50).NotNullable()
-            .WithColumn("PhoneNumber").AsString(50).NotNullable()
-            .WithColumn("RoleId").AsInt64().NotNullable().ForeignKey("Roles", "Id")
-            .WithColumn("IsBanned").AsBoolean().NotNullable()
+            .WithColumn("UserName").AsString(50).Nullable()
+            .WithColumn("NormalizedUserName").AsString(50).Nullable()
+            .WithColumn("Email").AsString(50).Nullable().Unique()
+            .WithColumn("NormalizedEmail").AsString(50).Nullable().Unique()
+            .WithColumn("EmailConfirmed").AsBoolean().NotNullable()
+            .WithColumn("PasswordHash").AsString().Nullable()
+            .WithColumn("PhoneNumber").AsString(50).Nullable().Unique()
+            .WithColumn("IsBanned").AsBoolean().NotNullable().WithDefaultValue(0)
             .WithColumn("IsDeleted").AsBoolean().NotNullable().WithDefaultValue(0);
+
+        Create.Table("UserRefreshTokens")
+            .WithColumn("Id").AsInt64().PrimaryKey().Identity()
+            .WithColumn("UserId").AsInt64().NotNullable().ForeignKey("Users", "Id")
+            .WithColumn("RefreshToken").AsString(int.MaxValue).NotNullable();
+
+        Create.Table("UserRoles")
+            .WithColumn("UserId").AsInt64().NotNullable().ForeignKey("Users", "Id")
+            .WithColumn("RoleId").AsInt64().NotNullable().ForeignKey("Roles", "Id");
+
+        Create.PrimaryKey().OnTable("UserRoles").Columns("UserId", "RoleId");
 
         Create.Table("Genres")
            .WithColumn("Id").AsInt64().PrimaryKey().Identity()
@@ -37,11 +55,15 @@ public class InitialTables_202211031808 : Migration
 
         Create.Table("Songs")
             .WithColumn("Id").AsInt64().PrimaryKey().Identity()
+            .WithColumn("UserId").AsInt64().NotNullable().ForeignKey("Users", "Id")
+            .WithColumn("UploadedAt").AsDateTime().NotNullable()
+            .WithColumn("SizeBytes").AsInt64().NotNullable()
             .WithColumn("Name").AsString(50).NotNullable()
-            .WithColumn("Path").AsString(50).NotNullable()
+            .WithColumn("Path").AsString(int.MaxValue).NotNullable()
             .WithColumn("AuthorName").AsString(50).NotNullable()
             .WithColumn("Year").AsInt32().NotNullable()
             .WithColumn("GenreId").AsInt64().NotNullable().ForeignKey("Genres", "Id")
+            .WithColumn("Duration").AsTime().NotNullable()
             .WithColumn("IsDeleted").AsBoolean().NotNullable().WithDefaultValue(0);
 
         Create.Table("FavouriteSongs")
@@ -53,7 +75,6 @@ public class InitialTables_202211031808 : Migration
         Create.Table("Playlists")
             .WithColumn("Id").AsInt64().PrimaryKey().Identity()
             .WithColumn("Name").AsString(50).NotNullable()
-            .WithColumn("Link").AsString(50).NotNullable().Unique()
             .WithColumn("AuthorId").AsInt64().NotNullable().ForeignKey("Users", "Id")
             .WithColumn("IsDeleted").AsBoolean().NotNullable().WithDefaultValue(0);
 
@@ -68,5 +89,10 @@ public class InitialTables_202211031808 : Migration
             .WithColumn("SongId").AsInt64().NotNullable().ForeignKey("Songs", "Id");
 
         Create.PrimaryKey().OnTable("PlaylistSongs").Columns("PlaylistId", "SongId");
+
+        Create.Table("ListeningStatistics")
+            .WithColumn("SongId").AsInt64().NotNullable().ForeignKey("Songs", "Id")
+            .WithColumn("UserId").AsInt64().NotNullable().ForeignKey("Users", "Id")
+            .WithColumn("Date").AsDateTime().NotNullable();
     }
 }

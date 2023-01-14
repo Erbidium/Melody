@@ -1,0 +1,16 @@
+<mat-toolbar color="primary">
+  <span><img src="assets/header/logo.svg" alt="header-logo" />{{title}}</span>
+  <nav mat-tab-nav-bar>
+    <a
+      mat-tab-link
+      class="link-btn"
+      *ngFor="let link of navLinks"
+      [routerLink]="link.path"
+      routerLinkActive
+      #rla="routerLinkActive"
+      [active]="rla.isActive">
+      {{ link.label }}
+    </a>
+  </nav>
+  <mat-icon (click)="navigateToProfile()">person</mat-icon>
+</mat-toolbar>

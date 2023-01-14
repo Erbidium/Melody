@@ -1,0 +1,20 @@
+<app-header>
+</app-header>
+<app-back-button></app-back-button>
+<div *ngIf="!user; else profile">
+    Профіль користувача не знайдено
+</div>
+<ng-template #profile>
+    <h1>{{user?.userName}}</h1>
+    <p>Сторінка профілю користувача профілю</p>
+    <p>Email: {{user?.email}}</p>
+    <p>Номер телефону: {{user?.phoneNumber}}</p>
+    <h1>
+        Створені плейлисти
+    </h1>
+    <app-horizontal-playlists-scroll
+        [userPlaylists]="userPlaylists"
+        (heartButtonClickEvent)="changePlaylistStatus($event.id, $event.event)"
+        [heartButtonForLikes]="true"
+    ></app-horizontal-playlists-scroll>
+</ng-template>
