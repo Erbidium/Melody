@@ -76,13 +76,13 @@ public class SongRepository : ISongRepository
 
         var songElastic = new SongElastic
         {
-            Id = song.Id,
-            Name = song.Name,
-            AuthorName = song.AuthorName,
-            DurationInSeconds = (int)song.Duration.TotalSeconds,
-            GenreId = song.GenreId,
-            UploadedAt = song.UploadedAt,
-            Year = song.Year
+            Id = createdSong.Id,
+            Name = createdSong.Name,
+            AuthorName = createdSong.AuthorName,
+            DurationInSeconds = (int)createdSong.Duration.TotalSeconds,
+            GenreId = createdSong.GenreId,
+            UploadedAt = createdSong.UploadedAt,
+            Year = createdSong.Year
         };
         await _elasticClient.IndexAsync(songElastic, descriptor => descriptor.Index(SongIndexName).Id(id));
 
