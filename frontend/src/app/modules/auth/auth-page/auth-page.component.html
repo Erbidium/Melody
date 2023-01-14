@@ -61,7 +61,7 @@
                       *ngIf="
                     signUpForm.controls['email'].hasError('email') ||
                     signUpForm.controls['email'].hasError('maxlength')">
-                      Email is invalid
+                      Email некоректний
                   </mat-error>
                   <mat-error *ngIf="signUpForm.controls['email'].hasError('required')">Email обов'язковий</mat-error>
                   <mat-error *ngIf="signUpForm.controls['email'].hasError('userAlreadyExists')">Користувач з такою поштою вже існує</mat-error>

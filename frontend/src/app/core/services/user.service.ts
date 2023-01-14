@@ -50,7 +50,7 @@ export class UserService {
     }
 
     saveUserRecommendationPreferences(preferences: IPreferences) {
-        return this.httpService.putRequest('/api/user/recommendations-preferences', preferences);
+        return this.httpService.putRequest('/api/user/recommendations-preferences', { ...preferences });
     }
 
     getUsersWithoutAdminRole(page: number, pageSize: number, searchText?: string) {
