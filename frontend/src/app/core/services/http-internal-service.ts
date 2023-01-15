@@ -12,10 +12,6 @@ export class HttpInternalService {
     // eslint-disable-next-line no-empty-function
     constructor(private http: HttpClient) {}
 
-    getStringRequest(url: string, httpParams?: any): Observable<string> {
-        return this.http.get(this.buildUrl(url), { headers: this.getHeaders(), params: httpParams, responseType: 'text' });
-    }
-
     getRequest<T>(url: string, httpParams?: any): Observable<T> {
         return this.http.get<T>(this.buildUrl(url), { headers: this.getHeaders(), params: httpParams });
     }
@@ -38,18 +34,6 @@ export class HttpInternalService {
 
     private getHeaders(): HttpHeaders {
         return this.headers;
-    }
-
-    private getHeader(key: string): string {
-        return this.headers.get(key) as string;
-    }
-
-    private setHeader(key: string, value: string): void {
-        this.headers = this.headers.set(key, value);
-    }
-
-    private deleteHeader(key: string): void {
-        this.headers = this.headers.delete(key);
     }
 
     private buildUrl(url: string): string {
