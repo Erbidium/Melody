@@ -88,11 +88,7 @@ export class AdminUsersPageComponent extends BaseComponent implements OnInit {
             this.userService
                 .setUserBanStatus(id, !user.isBanned)
                 .pipe(
-                    switchMap(() => {
-                        this.page = Math.ceil((this.users.length - 1) / this.pageSize);
-
-                        return this.userService.getUsersWithoutAdminRole(1, this.page * this.pageSize);
-                    }),
+                    switchMap(() => this.userService.getUsersWithoutAdminRole(1, this.page * this.pageSize)),
                 )
                 .pipe(this.untilThis)
                 .subscribe({
@@ -118,7 +114,7 @@ export class AdminUsersPageComponent extends BaseComponent implements OnInit {
                 .deleteUser(id)
                 .pipe(
                     switchMap(() => {
-                        const page = Math.ceil((this.users.length - 1) / this.pageSize);
+                        const page = Math.max(1, Math.ceil((this.users.length - 1) / this.pageSize));
 
                         return this.userService.getUsersWithoutAdminRole(1, page * this.pageSize);
                     }),
@@ -128,7 +124,7 @@ export class AdminUsersPageComponent extends BaseComponent implements OnInit {
                     next: (results) => {
                         this.users = results;
                         this.spinnerService.hide();
-                        this.page = Math.ceil((this.users.length - 1) / this.pageSize);
+                        this.page = Math.max(1, Math.ceil(this.users.length / this.pageSize));
                         this.playerService.emitPlayerStateChange(undefined, []);
                     },
                     error: () => this.notificationService.showErrorMessage('Трапилася помилка'),
