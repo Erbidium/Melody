@@ -128,7 +128,7 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
                 .pipe(
                     switchMap(() => {
                         this.currentSongIdForMusicPlayer = undefined;
-                        const page = Math.ceil((this.playlist!.songs.length - 1) / this.pageSize);
+                        const page = Math.max(1, Math.ceil((this.playlist!.songs.length - 1) / this.pageSize));
 
                         return forkJoin([
                             this.playlistService.getPlaylistById(this.playlist!.id, 1, page * this.pageSize),
@@ -140,7 +140,7 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
                 .subscribe({
                     next: (results) => {
                         [this.playlist, this.newSongsToAdd] = results;
-                        this.page = Math.ceil((this.playlist!.songs.length - 1) / this.pageSize);
+                        this.page = Math.max(1, Math.ceil((this.playlist!.songs.length) / this.pageSize));
                         this.spinnerService.hide();
                         this.playerService.emitPlayerStateChange(undefined, []);
 
