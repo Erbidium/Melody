@@ -67,6 +67,6 @@ public class UserService : IUserService
                 userIdentity.Email,
                 userIdentity.PhoneNumber,
                 userIdentity.IsBanned
-            );
+            ) { Id = userIdentity.Id };
     }
 }
