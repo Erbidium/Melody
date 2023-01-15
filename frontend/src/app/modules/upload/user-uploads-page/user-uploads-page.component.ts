@@ -85,14 +85,14 @@ export class UserUploadsPageComponent extends BaseComponent implements OnInit {
             .deleteSong(id)
             .pipe(
                 switchMap(async () => {
-                    const page = Math.ceil((this.uploadedSongs.length - 1) / this.pageSize);
+                    const page = Math.max(1, Math.ceil((this.uploadedSongs.length) / this.pageSize));
 
                     this.loadSongsUploadedByUser(1, page * this.pageSize, true);
                 }),
             )
             .subscribe(() => {
                 this.currentSongIdForMusicPlayer = undefined;
-                this.page = Math.ceil((this.uploadedSongs.length - 1) / this.pageSize);
+                this.page = Math.max(1, Math.ceil((this.uploadedSongs.length - 1) / this.pageSize));
                 this.playerService.emitPlayerStateChange(undefined, []);
             });
     }

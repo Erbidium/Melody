@@ -91,14 +91,14 @@ export class AdminSongsPageComponent extends BaseComponent implements OnInit {
             .deleteSongByAdministrator(id)
             .pipe(
                 switchMap(async () => {
-                    const page = Math.ceil((this.songs.length - 1) / this.pageSize);
+                    const page = Math.max(1, Math.ceil((this.songs.length - 1) / this.pageSize));
 
                     this.loadSongs(1, page * this.pageSize, true);
                 }),
             )
             .subscribe({
                 next: () => {
-                    this.page = Math.ceil((this.songs.length - 1) / this.pageSize);
+                    this.page = Math.max(1, Math.ceil((this.songs.length) / this.pageSize));
                     this.currentSongIdForMusicPlayer = undefined;
                     this.playerService.emitPlayerStateChange(undefined, []);
                 },
