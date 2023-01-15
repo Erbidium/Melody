@@ -82,13 +82,26 @@ export class RecommendationsPreferencesPageComponent extends BaseComponent imple
 
     savePreferences() {
         if (this.selectedGenre && this.uploadForm.valid) {
+            let startYearValue = this.uploadForm.value.startYear;
+            let endYearValue = this.uploadForm.value.endYear;
+            let averageDurationInMinutesValue = this.uploadForm.value.averageDurationInMinutes;
+
+            if (startYearValue === '') {
+                startYearValue = undefined;
+            }
+            if (endYearValue === '') {
+                endYearValue = undefined;
+            }
+            if (averageDurationInMinutesValue === '') {
+                averageDurationInMinutesValue = undefined;
+            }
             const preferences: IPreferences = {
                 authorName: this.uploadForm.value.author ?? undefined,
-                startYear: (this.uploadForm.value.startYear as unknown as number) ?? undefined,
-                endYear: (this.uploadForm.value.endYear as unknown as number) ?? undefined,
+                startYear: (startYearValue as unknown as number) ?? undefined,
+                endYear: (endYearValue as unknown as number) ?? undefined,
                 genreId: this.selectedGenre.id,
                 averageDurationInMinutes:
-                    (this.uploadForm.value.averageDurationInMinutes as unknown as number) ?? undefined,
+                    (averageDurationInMinutesValue as unknown as number) ?? undefined,
             };
 
             this.userService
