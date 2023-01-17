@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { HttpInternalService } from '@core/services/http-internal-service';
 import { NotificationService } from '@core/services/notification.service';
@@ -27,8 +28,14 @@ export class AuthService {
                     this.notificationService.showSuccessMessage('Вхід успішний');
                     localStorage.setItem('access-token', accessToken.accessToken);
                 },
-                error: () => {
-                    this.notificationService.showErrorMessage('Ти ввів неправильний пароль або пошту! Спробуй знову');
+                error: (e) => {
+                    if (e instanceof HttpErrorResponse && e.status === 403) {
+                        this.notificationService.showWarningMessage(
+                            'Твій акаунт заблоковано',
+                        );
+                    } else {
+                        this.notificationService.showErrorMessage('Ти ввів неправильний пароль або пошту! Спробуй знову');
+                    }
                 },
             }),
         );
