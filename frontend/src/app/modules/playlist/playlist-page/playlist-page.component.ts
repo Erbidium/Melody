@@ -113,9 +113,9 @@ export class PlaylistPageComponent extends BaseComponent implements OnInit {
     copyPlaylistLink() {
         if (this.id) {
             this.clipboard.copy(window.location.href);
-            this.notificationService.showSuccessMessage('Playlist link is successfully copied to clipboard!');
+            this.notificationService.showSuccessMessage('Посилання на плейлист успішно скопійовано у буфер обміну!');
         } else {
-            this.notificationService.showErrorMessage('Cannot generate link for the playlist');
+            this.notificationService.showErrorMessage('Не вдалося створити посилання для плейлисту');
         }
     }
 
